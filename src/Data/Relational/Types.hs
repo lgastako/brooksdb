@@ -1,7 +1,8 @@
 module Data.Relational.Types( AttributeName
                             , TypeName
                             , Heading
-                            , TupleValue
+                            , Tuple
+                            , Relation
                             , degree
                             , conforms
                             , DataType( RelVar
@@ -50,12 +51,12 @@ hdegree = onSet Set.size
 -- that heading {H} shall be the attributes and corresponding declared
 -- attribute types of t.
 
-data TupleValue = TupleValue AttrValueSet
+data Tuple = Tuple AttrValueSet
 
-tdegree :: TupleValue -> Int
+tdegree :: Tuple -> Int
 tdegree = onVSet Set.size
 
-tconforms :: Heading -> TupleValue -> Bool
+tconforms :: Heading -> Tuple -> Bool
 tconforms h t = (heading t) == h
 
 --     Given a heading {H}, exactly one selector operator S, of declared type
@@ -120,7 +121,7 @@ class Headed a where
     heading :: a -> Heading
 
 
-instance Headed TupleValue where
+instance Headed Tuple where
     heading = theading
 
 instance Headed Relation where
@@ -134,7 +135,7 @@ class Attributed a where
 instance Attributed Heading where
     attributes = undefined
 
-instance Attributed TupleValue where
+instance Attributed Tuple where
     attributes = undefined
 
 instance Attributed Relation where
@@ -148,7 +149,7 @@ class Typed a where
 instance Typed Heading where
     types = undefined
 
-instance Typed TupleValue where
+instance Typed Tuple where
     types = undefined
 
 instance Typed Relation where
@@ -162,7 +163,7 @@ class Degreed a where
 instance Degreed Heading where
     degree = hdegree
 
-instance Degreed TupleValue where
+instance Degreed Tuple where
     degree = tdegree
 
 instance Degreed Relation where
@@ -173,7 +174,7 @@ instance Degreed Relation where
 class Conformant a where
     conforms :: Heading -> a -> Bool
 
-instance Conformant TupleValue where
+instance Conformant Tuple where
     conforms = tconforms
 
 instance Conformant Relation where
@@ -186,13 +187,13 @@ instance Conformant Relation where
 headingSet :: Heading -> AttrSet
 headingSet (Heading set) = set
 
---tupleSet :: TupleValue -> AttrValueSet
---tupleSet (TupleValue set) = set
+--tupleSet :: Tuple -> AttrValueSet
+--tupleSet (Tuple set) = set
 
 rheading :: Relation -> Heading
 rheading (Relation h) = h
 
-theading :: TupleValue -> Heading
+theading :: Tuple -> Heading
 theading = undefined
 
 onSet :: (AttrSet -> a) -> Heading -> a
@@ -207,8 +208,8 @@ onSet = (. headingSet)
 --        then error "non-unique attribute names"
 --        else Heading $ Set.fromList as
 
-onVSet :: (AttrValueSet -> a) -> TupleValue -> a
-onVSet f (TupleValue set) = f set
+onVSet :: (AttrValueSet -> a) -> Tuple -> a
+onVSet f (Tuple set) = f set
 
 
 -- Misc support for the core stuff
