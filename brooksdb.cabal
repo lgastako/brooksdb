@@ -1,7 +1,6 @@
 name:                brooksdb
 version:             0.1.0.0
-synopsis:            A rdms system based on Date & Darwen's Third Manifesto and a
-                     few of my own ideas.
+synopsis:            A RDMS based on D&D's Third Manifesto and more.
 description:         It's yummy.
 homepage:            http://github.com/lgastako/brooksdb
 license:             AllRightsReserved
