@@ -19,6 +19,10 @@ module Data.Relational.Types( AttributeName
 
 import qualified Data.Set as Set
 
+-- Most of the guiding documentation in this module is copied from:
+--     http://www.dcs.warwick.ac.uk/~hugh/TTM/TTM-2013-02-07.pdf
+
+
 -- A heading {H} is a set of ordered pairs or attributes of the form <A,T>, where:
 
 data Heading = Heading AttrSet
@@ -53,8 +57,8 @@ data TupleValue = TupleValue AttrValueSet
 tdegree :: TupleValue -> Int
 tdegree = onVSet Set.size
 
-conforms :: TupleValue -> Heading -> Bool
-conforms t h = (degree t) == (degree h) && all (`elem` hs) ts
+tconforms :: TupleValue -> Heading -> Bool
+tconforms t h = (degree t) == (degree h) && all (`elem` hs) ts
     where ts = map fst . tupleSet t
           hs = map fst . headingSet h
 
@@ -71,7 +75,44 @@ conforms t h = (degree t) == (degree h) && all (`elem` hs) ts
 --
 -- 3. Every successful invocation of S shall produce some tuple of type TUPLE {H}.
 
--- NOT YET
+-- TBD
+
+-- A relation value r (relation for short) consists of a heading and a body,
+-- where:
+
+data Relation = Relation Heading Body
+
+-- a. The heading of r shall be a heading {H} as defined in RM Prescription 9; r
+-- conforms to that heading; equivalently, r is of the corresponding relation type
+-- (see RM Prescription 7). The degree of that heading {H} shall be the degree of
+-- r, and the attributes and corresponding types of that heading {H} shall be the
+-- attributes and corresponding declared attribute types of r.
+
+rconforms :: Heading -> RelValue -> Bool
+rconforms h r = undefined
+
+-- b. The body of r shall be a set {b} of tuples, all having that same heading
+-- {H}. The cardinality of that body shall be the cardinality of r. Note: Relation
+-- r is an empty relation if and only if the set {b} is empty.
+--
+-- Given a heading {H}, exactly one selector operator S, of declared type RELATION
+-- {H}, shall be provided for selecting an arbitrary relation conforming to {H}.
+-- That operator S shall have all of the following properties:
+--
+-- 1. The sole argument to any given invocation of S shall be a set {b} of tuples,
+-- each of which shall be denoted by a tuple expression of declared type TUPLE
+-- {H}.
+--
+-- 2. Every relation of type RELATION {H} shall be produced by some invocation of
+-- S for which the tuple expressions that together denote the argument to that
+-- invocation are all literals.The Third Manifesto 7
+--
+-- 3. Every successful invocation of S shall produce some relation of type
+-- RELATION {H}: to be specific, the relation of type RELATION {H} with body {b}.
+
+
+
+
 
 -- Level up:
 
@@ -86,8 +127,8 @@ instance Attributed Heading where
 instance Attributed TupleValue where
     attributes = undefined
 
---instance Attributed RelValue where
---    attributes = undefined
+instance Attributed RelValue where
+    attributes = undefined
 
 -- We want to be able to grab the types from a heading or a tuple or a relation.
 
@@ -100,8 +141,8 @@ instance Typed Heading where
 instance Typed TupleValue where
     types = undefined
 
---instance Typed RelValue where
---    types = undefined
+instance Typed RelValue where
+    types = undefined
 
 -- We want to be able to ask the degree of a heading, a tuple or a relation.
 
@@ -114,8 +155,20 @@ instance Degreed Heading where
 instance Degreed TupleValue where
     degree = tdegree
 
---instance Degreed RelValue where
---    degree = rdegree
+instance Degreed RelValue where
+    degree = rdegree
+
+-- We want to be able to determine if a Tuple or a Relation conforms to a heading.
+
+class Conformant a where
+    conforms :: a -> Bool
+
+instance Conformant TupleValue where
+    conforms = tconforms
+
+instance Conformant RelValue where
+    conforms = rconforms
+
 
 
 -- Helpers for extracting the internal bits of things
@@ -129,6 +182,9 @@ headingSet (Heading set) = set
 
 tupleSet :: TupleValue -> AttrValueSet
 tupleSet (TupleValue set) = set
+
+relHeading :: Relation -> Heading
+relHeading (Relation head _) = head
 
 onSet :: (AttrSet -> a) -> Heading -> a
 --onSet f (Heading set) = f set
