@@ -1,4 +1,6 @@
-module Data.Relational.Heading( Heading
+module Data.Relational.Heading( AttributeName
+                              , TypeName
+                              , Heading
                               , fromList
                               , degree
                               ) where
@@ -15,7 +17,6 @@ import qualified Data.Set as Set
 -- The number of pairs in {H}—equivalently, the number of attributes of {H}—is the
 -- degree of {H}.
 
-type AttributeName = String
 type TypeName = String
 
 type AttrSet = (Set.Set (AttributeName, TypeName))
@@ -35,7 +36,7 @@ degree = onSet Set.size
 --fromList = Heading . Set.fromList
 --it was so pretty!
 
-fromList :: [(AttributeName, AttributeValue)] -> Heading
+fromList :: [(AttributeName, TypeName)] -> Heading
 fromList as = do
     let s = Set.fromList $ map fst as
     if (Set.size s) < length as
