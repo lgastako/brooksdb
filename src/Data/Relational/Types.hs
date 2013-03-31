@@ -1,9 +1,21 @@
 module Data.Relational.Types( AttributeName
                             , TypeName
                             , Heading
-                            , fromList
+                            , TupleValue
                             , degree
+                            , conforms
                             ) where
+
+--                             , DataType( RelVar
+--                                       , MapVar
+--                                       , SetVar
+--                                       , IntVar
+--                                       , FloatVar
+--                                       , StringVar
+--                                       , BoolVar
+--                                       , CharVar
+--                                       )
+--                             ) where
 
 import qualified Data.Set as Set
 
@@ -14,7 +26,6 @@ data Heading = Heading AttrSet
 
 --     a. A is the name of an attribute of {H}. No two distinct pairs in {H} shall
 --        have the same attribute name.
---
 
 type AttributeName = String
 
@@ -22,27 +33,55 @@ type AttributeName = String
 
 type TypeName = String
 
---
 -- The number of pairs in {H}—equivalently, the number of attributes of {H}—is the
 -- degree of {H}.
-
-class Degreed a where
-    degree :: a -> Int
-
-
-
-
---withSet :: Heading -> (AttrSet -> a) -> a
---withSet (Heading set) f = f set
-
-onSet :: (AttrSet -> a) -> Heading -> a
-onSet f (Heading set) = f set
 
 hdegree :: Heading -> Int
 hdegree = onSet Set.size
 
+
+
+-- We want to be able to ask the degree of a heading, a tuple or a relation.
+
+class Degreed a where
+    degree :: a -> Int
+
 instance Degreed Heading where
     degree = hdegree
+
+instance Degreed TupleValue where
+    degree = tdegree
+
+--instance Degreed RelValue where
+--    degree = rdegree
+
+--     Now let t be a set of ordered triples <A,T,v>, obtained from {H} by
+-- extending each ordered pair <A,T> to include an arbitrary value v of type T,
+-- called the attribute value for attribute A of t. Then t is a tuple value
+-- (tuple for short) that conforms to heading {H}; equivalently, t is of the
+-- corresponding tuple type (see RM Prescription 6). The degree of that heading
+-- {H} shall be the degree of t, and the attributes and corresponding types of
+-- that heading {H} shall be the attributes and corresponding declared
+-- attribute types of t.
+
+conforms :: TupleValue -> Heading -> Bool
+conforms t h = (degree t) == (degree h) && all (`elem` hs) ts
+    where ts = map fst . tupleSet t
+          hs = map fst . headingSet h
+
+withSet :: Heading -> (AttrSet -> a) -> a
+--withSet (Heading set) f = f set
+withSet = (. headingSet)
+
+headingSet :: Heading -> AttrSet
+headingSet (Heading set) = set
+
+tupleSet :: TupleValue -> AttrValueSet
+tupleSet (TupleValue set) = set
+
+onSet :: (AttrSet -> a) -> Heading -> a
+--onSet f (Heading set) = f set
+onSet = (. headingSet)
 
 --fromList = Heading . Set.fromList
 --it was so pretty!
@@ -53,34 +92,7 @@ fromList as = do
     if (Set.size s) < length as
         then error "non-unique attribute names"
         else Heading $ Set.fromList as
-module Data.Relational.Tuple( TupleValue
-                            , degree
-                            , DataType( RelVar
-                                      , MapVar
-                                      , SetVar
-                                      , IntVar
-                                      , FloatVar
-                                      , StringVar
-                                      , BoolVar
-                                      , CharVar
-                                      )
-                            ) where
 
-import qualified Data.Set as Set
-import qualified Data.Relational.Attribute as A
-import qualified Data.Relational.Heading as A
-
--- [continued from Heading.hs...]
---
---     Now let t be a set of ordered triples <A,T,v>, obtained from {H} by
--- extending each ordered pair <A,T> to include an arbitrary value v of type T,
--- called the attribute value for attribute A of t. Then t is a tuple value (tuple
--- for short) that conforms to heading {H}; equivalently, t is of the
--- corresponding tuple type (see RM Prescription 6). The degree of that heading
--- {H} shall be the degree of t, and the attributes and corresponding types of
--- that heading {H} shall be the attributes and corresponding declared attribute
--- types of t.
---
 --     Given a heading {H}, exactly one selector operator S, of declared type
 -- TUPLE {H}, shall be provided for selecting an arbitrary tuple conforming to
 -- {H}. That operator S shall have all of the following properties:
@@ -101,28 +113,8 @@ import qualified Data.Relational.Heading as A
 -- defined, we will hide the implementation.
 
 type AttributeValue = String -- For now
-
 type AttrSet = (Set.Set (AttributeName, TypeName))
 type AttrValueSet = (Set.Set (AttributeName, TypeName, AttributeValue))
-
---withSet :: Heading -> (AttrSet -> a) -> a
---withSet (Heading set) f = f set
-
-onSet :: (AttrSet -> a) -> Heading -> a
-onSet f (Heading set) = f set
-
-hdegree :: Heading -> Int
-hdegree = onSet Set.size
-
---mkHeading = Heading . Set.fromList
---it was so pretty!
-
-fromList :: [(AttributeName, AttributeValue)] -> Heading
-fromList as = do
-    let s = Set.fromList $ map fst as
-    if (Set.size s) < length as
-        then error "non-unique attribute names"
-        else Heading $ Set.fromList as
 
 data TupleValue = TupleValue AttrValueSet
 
