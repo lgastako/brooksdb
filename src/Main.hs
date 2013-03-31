@@ -4,6 +4,6 @@ import Data.Relational.Types
 
 main :: IO ()
 main = do
-    let x = RelVar
-    putStrLn $ "hi" ++ (show x)
+    let x = 5 :: Int
+    putStrLn $ "hi " ++ (show x)
 
