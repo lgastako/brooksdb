@@ -9,6 +9,7 @@ all:
 	@echo "id: install-deps"
 	@echo "t:est"
 	@echo "f:ull = clean + configure + build + install + test"
+	@echo "d:ist"
 	@echo "r:un"
 	@echo "l:int"
 	@echo "g:hci"
@@ -34,8 +35,10 @@ install-deps:
 
 test:
 	@# $(CABAL) test
-	@#dist/build/test-brooksdb/test-brooksdb
-	@dist/build/tests/tests-brooksdb
+	@dist/build/tests/tests
+
+dist:
+	$(CABAL) sdist
 
 run:
 	@cabal-dev/bin/brooksdb
@@ -44,7 +47,7 @@ lint:
 	hlint .
 
 ghci:
-	# If you are not using cabal-dev, remove the $(CABAL).
+	@# If you are not using cabal-dev, remove the $(CABAL).
 	$(CABAL) ghci
 
 full: clean configure build install test
@@ -60,6 +63,7 @@ t: test
 i: install
 id: install-deps
 f: full
+d: dist
 r: run
 l: lint
 g: ghci

@@ -1,4 +1,9 @@
 module Main (main) where
 
+import Data.Relational.Types
+
 main :: IO ()
-main = putStrLn "hi"
+main = do
+    let x = 5 :: Int
+    putStrLn $ "hi " ++ (show x)
+
