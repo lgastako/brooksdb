@@ -39,7 +39,69 @@ type TypeName = String
 hdegree :: Heading -> Int
 hdegree = onSet Set.size
 
+--     Now let t be a set of ordered triples <A,T,v>, obtained from {H} by
+-- extending each ordered pair <A,T> to include an arbitrary value v of type T,
+-- called the attribute value for attribute A of t. Then t is a tuple value
+-- (tuple for short) that conforms to heading {H}; equivalently, t is of the
+-- corresponding tuple type (see RM Prescription 6). The degree of that heading
+-- {H} shall be the degree of t, and the attributes and corresponding types of
+-- that heading {H} shall be the attributes and corresponding declared
+-- attribute types of t.
 
+data TupleValue = TupleValue AttrValueSet
+
+tdegree :: TupleValue -> Int
+tdegree = onVSet Set.size
+
+conforms :: TupleValue -> Heading -> Bool
+conforms t h = (degree t) == (degree h) && all (`elem` hs) ts
+    where ts = map fst . tupleSet t
+          hs = map fst . headingSet h
+
+--     Given a heading {H}, exactly one selector operator S, of declared type
+-- TUPLE {H}, shall be provided for selecting an arbitrary tuple conforming to
+-- {H}. That operator S shall have all of the following properties:
+--
+-- 1. There shall be a one to one correspondence between the parameters of S and
+-- the attributes of {H}.  Each parameter of S shall have the same declared type
+-- as the corresponding attribute of {H}.
+--
+-- 2. Every tuple of type TUPLE {H} shall be produced by some invocation of S in
+-- which every argument expression is a literal.
+--
+-- 3. Every successful invocation of S shall produce some tuple of type TUPLE {H}.
+
+-- NOT YET
+
+-- Level up:
+
+-- We want to be able to grab the attributes from a heading or a tuple or a relation.
+
+class Attributed a where
+    attributes :: a -> [AttributeName]
+
+instance Attributed Heading where
+    attributes = undefined
+
+instance Attributed TupleValue where
+    attributes = undefined
+
+--instance Attributed RelValue where
+--    attributes = undefined
+
+-- We want to be able to grab the types from a heading or a tuple or a relation.
+
+class Typed a where
+    types :: a -> [TypeName]
+
+instance Typed Heading where
+    types = undefined
+
+instance Typed TupleValue where
+    types = undefined
+
+--instance Typed RelValue where
+--    types = undefined
 
 -- We want to be able to ask the degree of a heading, a tuple or a relation.
 
@@ -55,19 +117,8 @@ instance Degreed TupleValue where
 --instance Degreed RelValue where
 --    degree = rdegree
 
---     Now let t be a set of ordered triples <A,T,v>, obtained from {H} by
--- extending each ordered pair <A,T> to include an arbitrary value v of type T,
--- called the attribute value for attribute A of t. Then t is a tuple value
--- (tuple for short) that conforms to heading {H}; equivalently, t is of the
--- corresponding tuple type (see RM Prescription 6). The degree of that heading
--- {H} shall be the degree of t, and the attributes and corresponding types of
--- that heading {H} shall be the attributes and corresponding declared
--- attribute types of t.
 
-conforms :: TupleValue -> Heading -> Bool
-conforms t h = (degree t) == (degree h) && all (`elem` hs) ts
-    where ts = map fst . tupleSet t
-          hs = map fst . headingSet h
+-- Helpers for extracting the internal bits of things
 
 withSet :: Heading -> (AttrSet -> a) -> a
 --withSet (Heading set) f = f set
@@ -83,9 +134,7 @@ onSet :: (AttrSet -> a) -> Heading -> a
 --onSet f (Heading set) = f set
 onSet = (. headingSet)
 
---fromList = Heading . Set.fromList
---it was so pretty!
-
+-- "headingFromList" ... how to naming?
 fromList :: [(AttributeName, TypeName)] -> Heading
 fromList as = do
     let s = Set.fromList $ map fst as
@@ -93,37 +142,17 @@ fromList as = do
         then error "non-unique attribute names"
         else Heading $ Set.fromList as
 
---     Given a heading {H}, exactly one selector operator S, of declared type
--- TUPLE {H}, shall be provided for selecting an arbitrary tuple conforming to
--- {H}. That operator S shall have all of the following properties:
---
--- 1. There shall be a one to one correspondence between the parameters of S and
--- the attributes of {H}.  Each parameter of S shall have the same declared type
--- as the corresponding attribute of {H}.
---
--- 2. Every tuple of type TUPLE {H} shall be produced by some invocation of S in
--- which every argument expression is a literal.
---
--- 3. Every successful invocation of S shall produce some tuple of type TUPLE {H}.
+onVSet :: (AttrValueSet -> a) -> TupleValue -> a
+onVSet f (TupleValue set) = f set
 
--- NOTES:
--- This definition is so simple that we could almost literally go with a Data.Set
--- of ordered pairs (tuples) but in the interest of later switching to a better
--- implementation rather than just representing them as they are literally
--- defined, we will hide the implementation.
+
+-- Misc support for the core stuff
 
 type AttributeValue = String -- For now
 type AttrSet = (Set.Set (AttributeName, TypeName))
 type AttrValueSet = (Set.Set (AttributeName, TypeName, AttributeValue))
 
-data TupleValue = TupleValue AttrValueSet
-
-onVSet :: (AttrValueSet -> a) -> TupleValue -> a
-onVSet f (TupleValue set) = f set
-
-tdegree :: TupleValue -> Int
-tdegree = onVSet Set.size
-
+-- eventuallyish
 data DataType = RelVar
               | MapVar
               | SetVar
