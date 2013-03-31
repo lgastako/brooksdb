@@ -1,4 +1,9 @@
 module Main (main) where
 
+import Data.Relational.Tuple
+
 main :: IO ()
-main = putStrLn "hi"
+main = do
+    let x = RelVar
+    putStrLn $ "hi" ++ (show x)
+
