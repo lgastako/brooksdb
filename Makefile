@@ -9,6 +9,7 @@ all:
 	@echo "t:est"
 	@echo "f:ull = clean + configure + build + install + test"
 	@echo "r:un"
+	@echo "l:int"
 	@echo "g:hci"
 	@echo ""
 
@@ -34,6 +35,9 @@ test:
 run:
 	@cabal-dev/bin/brooksdb
 
+lint:
+	hlint .
+
 ghci:
 	# If you are not using cabal-dev, remove the $(CABAL).
 	$(CABAL) ghci
@@ -51,5 +55,6 @@ t: test
 i: install
 f: full
 r: run
+l: lint
 g: ghci
 
