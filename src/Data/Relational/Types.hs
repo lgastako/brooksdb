@@ -144,36 +144,24 @@ instance Degreed Relation where
 conforms :: (Headed a) => Heading -> a -> Bool
 conforms h x = (heading x) == h
 
+-- Missing types from above
+
+type AttributeValue = String -- For now
+type AttrSet = (Set.Set (AttributeName, TypeName))
+type AttrValueSet = (Set.Set (AttributeName, TypeName, AttributeValue))
+
+
+
 -- Helpers for extracting the internal bits of things
 
 headingSet :: Heading -> AttrSet
 headingSet (Heading set) = set
 
---tupleSet :: Tuple -> AttrValueSet
---tupleSet (Tuple set) = set
-
-
 onSet :: (AttrSet -> a) -> Heading -> a
---onSet f (Heading set) = f set
 onSet = (. headingSet)
-
--- "headingFromList" ... how to naming?
---fromList :: [(AttributeName, TypeName)] -> Heading
---fromList as = do
---    let s = Set.fromList $ map fst as
---    if (Set.size s) < length as
---        then error "non-unique attribute names"
---        else Heading $ Set.fromList as
 
 onVSet :: (AttrValueSet -> a) -> Tuple -> a
 onVSet f (Tuple set) = f set
-
-
--- Misc support for the core stuff
-
-type AttributeValue = String -- For now
-type AttrSet = (Set.Set (AttributeName, TypeName))
-type AttrValueSet = (Set.Set (AttributeName, TypeName, AttributeValue))
 
 -- eventuallyish
 data DataType = RelVar
