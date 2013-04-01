@@ -1,11 +1,16 @@
 module Data.Relational.Types( AttributeName
                             , TypeName
                             , Heading
+                            , fromList
                             , Tuple
                             , Relation
+                            , withHeading
+                            , Headed
+                            , Degreed
                             , degree
                             , conforms
                             , attributes
+                            , heading
                             , DataType( RelVar
                                       , MapVar
                                       , SetVar
@@ -27,6 +32,11 @@ import qualified Data.Set as Set
 
 data Heading = Heading AttrSet
     deriving (Show, Eq, Ord)
+
+
+fromList :: [(AttributeName, TypeName)] -> Heading
+fromList = Heading . Set.fromList
+
 
 --     a. A is the name of an attribute of {H}. No two distinct pairs in {H} shall
 --        have the same attribute name.
@@ -69,6 +79,10 @@ data Tuple = Tuple AttrValueSet
 -- where:
 
 data Relation = Relation Heading -- Body
+
+withHeading :: Heading -> Relation
+withHeading = Relation
+
 
 -- a. The heading of r shall be a heading {H} as defined in RM Prescription 9; r
 -- conforms to that heading; equivalently, r is of the corresponding relation type
@@ -115,7 +129,6 @@ instance Headed Relation where
 -- We want to be able to grab the attributes from a heading or a tuple or a relation.
 
 attributes :: (Headed a) => a -> Set.Set AttributeName
---attributes x = Set.fromList $ map fst (Set.toList (heading x))
 --TODO: point free
 attributes x = Set.fromList as
     where
@@ -147,7 +160,6 @@ conforms h x = (heading x) == h
 type AttributeValue = String -- For now
 type AttrSet = (Set.Set (AttributeName, TypeName))
 type AttrValueSet = (Set.Set (AttributeName, TypeName, AttributeValue))
-
 
 
 -- Helpers for extracting the internal bits of things
