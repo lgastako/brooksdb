@@ -3,12 +3,15 @@ module Main where
 import Test.Framework ( Test, defaultMain )
 import Test.Framework.Providers.QuickCheck2 ( testProperty )
 
-tmpTest :: String -> Bool
-tmpTest x = x == x
+import Data.Relational.Types
+
+prop_tuple_degree t = degree t == degree . heading t
+
+test_props = [ ("tmp", prop_foo)
+             ]
 
 tests :: [Test]
-tests = [ (testProperty "tmp" tmpTest)
-        ]
+tests = map testProperty testProps
 
 main :: IO ()
 main = defaultMain tests
