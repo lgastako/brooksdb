@@ -6,6 +6,7 @@ all:
 	@echo "b:uild"
 	@echo "h:addock"
 	@echo "i:install"
+	@echo "id: install-deps"
 	@echo "t:est"
 	@echo "f:ull = clean + configure + build + install + test"
 	@echo "r:un"
@@ -28,9 +29,13 @@ haddock:
 install:
 	$(CABAL) install
 
+install-deps:
+	$(CABAL) install --only-dependencies --enable-tests
+
 test:
 	@# $(CABAL) test
 	@#dist/build/test-brooksdb/test-brooksdb
+	@dist/build/tests/tests-brooksdb
 
 run:
 	@cabal-dev/bin/brooksdb
@@ -53,6 +58,7 @@ b: build
 h: haddock
 t: test
 i: install
+id: install-deps
 f: full
 r: run
 l: lint
