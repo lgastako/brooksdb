@@ -9,7 +9,7 @@ import Test.Framework ( Test
 --import Test.QuickCheck ( Testable, Arbitrary, choose )
 --import Test.QuickCheck.Arbitrary ( arbitrary )
 
---import Data.Relational.Types
+--import Data.Relation.Types
 
 --import System.Random ( StdGen, mkStdGen )
 

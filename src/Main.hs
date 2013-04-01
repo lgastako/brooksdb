@@ -1,9 +1,11 @@
 module Main (main) where
 
---import Data.Relational.Types
+--import Data.Relation.Types
+
+import Temp ( users )
+
 
 main :: IO ()
 main = do
-    let x = 5 :: Int
-    putStrLn $ "hi " ++ (show x)
+    putStrLn $ show users
 

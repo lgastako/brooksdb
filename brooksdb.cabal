@@ -24,7 +24,8 @@ executable brooksdb
                          test-framework                 ==0.8,
                          test-framework-quickcheck2     ==0.3.0.1,
                          test-framework-hunit           ==0.3.0,
-                         random                         ==1.0.1.1
+                         random                         ==1.0.1.1,
+                         MissingH                       ==1.2.0.0
 
 test-suite tests
     type:                exitcode-stdio-1.0
@@ -37,7 +38,8 @@ test-suite tests
                          test-framework                 ==0.8,
                          test-framework-quickcheck2     ==0.3.0.1,
                          test-framework-hunit           ==0.3.0,
-                         random                         ==1.0.1.1
+                         random                         ==1.0.1.1,
+                         MissingH                       ==1.2.0.0
 
 source-repository head
     type:     git

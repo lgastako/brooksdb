@@ -1,4 +1,4 @@
-module Data.Relational.Types( AttributeName
+module Data.Relation.Types( AttributeName
                             , TypeName
                             , Heading
                             , fromList
@@ -23,6 +23,9 @@ module Data.Relational.Types( AttributeName
                             ) where
 
 import qualified Data.Set as Set
+
+import Data.String.Utils ( join )
+import Data.List ( sort )
 
 -- Most of the guiding documentation in this module is copied from:
 --     http://www.dcs.warwick.ac.uk/~hugh/TTM/TTM-2013-02-07.pdf
@@ -59,6 +62,7 @@ type TypeName = String
 -- attribute types of t.
 
 data Tuple = Tuple AttrValueSet
+    deriving (Eq)
 
 --     Given a heading {H}, exactly one selector operator S, of declared type
 -- TUPLE {H}, shall be provided for selecting an arbitrary tuple conforming to
@@ -79,6 +83,7 @@ data Tuple = Tuple AttrValueSet
 -- where:
 
 data Relation = Relation Heading -- Body
+    deriving (Eq)
 
 withHeading :: Heading -> Relation
 withHeading = Relation
@@ -183,4 +188,20 @@ data DataType = RelVar
               | BoolVar
               | CharVar
     deriving (Show, Eq, Ord)
+
+
+-- If empty, "" else list of "AttrName TypeName," with no trailing comma,
+-- separated by newlines
+asKeyDefList :: Heading -> String
+asKeyDefList (Heading set) | set == Set.empty = ""
+                           | otherwise = "\n" ++ keyDefs ++ "\n"
+                                where keyDefs = join ",\n" $ map fmt sortedKeys
+                                      sortedKeys = sort $ Set.toList set
+                                      fmt (a, b) = "    " ++ a ++ " " ++ b
+
+instance Show Relation where
+    show (Relation hd) = "REAL RELATION {" ++ (asKeyDefList hd) ++ "}"
+
+
+
 
