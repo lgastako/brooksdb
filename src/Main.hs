@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Data.Relational.Types
+--import Data.Relational.Types
 
 main :: IO ()
 main = do
