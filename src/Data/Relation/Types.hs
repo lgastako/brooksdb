@@ -3,8 +3,11 @@ module Data.Relation.Types( AttributeName
                             , Heading
                             , fromList
                             , Tuple
+                            , headWith
+                            , withNoHead
                             , Relation
                             , withHeading
+                            , insertTuple
                             , Headed
                             , Degreed
                             , degree
@@ -34,7 +37,7 @@ import Data.List ( sort )
 -- A heading {H} is a set of ordered pairs or attributes of the form <A,T>, where:
 
 data Heading = Heading AttrSet
-    deriving (Show, Eq, Ord)
+    deriving (Eq, Ord, Show)
 
 
 fromList :: [(AttributeName, TypeName)] -> Heading
@@ -61,8 +64,44 @@ type TypeName = String
 -- that heading {H} shall be the attributes and corresponding declared
 -- attribute types of t.
 
-data Tuple = Tuple AttrValueSet
+data Tuple = Tuple Heading AttrValueSet
+    deriving (Eq, Ord)
+
+data AnonTuple = AnonTuple AttrValueSet
     deriving (Eq)
+
+instance Show Tuple where
+    show (Tuple (Heading h) vset) =
+        "TUPLE {" ++ attrList ++ "}"
+            where attrList = if (Set.size vset) > 0
+                                 then "\n" ++ (join ",\n" prettyAttrs) ++ "\n"
+                                 else ""
+                  prettyAttrs = map paint atvs
+                  paint (a, t, v) = "    " ++ a ++ "::" ++ t ++ "=\"" ++ v ++ "\""
+                  atvs = zip3 as ts vs
+                  as = map fst hlist
+                  ts = map snd hlist
+                  vs = map snd vlist
+                  vlist = sort $ Set.toList vset
+                  hlist = sort $ Set.toList h
+
+withNoHead :: [(AttributeName, AttributeValue)] -> AnonTuple
+withNoHead as = AnonTuple (Set.fromList as)
+
+headWith :: Heading -> [(AttributeName, AttributeValue)] -> Tuple
+headWith hd as
+    | (length as) /= (degree hd) = error "degree mismatch."
+    | anames /= hnames           = error "attribute name mismatch."
+    | otherwise = Tuple hd tset
+        -- TODO: Also check that the types are correct.  for the lolz.
+        where tset = (Set.fromList (zip anames values))
+              anames = map fst sas
+              values = map snd sas
+              hnames = map fst shs
+              hset = headSet hd
+              headSet (Heading set) = set
+              sas = sort as
+              shs = sort $ Set.toList hset
 
 --     Given a heading {H}, exactly one selector operator S, of declared type
 -- TUPLE {H}, shall be provided for selecting an arbitrary tuple conforming to
@@ -82,11 +121,11 @@ data Tuple = Tuple AttrValueSet
 -- A relation value r (relation for short) consists of a heading and a body,
 -- where:
 
-data Relation = Relation Heading -- Body
+data Relation = Relation Heading (Set.Set Tuple)
     deriving (Eq)
 
 withHeading :: Heading -> Relation
-withHeading = Relation
+withHeading hd = Relation hd Set.empty
 
 
 -- a. The heading of r shall be a heading {H} as defined in RM Prescription 9; r
@@ -128,12 +167,12 @@ instance Headed Tuple where
     heading = undefined
 
 instance Headed Relation where
-    heading (Relation h) = h
+    heading (Relation h _) = h
 
 
 -- We want to be able to grab the attributes from a heading or a tuple or a relation.
 
-attributes :: (Headed a) => a -> Set.Set AttributeName
+attributes :: Headed a => a -> Set.Set AttributeName
 --TODO: point free
 attributes x = Set.fromList as
     where
@@ -141,6 +180,8 @@ attributes x = Set.fromList as
         pairs = Set.toList aset
         aset = headingSet h
         h = heading x
+        headingSet (Heading set) = set
+
 
 -- We want to be able to ask the degree of a heading, a tuple or a relation.
 
@@ -148,35 +189,25 @@ class Degreed a where
     degree :: a -> Int
 
 instance Degreed Heading where
-    degree = onSet Set.size
+    degree (Heading set) = Set.size set
 
 instance Degreed Tuple where
-    degree = onVSet Set.size
+    degree = degree . heading
 
 instance Degreed Relation where
     degree = degree . heading
 
 -- | Determine if a Headed entity conforms to the given Heading.
-conforms :: (Headed a) => Heading -> a -> Bool
+conforms :: Headed a => Heading -> a -> Bool
 conforms h x = (heading x) == h
 
 -- Missing types from above
 
 type AttributeValue = String -- For now
 type AttrSet = (Set.Set (AttributeName, TypeName))
-type AttrValueSet = (Set.Set (AttributeName, TypeName, AttributeValue))
-
+type AttrValueSet = (Set.Set (AttributeName, AttributeValue))
 
 -- Helpers for extracting the internal bits of things
-
-headingSet :: Heading -> AttrSet
-headingSet (Heading set) = set
-
-onSet :: (AttrSet -> a) -> Heading -> a
-onSet = (. headingSet)
-
-onVSet :: (AttrValueSet -> a) -> Tuple -> a
-onVSet f (Tuple set) = f set
 
 -- eventuallyish
 data DataType = RelVar
@@ -200,8 +231,20 @@ asKeyDefList (Heading set) | set == Set.empty = ""
                                       fmt (a, b) = "    " ++ a ++ " " ++ b
 
 instance Show Relation where
-    show (Relation hd) = "REAL RELATION {" ++ (asKeyDefList hd) ++ "}"
+    show (Relation hd tuples) = top ++ bottom
+        where top = "REAL RELATION {" ++ (asKeyDefList hd) ++ "}"
+              prettyTuples = join ",\n" $ map prettyShow $ Set.toList tuples
+              bottom = if (Set.size tuples > 0)
+                           then " VALUES {\n" ++ prettyTuples ++ "\n}\n"
+                           else ""
+              prettyShow x = "    " ++ (show x)
 
 
+-- Operations on relations
 
+--insert :: Relation -> Relation -> Relation
+--insert = undefined
+
+insertTuple :: Relation -> Tuple -> Relation
+insertTuple (Relation hd tups) t = Relation hd (Set.insert t tups)
 
