@@ -4,9 +4,10 @@ module IO.Brooks.Timothy where
 
 -- Timothy, an ACID store for Brooks.
 
-import Data.Map             ( Map, insert, empty, fromList, toList )
+import Data.Map             ( Map, insert, fromList, toList )
 import Data.Acid            ( AcidState
                             , Update
+                            , Query
                             , makeAcidic
                             , update
                             , openLocalStateFrom
@@ -17,7 +18,9 @@ import Data.SafeCopy        ( SafeCopy
                             , safePut
                             , safeGet
                             , deriveSafeCopy )
+import Control.Monad        ( liftM )
 import Control.Monad.State  ( get, put )
+import Control.Monad.Reader ( ask )
 import Control.Applicative  ( (<$>) )
 
 import Data.Brooks.Vars
@@ -27,7 +30,7 @@ type DataFormat = [(String, DVar)]
 
 data Store = Store DataFormat
 
-$(deriveSafeCopy 0 'base ''DVar)
+-- $(deriveSafeCopy 0 'base ''DVar)
 -- $(deriveSafeCopy 0 'base 'DataFormat)
 $(deriveSafeCopy 0 'base ''Store)
 
@@ -40,7 +43,12 @@ bindName name val = do Store pairs <- get
                        let newPairs = toList newMap
                        put $ Store newPairs
 
-$(makeAcidic ''Store ['bindName])
+value :: String -> Query Store (Maybe DVar)
+value name = do Store pairs <- ask
+                let res = lookup name pairs
+                return res
+
+$(makeAcidic ''Store ['bindName, 'value])
 
 instance DB.Engine (AcidStateEngine a) where
     engineName _ = "Timothy - AcidState store for BrooksDB."
@@ -57,6 +65,6 @@ onAcid (AcidStateEngine asdf) = return asdf
 
 newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState DataFormat)))
 newDb path = do
-    store <- openLocalStateFrom path (empty)
+    store <- openLocalStateFrom path ([]::DataFormat)
     return ( DB.newDb ( AcidStateEngine store ) )
 
