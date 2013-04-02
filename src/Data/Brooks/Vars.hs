@@ -1,6 +1,6 @@
 module Data.Brooks.Vars where
 
--- Todo these should be renamed to *Val and ..Brooks.Vals
+-- TODO: these should be renamed to *Val and ..Brooks.Vals
 
 import Data.Relation.Types
 

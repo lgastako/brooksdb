@@ -17,7 +17,7 @@ import IO.Brooks.Timothy ( AcidStateEngine
 
 
 db :: Database AcidStateEngine
-db = newDb
+db = newDb "test.db"
 
 heading :: Heading
 heading = fromList [ ("username", "TEXT")

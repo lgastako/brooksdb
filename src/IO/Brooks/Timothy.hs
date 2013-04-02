@@ -4,53 +4,59 @@ module IO.Brooks.Timothy where
 
 -- Timothy, an ACID store for Brooks.
 
-import Data.Map             ( Map, insert, empty )
-import Data.Acid            ( AcidState, Update, makeAcidic, update, openLocalStateFrom )
-import Data.SafeCopy        ( base, deriveSafeCopy )
+import Data.Map             ( Map, insert, empty, fromList, toList )
+import Data.Acid            ( AcidState
+                            , Update
+                            , makeAcidic
+                            , update
+                            , openLocalStateFrom
+                            )
+import Data.SafeCopy        ( SafeCopy
+                            , base
+                            , contain
+                            , safePut
+                            , safeGet
+                            , deriveSafeCopy )
 import Control.Monad.State  ( get, put )
+import Control.Applicative  ( (<$>) )
 
-import Data.Brooks.Vars     ( DVar )
+import Data.Brooks.Vars
 import qualified IO.Brooks.Database as DB
 
-instance SafeCopy DVar where
-    --putCopy (Contacts contacts) = contain $ safePut contacts
-    --getCopy = contain $ Contacts <$> safeGet
+type DataFormat = [(String, DVar)]
 
-    getCopy = contain $ DVar <$> safeGet
-    putCopy (RelVar x) = contain $ safePut x
-    putCopy (TupVar x) = contain $ safePut x
-    putCopy (BoolVar x) = contain $ safePut x
-    putCopy (IntVar x) = contain $ safePut x
-    putCopy (FloatVar x) = contain $ safePut x
-    putCopy (DoubleVar x) = contain $ safePut x
-    putCopy (StringVar x) = contain $ safePut x
+data Store = Store DataFormat
 
-
-data Store = Store (Map String DVar)
-
+$(deriveSafeCopy 0 'base ''DVar)
+-- $(deriveSafeCopy 0 'base 'DataFormat)
 $(deriveSafeCopy 0 'base ''Store)
 
-data AcidStateEngine st = AcidStateEngine (AcidState (Map String DVar))
+data AcidStateEngine st = AcidStateEngine (AcidState (DataFormat))
 
 bindName :: String -> DVar -> Update Store ()
-bindName nam val = do Store map <- get
-                      put $ Store (insert nam val map)
-
-                      --putStrLn $ "BIND Name: " ++ (show nam) ++ " bound to " ++ (show val)
+bindName name val = do Store pairs <- get
+                       let m = fromList pairs
+                       let newMap = insert name val m
+                       let newPairs = toList newMap
+                       put $ Store newPairs
 
 $(makeAcidic ''Store ['bindName])
 
-instance DB.Engine (AcidStateEngine st) where
+instance DB.Engine (AcidStateEngine a) where
     engineName _ = "Timothy - AcidState store for BrooksDB."
 
-    bindName engine name value = do
-        update (onAcid engine) (BindName name value)
+    bindName ase name value = do
+        st <- onAcid ase
+        update st (BindName name value)
+        putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show value)
+        return ()
 
-onAcid :: AcidStateEngine st -> IO (AcidState (Map String DVar))
-onAcid (AcidStateEngine ast) = ast
+onAcid :: AcidStateEngine st -> IO (AcidState (DataFormat))
+--onAcid :: AcidStateEngine st -> IO (AcidState st)
+onAcid (AcidStateEngine asdf) = return asdf
 
-newDb :: FilePath -> IO (DB.Database (AcidStateEngine st))
+newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState DataFormat)))
 newDb path = do
     store <- openLocalStateFrom path (empty)
-    DB.newDb AcidStateEngine
+    return ( DB.newDb ( AcidStateEngine store ) )
 
