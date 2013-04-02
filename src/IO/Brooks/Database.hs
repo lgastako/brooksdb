@@ -8,7 +8,7 @@ module IO.Brooks.Database ( Database
                           , newDb
                           ) where
 
-import Data.Brooks.Vars ( DVar )
+import Data.Brooks.Vals ( DVal )
 
 
 type Query = String -- For now
@@ -20,12 +20,12 @@ data (Engine a) => Database a = Database a
 
 class Engine a where
     engineName :: a -> String
-    bindName :: a -> String -> DVar -> IO ()
+    bindName :: a -> String -> DVal -> IO ()
     close :: a -> IO ()
 
 
 
-query :: Query -> DVar
+query :: Query -> DVal
 query = undefined
 
 
