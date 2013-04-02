@@ -2,15 +2,10 @@
 module Main (main) where
 
 import Data.Acid
-import Data.Acid.Remote
 
 import Control.Monad.State
 import Control.Monad.Reader
-import Control.Applicative
 import System.Environment
-import System.IO
-import System.Exit
---import Network
 import Data.SafeCopy
 
 import Data.Typeable
@@ -56,7 +51,7 @@ main = do args <- getArgs
                       Nothing    -> putStrLn $ key ++ " has no associated value."
                       Just value -> putStrLn $ key ++ " = " ++ value
             [key,val]
-              -> do update acid (InsertKey key val)
+              -> do _ <- update acid (InsertKey key val)
                     putStrLn "Done."
             _ -> do putStrLn "Usage:"
                     putStrLn "  key               Lookup the value of 'key'."

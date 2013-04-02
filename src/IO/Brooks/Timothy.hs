@@ -18,10 +18,15 @@ import Data.SafeCopy        ( SafeCopy
                             , safePut
                             , safeGet
                             , deriveSafeCopy )
+import Data.Typeable        ( Typeable )
 import Control.Monad        ( liftM )
 import Control.Monad.State  ( get, put )
 import Control.Monad.Reader ( ask )
 import Control.Applicative  ( (<$>) )
+import Data.Relation.Types  ( Relation
+                            , Tuple
+                            , Heading
+                            )
 
 import Data.Brooks.Vars
 import qualified IO.Brooks.Database as DB
@@ -29,8 +34,12 @@ import qualified IO.Brooks.Database as DB
 type DataFormat = [(String, DVar)]
 
 data Store = Store DataFormat
+    deriving (Typeable)
 
--- $(deriveSafeCopy 0 'base ''DVar)
+$(deriveSafeCopy 0 'base ''DVar)
+$(deriveSafeCopy 0 'base ''Tuple)
+$(deriveSafeCopy 0 'base ''Relation)
+$(deriveSafeCopy 0 'base ''Heading)
 -- $(deriveSafeCopy 0 'base 'DataFormat)
 $(deriveSafeCopy 0 'base ''Store)
 
@@ -59,8 +68,10 @@ instance DB.Engine (AcidStateEngine a) where
         putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show value)
         return ()
 
-onAcid :: AcidStateEngine st -> IO (AcidState (DataFormat))
---onAcid :: AcidStateEngine st -> IO (AcidState st)
+    --close engine = closeAcidState store
+
+--onAcid :: AcidStateEngine st -> IO (AcidState (DataFormat))
+onAcid :: AcidStateEngine st -> IO (AcidState st)
 onAcid (AcidStateEngine asdf) = return asdf
 
 newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState DataFormat)))
