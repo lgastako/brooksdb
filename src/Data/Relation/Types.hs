@@ -122,7 +122,7 @@ headWith hd as
 -- where:
 
 data Relation = Relation Heading (Set.Set Tuple)
-    deriving (Eq)
+    deriving (Eq, Ord)
 
 withHeading :: Heading -> Relation
 withHeading hd = Relation hd Set.empty

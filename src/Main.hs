@@ -9,7 +9,9 @@ import Data.Relation.Types ( Relation
                            , insertTuple
                            )
 
---db = newDb
+import IO.Brooks.Timothy ( newDb )
+
+db = newDb
 
 heading :: Heading
 heading = fromList [ ("username", "TEXT")
