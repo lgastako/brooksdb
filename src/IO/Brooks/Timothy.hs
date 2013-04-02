@@ -28,15 +28,15 @@ import Data.Relation.Types  ( Relation
                             , Heading
                             )
 
-import Data.Brooks.Vars
+import Data.Brooks.Vals
 import qualified IO.Brooks.Database as DB
 
-type DataFormat = [(String, DVar)]
+type DataFormat = [(String, DVal)]
 
 data Store = Store DataFormat
     deriving (Typeable)
 
-$(deriveSafeCopy 0 'base ''DVar)
+$(deriveSafeCopy 0 'base ''DVal)
 $(deriveSafeCopy 0 'base ''Tuple)
 $(deriveSafeCopy 0 'base ''Relation)
 $(deriveSafeCopy 0 'base ''Heading)
@@ -45,14 +45,14 @@ $(deriveSafeCopy 0 'base ''Store)
 
 data AcidStateEngine st = AcidStateEngine (AcidState (DataFormat))
 
-bindName :: String -> DVar -> Update Store ()
+bindName :: String -> DVal -> Update Store ()
 bindName name val = do Store pairs <- get
                        let m = fromList pairs
                        let newMap = insert name val m
                        let newPairs = toList newMap
                        put $ Store newPairs
 
-value :: String -> Query Store (Maybe DVar)
+value :: String -> Query Store (Maybe DVal)
 value name = do Store pairs <- ask
                 let res = lookup name pairs
                 return res

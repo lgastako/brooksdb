@@ -1,29 +1,20 @@
 module Data.Relation.Types( AttributeName
-                            , TypeName
-                            , Heading
-                            , fromList
-                            , Tuple
-                            , headWith
-                            , withNoHead
-                            , Relation
-                            , withHeading
-                            , insertTuple
-                            , Headed
-                            , Degreed
-                            , degree
-                            , conforms
-                            , attributes
-                            , heading
-                            , DataType( RelVar
-                                      , MapVar
-                                      , SetVar
-                                      , IntVar
-                                      , FloatVar
-                                      , StringVar
-                                      , BoolVar
-                                      , CharVar
-                                      )
-                            ) where
+                          , TypeName
+                          , Heading
+                          , fromList
+                          , Tuple
+                          , headWith
+                          , withNoHead
+                          , Relation
+                          , withHeading
+                          , insertTuple
+                          , Headed
+                          , Degreed
+                          , degree
+                          , conforms
+                          , attributes
+                          , heading
+                          ) where
 
 import qualified Data.Set as Set
 
@@ -207,18 +198,7 @@ type AttributeValue = String -- For now
 type AttrSet = (Set.Set (AttributeName, TypeName))
 type AttrValueSet = (Set.Set (AttributeName, AttributeValue))
 
--- Helpers for extracting the internal bits of things
 
--- eventuallyish
-data DataType = RelVar
-              | MapVar
-              | SetVar
-              | IntVar
-              | FloatVar
-              | StringVar
-              | BoolVar
-              | CharVar
-    deriving (Show, Eq, Ord)
 
 
 -- If empty, "" else list of "AttrName TypeName," with no trailing comma,
