@@ -9,8 +9,14 @@ import Data.Relation.Types ( Relation
                            , insertTuple
                            )
 
-import IO.Brooks.Timothy ( newDb )
+import IO.Brooks.Database ( Database )
 
+import IO.Brooks.Timothy ( AcidStateEngine
+                         , newDb
+                         )
+
+
+db :: Database AcidStateEngine
 db = newDb
 
 heading :: Heading
@@ -45,3 +51,4 @@ main = do
     putStrLn "\n"
     putStrLn $ show otherUsers
     putStrLn "\n"
+

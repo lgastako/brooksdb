@@ -25,6 +25,9 @@ executable brooksdb
                          test-framework-quickcheck2     ==0.3.0.1,
                          test-framework-hunit           ==0.3.0,
                          random                         ==1.0.1.1,
+                         acid-state                     ==0.8.3,
+                         mtl                            ==2.1.2,
+                         safecopy                       ==0.8.2,
                          MissingH                       ==1.2.0.0
 
 test-suite tests
@@ -39,6 +42,9 @@ test-suite tests
                          test-framework-quickcheck2     ==0.3.0.1,
                          test-framework-hunit           ==0.3.0,
                          random                         ==1.0.1.1,
+                         acid-state                     ==0.8.3,
+                         mtl                            ==2.1.2,
+                         safecopy                       ==0.8.2,
                          MissingH                       ==1.2.0.0
 
 source-repository head
