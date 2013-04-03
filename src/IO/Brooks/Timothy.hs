@@ -63,6 +63,7 @@ newDb path = do
     acid <- openLocalStateFrom path (Store [])
     return ( DB.newDb ( AcidStateEngine acid ) )
 
-withASE :: DB.Database (AcidStateEngine (AcidState Store))
-           -> (AcidStateEngine (AcidState Store))
-withASE (DB.Database x) = x
+
+withASE :: DB.Engine t1 =>
+           DB.Database t1 -> (t1 -> t) -> t
+withASE (DB.Database ase) f = f ase

@@ -53,7 +53,7 @@ main = do
 
     db <- newDb "test.db"
     putStrLn "yarp!"
-    bindName (withASE db) "foo" (StringVal "bar")
+    withASE db $ \ase -> bindName ase "foo" (StringVal "bar")
     --close db
     putStrLn "done"
 
