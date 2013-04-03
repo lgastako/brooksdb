@@ -43,7 +43,7 @@ $(deriveSafeCopy 0 'base ''Heading)
 -- $(deriveSafeCopy 0 'base 'DataFormat)
 $(deriveSafeCopy 0 'base ''Store)
 
-data AcidStateEngine st = AcidStateEngine (AcidState (DataFormat))
+data AcidStateEngine st = AcidStateEngine (AcidState Store)
 
 bindName :: String -> DVal -> Update Store ()
 bindName name val = do Store pairs <- get
@@ -63,19 +63,18 @@ instance DB.Engine (AcidStateEngine a) where
     engineName _ = "Timothy - AcidState store for BrooksDB."
 
     bindName ase name value = do
-        st <- onAcid ase
-        update st (BindName name value)
+        acid <- onAcid ase
+        update acid (BindName name value)
         putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show value)
         return ()
+            where
+                onAcid (AcidStateEngine acid) = return acid
 
     --close engine = closeAcidState store
 
---onAcid :: AcidStateEngine st -> IO (AcidState (DataFormat))
-onAcid :: AcidStateEngine st -> IO (AcidState st)
-onAcid (AcidStateEngine asdf) = return asdf
 
-newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState DataFormat)))
+newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState Store)))
 newDb path = do
-    store <- openLocalStateFrom path ([]::DataFormat)
-    return ( DB.newDb ( AcidStateEngine store ) )
+    acid <- openLocalStateFrom path (Store [])
+    return ( DB.newDb ( AcidStateEngine acid ) )
 

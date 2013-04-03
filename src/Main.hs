@@ -16,8 +16,6 @@ import IO.Brooks.Timothy ( AcidStateEngine
                          )
 
 
---db :: Database AcidStateEngine
-
 heading :: Heading
 heading = fromList [ ("username", "TEXT")
                    , ("password", "TEXT")
@@ -51,6 +49,7 @@ main = do
     putStrLn $ show otherUsers
     putStrLn "\n"
 
-    db = newDb "test.db"
-    close db
+    let db = newDb "test.db"
+    --close db
+    putStrLn "whatever"
 
