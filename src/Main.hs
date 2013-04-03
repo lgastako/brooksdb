@@ -9,9 +9,13 @@ import Data.Relation.Types ( Relation
                            , insertTuple
                            )
 
-import IO.Brooks.Database ( Database )
+import Data.Brooks.Vals
 
-import IO.Brooks.Timothy ( newDb )
+import IO.Brooks.Database  ( bindName )
+
+import IO.Brooks.Timothy   ( newDb
+                           , withASE
+                           )
 
 
 heading :: Heading
@@ -47,11 +51,9 @@ main = do
     putStrLn $ show otherUsers
     putStrLn "\n"
 
-    let db = newDb "test.db"
+    db <- newDb "test.db"
     putStrLn "yarp!"
-    --case db of
-        --(Database ase) -> ase
-        --_ -> putStrLn "yarp!"
+    bindName (withASE db) "foo" (StringVal "bar")
     --close db
-    putStrLn "whatever"
+    putStrLn "done"
 

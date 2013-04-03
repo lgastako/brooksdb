@@ -58,9 +58,11 @@ instance DB.Engine (AcidStateEngine a) where
             where
                 onAcid (AcidStateEngine acid) = return acid
 
-
 newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState Store)))
 newDb path = do
     acid <- openLocalStateFrom path (Store [])
     return ( DB.newDb ( AcidStateEngine acid ) )
 
+withASE :: DB.Database (AcidStateEngine (AcidState Store))
+           -> (AcidStateEngine (AcidState Store))
+withASE (DB.Database x) = x
