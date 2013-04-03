@@ -4,7 +4,7 @@ module IO.Brooks.Timothy where
 
 -- Timothy, an ACID store for Brooks.
 
-import Data.Map             ( Map, insert, fromList, toList )
+import Data.Map             ( insert, fromList, toList )
 import Data.Acid            ( AcidState
                             , Update
                             , Query
@@ -12,21 +12,12 @@ import Data.Acid            ( AcidState
                             , update
                             , openLocalStateFrom
                             )
-import Data.SafeCopy        ( SafeCopy
-                            , base
-                            , contain
-                            , safePut
-                            , safeGet
-                            , deriveSafeCopy )
+import Data.SafeCopy        ( base
+                            , deriveSafeCopy
+                            )
 import Data.Typeable        ( Typeable )
-import Control.Monad        ( liftM )
 import Control.Monad.State  ( get, put )
 import Control.Monad.Reader ( ask )
-import Control.Applicative  ( (<$>) )
-import Data.Relation.Types  ( Relation
-                            , Tuple
-                            , Heading
-                            )
 
 import Data.Brooks.Vals
 import qualified IO.Brooks.Database as DB
@@ -36,11 +27,6 @@ type DataFormat = [(String, DVal)]
 data Store = Store DataFormat
     deriving (Typeable)
 
-$(deriveSafeCopy 0 'base ''DVal)
-$(deriveSafeCopy 0 'base ''Tuple)
-$(deriveSafeCopy 0 'base ''Relation)
-$(deriveSafeCopy 0 'base ''Heading)
--- $(deriveSafeCopy 0 'base 'DataFormat)
 $(deriveSafeCopy 0 'base ''Store)
 
 data AcidStateEngine st = AcidStateEngine (AcidState Store)
@@ -62,15 +48,15 @@ $(makeAcidic ''Store ['bindName, 'value])
 instance DB.Engine (AcidStateEngine a) where
     engineName _ = "Timothy - AcidState store for BrooksDB."
 
-    bindName ase name value = do
+    close _ = return ()
+
+    bindName ase name val = do
         acid <- onAcid ase
-        update acid (BindName name value)
-        putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show value)
+        _ <- update acid (BindName name val)
+        putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show val)
         return ()
             where
                 onAcid (AcidStateEngine acid) = return acid
-
-    --close engine = closeAcidState store
 
 
 newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState Store)))

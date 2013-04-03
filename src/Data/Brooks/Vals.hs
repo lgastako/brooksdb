@@ -1,10 +1,13 @@
-module Data.Brooks.Vals where
+{-# LANGUAGE TypeFamilies, DeriveDataTypeable, TemplateHaskell #-}
 
--- TODO: these should be renamed to *Val and ..Brooks.Vals
+module Data.Brooks.Vals where
 
 import Data.Typeable        ( Typeable )
 import Data.Relation.Types
 
+import Data.SafeCopy        ( base
+                            , deriveSafeCopy
+                            )
 
 data DVal = RelVal Relation
           | TupVal Tuple
@@ -15,3 +18,4 @@ data DVal = RelVal Relation
           | StringVal String
     deriving (Eq, Ord, Show, Typeable)
 
+$(deriveSafeCopy 0 'base ''DVal)

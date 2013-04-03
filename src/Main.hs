@@ -11,9 +11,7 @@ import Data.Relation.Types ( Relation
 
 import IO.Brooks.Database ( Database )
 
-import IO.Brooks.Timothy ( AcidStateEngine
-                         , newDb
-                         )
+import IO.Brooks.Timothy ( newDb )
 
 
 heading :: Heading
@@ -50,6 +48,10 @@ main = do
     putStrLn "\n"
 
     let db = newDb "test.db"
+    putStrLn "yarp!"
+    --case db of
+        --(Database ase) -> ase
+        --_ -> putStrLn "yarp!"
     --close db
     putStrLn "whatever"
 

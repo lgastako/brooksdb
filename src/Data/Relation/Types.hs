@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeFamilies, DeriveDataTypeable, TemplateHaskell #-}
+
 module Data.Relation.Types( AttributeName
                           , TypeName
                           , Heading
@@ -21,9 +23,12 @@ import qualified Data.Set as Set
 import Data.String.Utils ( join )
 import Data.List ( sort )
 
+import Data.SafeCopy        ( base
+                            , deriveSafeCopy
+                            )
+
 -- Most of the guiding documentation in this module is copied from:
 --     http://www.dcs.warwick.ac.uk/~hugh/TTM/TTM-2013-02-07.pdf
-
 
 -- A heading {H} is a set of ordered pairs or attributes of the form <A,T>, where:
 
@@ -228,3 +233,6 @@ instance Show Relation where
 insertTuple :: Relation -> Tuple -> Relation
 insertTuple (Relation hd tups) t = Relation hd (Set.insert t tups)
 
+$(deriveSafeCopy 0 'base ''Tuple)
+$(deriveSafeCopy 0 'base ''Relation)
+$(deriveSafeCopy 0 'base ''Heading)
