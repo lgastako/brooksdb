@@ -2,6 +2,7 @@ module IO.Brooks.Database ( Database ( Database )
                           , Query
                           , Engine ( engineName
                                    , bindName
+                                   , value
                                    , close
                                    )
                           , query
@@ -18,6 +19,7 @@ data (Engine a) => Database a = Database a
 class Engine a where
     engineName :: a -> String
     bindName :: a -> String -> DVal -> IO ()
+    value :: a -> String -> IO (Maybe DVal)
     close :: a -> IO ()
 
 query :: Query -> DVal

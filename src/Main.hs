@@ -1,5 +1,7 @@
 module Main (main) where
 
+import System.Environment  ( getArgs )
+
 import Data.Relation.Types ( Relation
                            , Tuple
                            , Heading
@@ -11,7 +13,9 @@ import Data.Relation.Types ( Relation
 
 import Data.Brooks.Vals
 
-import IO.Brooks.Database  ( bindName )
+import IO.Brooks.Database  ( bindName
+                           , value
+                           )
 
 import IO.Brooks.Timothy   ( newDb
                            , withASE
@@ -45,6 +49,9 @@ otherUsers = insertTuple users bob
 
 main :: IO ()
 main = do
+    args <- getArgs
+    putStrLn $ "Args: " ++ (show args)
+
     putStrLn "\n"
     putStrLn $ show users
     putStrLn "\n"
@@ -53,7 +60,11 @@ main = do
 
     db <- newDb "test.db"
     putStrLn "yarp!"
-    withASE db $ \ase -> bindName ase "foo" (StringVal "bar")
+    --withASE db $ \ase -> bindName ase "foo" (StringVal "bar")
+    val <- withASE db $ \ase -> value ase "foo"
+    case val of
+        (Just x) -> putStrLn $ "value is: " ++ (show val)
+        Nothing -> putStrLn $ "no value."
     --close db
     putStrLn "done"
 

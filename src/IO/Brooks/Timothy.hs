@@ -10,6 +10,7 @@ import Data.Acid            ( AcidState
                             , Query
                             , makeAcidic
                             , update
+                            , query
                             , openLocalStateFrom
                             )
 import Data.SafeCopy        ( base
@@ -32,9 +33,9 @@ $(deriveSafeCopy 0 'base ''Store)
 data AcidStateEngine st = AcidStateEngine (AcidState Store)
 
 bindName :: String -> DVal -> Update Store ()
-bindName name val = do Store pairs <- get
-                       let m = fromList pairs
-                       let newMap = insert name val m
+bindName name val = do Store pairs  <- get
+                       let m        = fromList pairs
+                       let newMap   = insert name val m
                        let newPairs = toList newMap
                        put $ Store newPairs
 
@@ -45,6 +46,9 @@ value name = do Store pairs <- ask
 
 $(makeAcidic ''Store ['bindName, 'value])
 
+onAcid :: Monad m => AcidStateEngine t -> m (AcidState Store)
+onAcid (AcidStateEngine acid) = return acid
+
 instance DB.Engine (AcidStateEngine a) where
     engineName _ = "Timothy - AcidState store for BrooksDB."
 
@@ -52,11 +56,14 @@ instance DB.Engine (AcidStateEngine a) where
 
     bindName ase name val = do
         acid <- onAcid ase
-        _ <- update acid (BindName name val)
+        _    <- update acid (BindName name val)
         putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show val)
         return ()
-            where
-                onAcid (AcidStateEngine acid) = return acid
+
+    value ase name = do
+        acid <- onAcid ase
+        val  <- query acid (Value name)
+        return val
 
 newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState Store)))
 newDb path = do
@@ -64,6 +71,5 @@ newDb path = do
     return ( DB.newDb ( AcidStateEngine acid ) )
 
 
-withASE :: DB.Engine t1 =>
-           DB.Database t1 -> (t1 -> t) -> t
+withASE :: DB.Engine a => DB.Database a -> (a -> b) -> b
 withASE (DB.Database ase) f = f ase
