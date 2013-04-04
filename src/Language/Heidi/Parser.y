@@ -8,7 +8,7 @@ import Data.Char ( isSpace, isAlpha, isDigit )
 
 %name calc
 %tokentype { Token }
-%error { parseError }
+%error     { parseError }
 
 %token
       let             { TokenLet }
