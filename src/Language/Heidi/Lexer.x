@@ -8,10 +8,10 @@ $digit = 0-9			-- digits
 $alpha = [a-zA-Z]		-- alphabetic characters
 
 tokens :-
-
   $white+				;
   "--".*				;
   $digit+				{ \s -> Int (read s) }
+
   var                   { \s -> Var }
 --  let					{ \s -> Let }
 --  in					{ \s -> In }
@@ -26,14 +26,6 @@ data Token =
     Var         |
     Int Int
     deriving (Eq, Show)
-
---data Token =
---     Let 		|
---     In  		|
---     Sym Char	|
---     Var String	|
---     Int Int
---     deriving (Eq,Show)
 
 main = do
   s <- getContents
