@@ -17,7 +17,9 @@ executable brooksdb
     ghc-options:         -Wall
     extensions:          DeriveDataTypeable
     main-is:             Main.hs
-    -- other-modules:
+    other-modules:       Language.Heidi.Grammar
+    build-tools:         happy
+                         -- , alex
     build-depends:       base                           ==4.5.*,
                          containers                     ==0.4.2.1,
 
@@ -29,7 +31,8 @@ executable brooksdb
                          acid-state                     ==0.8.3,
                          mtl                            ==2.1.2,
                          safecopy                       ==0.8.2,
-                         MissingH                       ==1.2.0.0
+                         MissingH                       ==1.2.0.0,
+                         array                          ==0.4.0.0
 
 -- executable play
 --     hs-source-dirs:      play src
@@ -65,7 +68,8 @@ test-suite tests
                          acid-state                     ==0.8.3,
                          mtl                            ==2.1.2,
                          safecopy                       ==0.8.2,
-                         MissingH                       ==1.2.0.0
+                         MissingH                       ==1.2.0.0,
+                         array                          ==0.4.0.0
 
 source-repository head
     type:     git

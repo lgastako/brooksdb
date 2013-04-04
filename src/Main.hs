@@ -11,7 +11,7 @@ import Data.Relation.Types ( Relation
                            , insertTuple
                            )
 
-import Data.Brooks.Vals
+import Data.Brooks.Vals    ( DVal( StringVal ) )
 
 import IO.Brooks.Database  ( bindName
                            , value
@@ -20,6 +20,8 @@ import IO.Brooks.Database  ( bindName
 import IO.Brooks.Timothy   ( newDb
                            , withASE
                            )
+
+import Language.Heidi.Grammar hiding ( main )
 
 
 heading :: Heading
@@ -51,20 +53,26 @@ main :: IO ()
 main = do
     args <- getArgs
     putStrLn $ "Args: " ++ (show args)
+    case args of
+        [k] -> getKey k
+        [k, v] -> setKey k v
+        _ -> putStrLn "[k] or [k,v] only."
+    putStrLn "Done"
 
-    putStrLn "\n"
-    putStrLn $ show users
-    putStrLn "\n"
-    putStrLn $ show otherUsers
-    putStrLn "\n"
 
+getKey :: String -> IO ()
+getKey k = do
     db <- newDb "test.db"
-    putStrLn "yarp!"
-    --withASE db $ \ase -> bindName ase "foo" (StringVal "bar")
-    val <- withASE db $ \ase -> value ase "foo"
+    putStrLn "yarp! getKey!"
+    val <- withASE db $ \ase -> value ase k
     case val of
         (Just x) -> putStrLn $ "value is: " ++ (show val)
         Nothing -> putStrLn $ "no value."
     --close db
-    putStrLn "done"
 
+setKey :: String -> String -> IO ()
+setKey k v = do
+    db <- newDb "test.db"
+    putStrLn "yarp! setKey!"
+    withASE db $ \ase -> bindName ase k (StringVal v)
+    --close db
