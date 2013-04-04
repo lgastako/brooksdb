@@ -16,7 +16,7 @@ executable brooksdb
     default-language:    Haskell2010
     hs-source-dirs:      src
     ghc-options:         -Wall
-    other-extensions:          DeriveDataTypeable
+    other-extensions:    DeriveDataTypeable
     main-is:             Main.hs
     other-modules:       Language.Heidi.Parser,
                          Language.Heidi.Lexer
@@ -35,7 +35,7 @@ executable lexer
     default-language:    Haskell2010
     hs-source-dirs:      lexer src
     ghc-options:         -Wall
-    other-extensions:          DeriveDataTypeable
+    other-extensions:    DeriveDataTypeable
     main-is:             Main.hs
     other-modules:       Language.Heidi.Lexer
     build-tools:         alex
@@ -52,7 +52,7 @@ executable parser
     default-language:    Haskell2010
     hs-source-dirs:      parser src
     ghc-options:         -Wall
-    other-extensions:          DeriveDataTypeable
+    other-extensions:    DeriveDataTypeable
     main-is:             Main.hs
     other-modules:       Language.Heidi.Parser
     build-tools:         happy
@@ -71,7 +71,7 @@ test-suite tests
     type:                exitcode-stdio-1.0
     hs-source-dirs:      tests src
     ghc-options:         -Wall
-    other-extensions:          DeriveDataTypeable
+    other-extensions:    DeriveDataTypeable
     main-is:             Main.hs
     other-modules:       Language.Heidi.Parser,
                          Language.Heidi.Lexer
