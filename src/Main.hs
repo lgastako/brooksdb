@@ -24,29 +24,29 @@ import IO.Brooks.Timothy   ( newDb
 import Language.Heidi.Grammar hiding ( main )
 
 
-heading :: Heading
-heading = fromList [ ("username", "TEXT")
-                   , ("password", "TEXT")
-                   ]
-
-emptyUsers :: Relation
-emptyUsers = withHeading heading
-
-john :: Tuple
-john = headWith heading [ ("username", "john")
-                        , ("password", "letmein")
-                        ]
-
-bob :: Tuple
-bob = headWith heading [ ("username", "bob")
-                       , ("password", "letmein, also")
-                       ]
-
-users :: Relation
-users = insertTuple emptyUsers john
-
-otherUsers :: Relation
-otherUsers = insertTuple users bob
+-- heading :: Heading
+-- heading = fromList [ ("username", "TEXT")
+--                    , ("password", "TEXT")
+--                    ]
+--
+-- emptyUsers :: Relation
+-- emptyUsers = withHeading heading
+--
+-- john :: Tuple
+-- john = headWith heading [ ("username", "john")
+--                         , ("password", "letmein")
+--                         ]
+--
+-- bob :: Tuple
+-- bob = headWith heading [ ("username", "bob")
+--                        , ("password", "letmein, also")
+--                        ]
+--
+-- users :: Relation
+-- users = insertTuple emptyUsers john
+--
+-- otherUsers :: Relation
+-- otherUsers = insertTuple users bob
 
 
 main :: IO ()
@@ -54,9 +54,9 @@ main = do
     args <- getArgs
     putStrLn $ "Args: " ++ (show args)
     case args of
-        [k] -> getKey k
+        [k]    -> getKey k
         [k, v] -> setKey k v
-        _ -> putStrLn "[k] or [k,v] only."
+        _      -> putStrLn "[k] or [k,v] only."
     putStrLn "Done"
 
 
@@ -66,8 +66,10 @@ getKey k = do
     putStrLn "yarp! getKey!"
     val <- withASE db $ \ase -> value ase k
     case val of
-        (Just x) -> putStrLn $ "value is: " ++ (show val)
-        Nothing -> putStrLn $ "no value."
+        (Just (StringVal s)) -> putStrLn $ "value is: " ++ (show s)
+        (Just other) ->
+            putStrLn $ "(extraordinary) value is: " ++ (show other)
+        Nothing  -> putStrLn $ "no value."
     --close db
 
 setKey :: String -> String -> IO ()
