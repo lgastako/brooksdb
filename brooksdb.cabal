@@ -17,9 +17,9 @@ executable brooksdb
     ghc-options:         -Wall
     extensions:          DeriveDataTypeable
     main-is:             Main.hs
-    other-modules:       Language.Heidi.Parser
-    build-tools:         happy
-                         -- , alex
+    other-modules:       Language.Heidi.Parser,
+                         Language.Heidi.Lexer
+    build-tools:         alex, happy
     build-depends:       base                           ==4.5.*,
                          containers                     ==0.4.2.1,
 
@@ -34,8 +34,28 @@ executable brooksdb
                          MissingH                       ==1.2.0.0,
                          array                          ==0.4.0.0
 
-executable play
-    hs-source-dirs:      play src
+executable lexer
+    hs-source-dirs:      lexer src
+    ghc-options:         -Wall
+    extensions:          DeriveDataTypeable
+    main-is:             Main.hs
+    other-modules:       Language.Heidi.Lexer
+    build-tools:         alex
+    build-depends:       base                           ==4.5.*,
+                         containers                     ==0.4.2.1,
+
+                         QuickCheck                     ==2.5.1.1,
+                         test-framework                 ==0.8,
+                         test-framework-quickcheck2     ==0.3.0.1,
+                         test-framework-hunit           ==0.3.0,
+                         random                         ==1.0.1.1,
+                         acid-state                     ==0.8.3,
+                         mtl                            ==2.1.2,
+                         safecopy                       ==0.8.2,
+                         MissingH                       ==1.2.0.0,
+                         array                          ==0.4.0.0
+executable parser
+    hs-source-dirs:      parser src
     ghc-options:         -Wall
     extensions:          DeriveDataTypeable
     main-is:             Main.hs

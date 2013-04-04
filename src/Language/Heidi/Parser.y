@@ -28,7 +28,7 @@ import Data.Char ( isSpace, isAlpha, isDigit )
 
 %%
 
-Exp : varDec varName { Var $1 }
+Exp : varDec varName { Var $2 }
 
 -- Exp   : let var '=' Exp in Exp  { Let $2 $4 $6 }
 --       | Exp1                    { Exp1 $1 }

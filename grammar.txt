@@ -1,0 +1,15 @@
+For right now we are trying to parse the simplest of variable
+declarations, specifically one with no value even, e.g:
+
+    VAR x
+
+We want to wind up emitting something like this for that:
+
+    VarDec (String "x")
+
+Give or take.
+
+We want to go through our Alex based lexer first, where it
+should recognize "VAR" and emit it as a token, then swallow
+the whitespace and emit "x" as VarName or similar.
+
