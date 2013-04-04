@@ -1,7 +1,7 @@
 {
 -- Starting with example calculator from
 -- http://www.haskell.org/happy/doc/html/sec-using.html#sec-other-datatypes
-module Language.Heidi.Grammar ( main ) where
+module Language.Heidi.Parser ( main ) where
 
 import Data.Char ( isSpace, isAlpha, isDigit )
 }

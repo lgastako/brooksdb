@@ -1,4 +1,4 @@
 module Main ( main ) where
 
-import Language.Heidi.Grammar ( main )
+import Language.Heidi.Parser ( main )
 

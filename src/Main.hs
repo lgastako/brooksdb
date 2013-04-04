@@ -21,7 +21,7 @@ import IO.Brooks.Timothy   ( newDb
                            , withASE
                            )
 
-import Language.Heidi.Grammar hiding ( main )
+import Language.Heidi.Parser hiding ( main )
 
 
 -- heading :: Heading
