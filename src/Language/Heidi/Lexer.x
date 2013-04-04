@@ -13,10 +13,6 @@ tokens :-
   $digit+				{ \s -> Int (read s) }
 
   var                   { \s -> Var }
---  let					{ \s -> Let }
---  in					{ \s -> In }
---  [\=\+\-\*\/\(\)]			{ \s -> Sym (head s) }
---  $alpha [$alpha $digit \_ \']*		{ \s -> Var s }
 
 {
 -- Each action has type :: String -> Token
