@@ -21,6 +21,7 @@ import IO.Brooks.Timothy   ( newDb
                            , withASE
                            )
 
+import Language.Heidi.Lexer ( alexScanTokens )
 import Language.Heidi.Parser hiding ( main )
 
 
@@ -54,9 +55,17 @@ main = do
     args <- getArgs
     putStrLn $ "Args: " ++ (show args)
     case args of
-        [k]    -> getKey k
-        [k, v] -> setKey k v
-        _      -> putStrLn "[k] or [k,v] only."
+        ["get", k]    -> getKey k
+        ["set", k, v] -> setKey k v
+        ["lex", fn] -> do
+            stream <- readFile fn
+            let result = lexMain stream
+            putStrLn result
+        ["lex"]     -> do
+            stream <- getContents
+            let result = lexMain stream
+            putStrLn result
+        _      -> putStrLn "<get k>, <set k v> or <lex [fn]>"
     putStrLn "Done"
 
 
@@ -78,3 +87,9 @@ setKey k v = do
     putStrLn "yarp! setKey!"
     withASE db $ \ase -> bindName ase k (StringVal v)
     --close db
+
+
+lexMain :: String -> String
+lexMain stream = show (alexScanTokens stream)
+
+
