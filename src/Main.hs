@@ -22,7 +22,7 @@ import IO.Brooks.Timothy   ( newDb
                            )
 
 import Language.Heidi.Lexer ( alexScanTokens )
-import Language.Heidi.Parser hiding ( main )
+import Language.Heidi.Parser ( parse )
 
 
 -- heading :: Heading
@@ -65,7 +65,15 @@ main = do
             stream <- getContents
             let result = lexMain stream
             putStrLn result
-        _      -> putStrLn "<get k>, <set k v> or <lex [fn]>"
+        ["parse", fn] -> do
+            stream <- readFile fn
+            let result = parseMain stream
+            putStrLn result
+        ["parse"]     -> do
+            stream <- getContents
+            let result = parseMain stream
+            putStrLn result
+        _      -> putStrLn "<get k>, <set k v>, <lex [fn]>, <parse [fn]>"
     putStrLn "Done"
 
 
@@ -92,4 +100,5 @@ setKey k v = do
 lexMain :: String -> String
 lexMain stream = show (alexScanTokens stream)
 
-
+parseMain :: String -> String
+parseMain stream = show (parse (alexScanTokens stream))
