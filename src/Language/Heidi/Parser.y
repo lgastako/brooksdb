@@ -20,9 +20,8 @@ import Language.Heidi.Lexer
 
 %%
 
-Exp : var varName valDef { VarDec $2 $3 }
-
-valDef : real relation { RelationDef }
+Exp    : var varName valDef { VarDec $2 $3 }
+valDef : real relation      { RelationDef  }
 
 
 {
