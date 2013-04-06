@@ -20,21 +20,24 @@ import Language.Heidi.Lexer
 
 %%
 
-Int    : int { IntTok $2 }
+-- should we return a token here?  why not for now? it has
+-- everything we need, namely the int to be pulled out later
 
-Exp    : var varName Value { VarDec $2 $3 }
+Int    : int     { IntTok $1 }
 
-Value  : RealRelationDef
-       | Int
+Exp    : var varName RealRelationDef { VarDec $2 $3 }
+--       | varName                     { BareName $1 }
 
-RealRelationDef : real relation { RelationDef  }
-
+RealRelationDef : real relation { RelationDef }
 
 {
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
 data VarDec = VarDec String RelationDef
+    deriving (Show)
+
+data BareName = BareName String
     deriving (Show)
 
 data RelationDef = RelationDef

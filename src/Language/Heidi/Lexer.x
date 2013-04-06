@@ -15,7 +15,7 @@ tokens :-
   $digit+				{ \s -> IntTok (read s) }
   $ident                { \s -> IdentTok s }
   "\"".*"\""            { \s -> StrTok s }
-  
+
   var                   { \s -> VarTok }
   real                  { \s -> RealTok }
   relation              { \s -> RelationTok }
@@ -30,11 +30,7 @@ data Token =
     RelationTok      |
     IntTok Int       |
     StrTok String    |
-    IdentTok String 
+    IdentTok String
     deriving (Eq, Show)
 
--- main = do
---   s <- getContents
---   print (alexScanTokens s)
--- 
 }
