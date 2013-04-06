@@ -2,15 +2,6 @@ module Main (main) where
 
 import System.Environment  ( getArgs )
 
-import Data.Relation.Types ( Relation
-                           , Tuple
-                           , Heading
-                           , headWith
-                           , withHeading
-                           , fromList
-                           , insertTuple
-                           )
-
 import Data.Brooks.Vals    ( DVal( StringVal ) )
 
 import IO.Brooks.Database  ( bindName
