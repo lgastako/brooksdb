@@ -41,7 +41,7 @@ dist:
 	$(CABAL) sdist
 
 run:
-	@cabal-dev/bin/brooksdb
+	@cabal-dev/bin/brooksdb parse
 
 lint:
 	hlint .
