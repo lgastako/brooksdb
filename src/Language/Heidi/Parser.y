@@ -229,7 +229,12 @@ Renaming : AttributeRef as IntroducedName                           { Renaming $
 
 CharacterStringLiteral : strLiteral                                 { CharacterStringLiteral $1 }
 
--- AttributeAssignCommaList : ?
+AttributeAssignCommalist : AttributeAssign                              { AttributeAssignCommalist $1 }
+                         | AttributeAssignCommalist ',' AttributeAssign { AttributeAssignCommalistCons $1 $3 }
+
+-- Inferred from TTMHC's <extend add>
+-- TODO: Looks like the online stuff and book are not in sync.  Sync up I guess.  Hopefully pretty close.
+AttributeAssign : Exp as IntroducedName                             { AttributeAssign $1 $3 }
 
 TupleWrap : TupleExp wrap '(' Wrapping ')'                          { TupleWrap $1 $4 }
 

@@ -10,20 +10,20 @@ $alphanum = $alpha # $digit
 $ident    = [$alphanum _]
 
 tokens :-
-  $white+				;
-  "--".*				;
+  $white+               ;
+  "--".*                ;
 
-  $digit+				{ \s -> IntTok (read s) }
-  "\"".*"\""            { \s -> StrTok s        }
+  $digit+               { \s -> IntTok (read s) }
+--  "\"".*"\""            { \s -> StrTok s        }
 
-  '('                   { \s -> LeftRoundTok    }
-  ')'                   { \s -> RightRoundTok   }
-  '{'                   { \s -> LeftCurlyTok    }
-  '}'                   { \s -> RightCurlyTok   }
+--  '('                   { \s -> LeftRoundTok    }
+--  ')'                   { \s -> RightRoundTok   }
+--  '{'                   { \s -> LeftCurlyTok    }
+--  '}'                   { \s -> RightCurlyTok   }
 --  '['                   { \s -> LeftSquareTok   }
 --  ']'                   { \s -> RightSquareTok  }
   ':'                   { \s -> ColonTok        }
-  ','                   { \s -> CommaTok        }
+--  ','                   { \s -> CommaTok        }
   ':='                  { \s -> AssignerTok     }
 
   var                   { \s -> VarTok       }
@@ -74,21 +74,66 @@ tokens :-
   false                 { \s -> FalseTok     }
 
   $ident+               { \s -> IdentTok s  }
+
 {
 -- Each action has type :: String -> Token
 
 -- The token type:
 data Token =
-    VarTok           |
-    RealTok          |
-    BaseTok          |
-    WithTok          |
-    RelationTok      |
-    TableDeeTok      |
-    TableDumTok      |
-    IntTok Int       |
-    StrTok String    |
+    MatchingTok   |
+    SummarizeTok  |
+    DividebyTok   |
+    NotTok        |
+    IminusTok     |
+    MinusTok      |
+    TcloseTok     |
+    GroupTok      |
+    UngroupTok    |
+    UnionTok      |
+    RenameTok     |
+    ExtendTok     |
+    WrapTok       |
+    UnwrapTok     |
+    AsTok         |
+    DunionTok     |
+    JoinTok       |
+    TimesTok      |
+    WhereTok      |
+    KeyTok        |
+    PerTok        |
+    ByTok         |
+    ColonTok      |
+    AssignerTok   |
+    InitTok       |
+    TupleTok      |
+    FromTok       |
+    AllTok        |
+    ButTok        |
+    ComposeTok    |
+    HeadingTok    |
+    IntersectTok  |
+    XunionTok     |
+    PrefixTok     |
+    SuffixTok     |
+    IntegerTok    |
+    RationalTok   |
+    CharacterTok  |
+    BooleanTok    |
+    LeftCurlyTok  |
+    RightCurlyTok |
+    TrueTok       |
+    FalseTok      |
+    VarTok        |
+    RealTok       |
+    BaseTok       |
+    WithTok       |
+    RelationTok   |
+    TableDeeTok   |
+    TableDumTok   |
+    IntTok Int    |
+    StrTok String |
     IdentTok String
     deriving (Eq, Show)
 
 }
+
