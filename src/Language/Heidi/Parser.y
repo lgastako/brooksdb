@@ -736,6 +736,7 @@ data Ungroup = Ungroup RelationExp Ungrouping
 
 data Grouping = Grouping AttributeRefCommalist
               | GroupingAllBut AttributeRefCommalist
+    deriving (Show)
 
 data Ungrouping = Ungrouping AttributeRef
     deriving (Show)
@@ -882,6 +883,7 @@ data TupleComponentCommalist = TupleComponentCommalist TupleComponent
     deriving (Show)
 
 data NadicOtherBuiltInTupleOpInv = NadicOtherBuiltInTupleOpInv NadicTupleUnion
+    deriving (Show)
 
 data TupleExtractorInv = TupleExtractorInv RelationExp
     deriving (Show)
