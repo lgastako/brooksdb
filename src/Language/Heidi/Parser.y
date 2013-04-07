@@ -46,6 +46,7 @@ import Language.Heidi.Lexer
         by              { ByTok            }
         prefix          { PrefixTok        }
         suffix          { SuffixTok        }
+        key             { KeyTok           }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -72,7 +73,12 @@ import Language.Heidi.Lexer
 
 RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList { RealRelationVarDef }
 
---KeyDefList : ?
+-- I assume this is a commalist?
+KeyDefList : KeyDef                                                 { KeyDefList $1 }
+           | KeyDefList ',' KeyDef                                  { KeyDefListCons $1 $3 }
+
+KeyDef : key '{' AttributeRefCommalist '}'                          { KeyDef $1 }
+       | key '{' all but AttributeRefCommalist '}'                  { KeyDefAlLBut $1 }
 
 RealOrBase : real                                                   { RealTok }
            | base                                                   { BaseTok }
@@ -353,7 +359,7 @@ ArgumentExpCommalist : ArgumentExp                                  { ArgumentEx
 ArgumentExp : Exp                                                   { ArgumentExp $1 }
 
 Exp : ScalarExp                                                     { Exp $1 }
-    | NonscalarExp                                                  { Exp $2 }
+    | NonscalarExp                                                  { Exp $1 }
 
 -- BuiltInScalarLiteral : ?
 

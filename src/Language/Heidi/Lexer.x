@@ -58,6 +58,7 @@ tokens :-
   by                    { \s -> ByTok        }
   prefix                { \s -> PrefixTok    }
   suffix                { \s -> SuffixTok    }
+  key                   { \s -> KeyTok       }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }
