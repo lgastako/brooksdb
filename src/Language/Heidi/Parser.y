@@ -199,13 +199,13 @@ NadicTupleUnion : union '{' TupleExpCommalist '}'                   { NadicTuple
 TupleExpCommalist : TupleExp                                        { TupleExpCommalist $1 }
                   | TupleExpCommalist ',' TupleExp                  { TupleExpCommalistCons $1 $3 }
 
-MonadicOrDyadicOtherBuiltInTupleOpInv : MonadicOtherBuiltInTupleOpInv { MonadicOrDyadicOtherBuiltInTupleOpInv $1 }
-                                      | DyadicOtherBuiltInTupleOpInv  { MonadicOrDyadicOtherBuiltInTupleOpInv $1 }
+MonadicOrDyadicOtherBuiltInTupleOpInv : MonadicOtherBuiltInTupleOpInv { MonadicOrDyadicOtherBuiltInTupleOpInvMonadic $1 }
+                                      | DyadicOtherBuiltInTupleOpInv  { MonadicOrDyadicOtherBuiltInTupleOpInvDyadic $1 }
 
-MonadicOtherBuiltInTupleOpInv : TupleRename                         { MonadicOtherBuiltInTupleOpInv $1 }
-                              | TupleExtend                         { MonadicOtherBuiltInTupleOpInv $1 }
-                              | TupleWrap                           { MonadicOtherBuiltInTupleOpInv $1 }
-                              | TupleUnwrap                         { MonadicOtherBuiltInTupleOpInv $1 }
+MonadicOtherBuiltInTupleOpInv : TupleRename                         { MonadicOtherBuiltInTupleOpInvRename $1 }
+                              | TupleExtend                         { MonadicOtherBuiltInTupleOpInvExtend $1 }
+                              | TupleWrap                           { MonadicOtherBuiltInTupleOpInvWrap $1 }
+                              | TupleUnwrap                         { MonadicOtherBuiltInTupleOpInvUnwrap $1 }
 
 DyadicOtherBuiltInTupleOpInv : DyadicTupleUnion                     { DyadicOtherBuiltInTupleOpInvUnion $1 }
                              | DyadicTupleCompose                   { DyadicOtherBuiltInTupleOpInvCompose $1 }
@@ -249,7 +249,7 @@ Unwrapping : AttributeRef                                           { Unwrapping
 
 Subscript : IntegerExp                                              { Subscript $1 }
 
-IntegerExp : int                                                    { IntegerExpInt $1 }
+IntegerExp : int                                                    { IntegerExp $1 }
 
 RelationExp : RelationWithExp                                       { RelationExpWith $1 }
             | RelationNonwithExp                                    { RelationExpNonwith $1 }
@@ -276,20 +276,20 @@ BuiltInRelationOpInv : RelationSelectorInv                          { BuiltInRel
                      | NadicOtherBuiltInRelationOpInv               { BuiltInRelationOpInvNadicOtherBuiltInRelationOpInv $1           }
                      | MonadicOrDyadicOtherBuiltInRelationOpInv     { BuiltInRelationOpInvMonadicOrDyadicOtherBuiltInRelationOpInv $1 }
 
-THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv $3 }
+THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv $1 $3 }
 
 THE_OpName : varName                                                { THE_OpName $1 }
 
 Project : RelationExp '{' AttributeRefCommalist '}'                 { Project $1 $3       }
         | RelationExp '{' all but AttributeRefCommalist '}'         { ProjectAllBut $1 $5 }
 
-NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOtherBuiltInRelationOpInv $1 }
-                               | NadicDisjointUnion                 { NadicOtherBuiltInRelationOpInv $1 }
-                               | NadicIntersect                     { NadicOtherBuiltInRelationOpInv $1 }
-                               | NadicJoin                          { NadicOtherBuiltInRelationOpInv $1 }
-                               | NadicTimes                         { NadicOtherBuiltInRelationOpInv $1 }
-                               | NadicXunion                        { NadicOtherBuiltInRelationOpInv $1 }
-                               | NadicCompose                       { NadicOtherBuiltInRelationOpInv $1 }
+NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOtherBuiltInRelationOpInvUnion $1         }
+                               | NadicDisjointUnion                 { NadicOtherBuiltInRelationOpInvDisjointUnion $1 }
+                               | NadicIntersect                     { NadicOtherBuiltInRelationOpInvIntersect $1     }
+                               | NadicJoin                          { NadicOtherBuiltInRelationOpInvJoin $1          }
+                               | NadicTimes                         { NadicOtherBuiltInRelationOpInvTimes $1         }
+                               | NadicXunion                        { NadicOtherBuiltInRelationOpInvXunion $1        }
+                               | NadicCompose                       { NadicOtherBuiltInRelationOpInvCompose $1       }
 
 NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion $3          }
            | union Heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $2 $4 }
@@ -313,17 +313,17 @@ RelationExpCommalist : RelationExp                                  { RelationEx
                      | RelationExpCommalist ',' RelationExp         { RelationExpCommalistCons $1 $3 }
 
 MonadicOrDyadicOtherBuiltInRelationOpInv
-    : MonadicOtherBuiltInRelationOpInv                              { MonadicOrDyadicOtherBuiltInRelationOpInv $1 }
-    | DyadicOtherBuiltInRelationOpInv                               { MonadicOrDyadicOtherBuiltInRelationOpInv $1 }
+    : MonadicOtherBuiltInRelationOpInv                              { MonadicOrDyadicOtherBuiltInRelationOpInvMonadic $1 }
+    | DyadicOtherBuiltInRelationOpInv                               { MonadicOrDyadicOtherBuiltInRelationOpInvDyadic $1 }
 
-MonadicOtherBuiltInRelationOpInv : Rename                           { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Where                            { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Extend                           { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Wrap                             { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Unwrap                           { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Group                            { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Ungroup                          { MonadicOtherBuiltInRelationOpInv $1 }
-                                 | Tclose                           { MonadicOtherBuiltInRelationOpInv $1 }
+MonadicOtherBuiltInRelationOpInv : Rename                           { MonadicOtherBuiltInRelationOpInvRename $1 }
+                                 | Where                            { MonadicOtherBuiltInRelationOpInvWhere $1 }
+                                 | Extend                           { MonadicOtherBuiltInRelationOpInvExtend $1 }
+                                 | Wrap                             { MonadicOtherBuiltInRelationOpInvWrap $1 }
+                                 | Unwrap                           { MonadicOtherBuiltInRelationOpInvUnwrap $1 }
+                                 | Group                            { MonadicOtherBuiltInRelationOpInvGroup $1 }
+                                 | Ungroup                          { MonadicOtherBuiltInRelationOpInvUngroup $1 }
+                                 | Tclose                           { MonadicOtherBuiltInRelationOpInvTclose $1 }
 
 Rename : RelationExp rename '{' RenamingCommalist '}'               { Rename $1 $4  }
 Where : RelationExp where BoolExp                                   { Where $1 $3   }
@@ -448,7 +448,7 @@ data PossrepName = PossrepName String
     deriving (Show)
 
 data Exp = ExpScalar ScalarExp
-           ExpNonscalar NonscalarExp
+         | ExpNonscalar NonscalarExp
     deriving (Show)
 
 data ScalarExp = ScalarExpWith ScalarWithExp
@@ -539,7 +539,7 @@ data TypeSpec = TypeSpecScalar ScalarTypeSpec
               | TypeSpecNonscalar NonscalarTypeSpec
     deriving (Show)
 
-data ScalarTypeSpec = SaclarTypeSpec ScalarTypeName
+data ScalarTypeSpec = ScalarTypeSpecScalarTypeName ScalarTypeName
                     | ScalarTypeSpecSameTypeAs ScalarExp
     deriving (Show)
 
@@ -580,13 +580,17 @@ data TupleOpInv = TupleOpInvUser UserOpInv
                 | TupleOpInvBuiltIn BuiltInTupleOpInv
     deriving (Show)
 
-data BuiltInTupleOpInv = BuiltInTupleOpInvTupleSelectorInv
-                       | BuiltInTupleOpInvTHE_OpInv
-                       | BuiltInTupleOpInvAttributeExtractorInv
-                       | BuiltInTupleOpInvTupleExtractorInv
-                       | BuiltInTupleOpInvTupleProject
-                       | BuiltInTupleOpInvNadicOtherBuiltInTupleOpInv
-                       | BuiltInTupleOpInvMonadicOrDyadicOtherBuiltInTupleOpInv
+data BuiltInTupleOpInv = BuiltInTupleOpInvTupleSelectorInv TupleSelectorInv
+                       | BuiltInTupleOpInvTHE_OpInv THE_OpInv
+                       | BuiltInTupleOpInvAttributeExtractorInv AttributeExtractorInv
+                       | BuiltInTupleOpInvTupleExtractorInv TupleExtractorInv
+                       | BuiltInTupleOpInvTupleProject TupleProject
+                       | BuiltInTupleOpInvNadicOtherBuiltInTupleOpInv NadicOtherBuiltInTupleOpInv
+                       | BuiltInTupleOpInvMonadicOrDyadicOtherBuiltInTupleOpInv MonadicOrDyadicOtherBuiltInTupleOpInv
+    deriving (Show)
+
+data DyadicOtherBuiltInTupleOpInv = DyadicOtherBuiltInTupleOpInvCompose DyadicTupleCompose
+                                  | DyadicOtherBuiltInTupleOpInvUnion DyadicTupleUnion
     deriving (Show)
 
 data TupleVarRef = TupleVarRef TupleVarName
@@ -659,7 +663,7 @@ data RelationWithExp = RelationWithExp NameIntroCommalist RelationExp
 
 data RelationNonwithExp = RelationNonwithExpRelationVarRef RelationVarRef
                         | RelationNonwithExpRelationOpInv RelationOpInv
-                        | RelationNonwithExpNested RelationExp
+                        | RelationNonwithExpRelationExp RelationExp
     deriving (Show)
 
 data RelationOpInv = RelationOpInvUserOpInv UserOpInv
@@ -674,7 +678,7 @@ data BuiltInRelationOpInv = BuiltInRelationOpInvRelationSelectorInv
                           | BuiltInRelationOpInvMonadicOrDyadicOtherBuiltInRelationOpInv
     deriving (Show)
 
-data RelationVarRef = RelationVarDef RelationVarName
+data RelationVarRef = RelationVarRef RelationVarName
     deriving (Show)
 
 data RelationVarName = RelationVarName String
@@ -711,19 +715,19 @@ data RealOrBase = RealOrBaseReal
 data IncludedMinus = IncludedMinus RelationExp RelationExp
     deriving (Show)
 
-data DyadicOtherBuiltInRelationOpInv = DyadicOtherBuiltInRelationOpInvDyadicUnion
-                                     | DyadicOtherBuiltInRelationOpInvDyadicDisjointUnion
-                                     | DyadicOtherBuiltInRelationOpInvDyadicIntersect
-                                     | DyadicOtherBuiltInRelationOpInvMinus
-                                     | DyadicOtherBuiltInRelationOpInvIncludedMinus
-                                     | DyadicOtherBuiltInRelationOpInvDyadicJoin
-                                     | DyadicOtherBuiltInRelationOpInvDyadicTimes
-                                     | DyadicOtherBuiltInRelationOpInvDyadicXunion
-                                     | DyadicOtherBuiltInRelationOpInvDyadicCompose
-                                     | DyadicOtherBuiltInRelationOpInvMatching
-                                     | DyadicOtherBuiltInRelationOpInvNotMatching
-                                     | DyadicOtherBuiltInRelationOpInvDivide
-                                     | DyadicOtherBuiltInRelationOpInvSummarize
+data DyadicOtherBuiltInRelationOpInv = DyadicOtherBuiltInRelationOpInvDyadicUnion DyadicUnion
+                                     | DyadicOtherBuiltInRelationOpInvDyadicDisjointUnion DyadicDisjointUnion
+                                     | DyadicOtherBuiltInRelationOpInvDyadicIntersect DyadicIntersect
+                                     | DyadicOtherBuiltInRelationOpInvMinus Minus
+                                     | DyadicOtherBuiltInRelationOpInvIncludedMinus IncludedMinus
+                                     | DyadicOtherBuiltInRelationOpInvDyadicJoin DyadicJoin
+                                     | DyadicOtherBuiltInRelationOpInvDyadicTimes DyadicTimes
+                                     | DyadicOtherBuiltInRelationOpInvDyadicXunion DyadicXunion
+                                     | DyadicOtherBuiltInRelationOpInvDyadicCompose DyadicCompose
+                                     | DyadicOtherBuiltInRelationOpInvMatching Matching
+                                     | DyadicOtherBuiltInRelationOpInvNotMatching NotMatching
+                                     | DyadicOtherBuiltInRelationOpInvDivide Divide
+                                     | DyadicOtherBuiltInRelationOpInvSummarize Summarize
     deriving (Show)
 
 data Group = Group RelationExp Grouping
@@ -741,6 +745,10 @@ data Ungrouping = Ungrouping AttributeRef
 data Wrap = Wrap Wrapping
     deriving (Show)
 
+data Wrapping = Wrapping AttributeRefCommalist IntroducedName
+              | WrappingAllBut AttributeRefCommalist IntroducedName
+    deriving (Show)
+
 data Unwrap = Unwrap Unwrapping
     deriving (Show)
 
@@ -756,8 +764,16 @@ data Extend = Extend RelationExp AttributeAssignCommalist
 data Rename = Rename RelationExp RenamingCommalist
     deriving (Show)
 
-data RenamingCommalist = RenamingCommalist Rename
-                       | RenamingCommalistCons RenamingCommalist Rename
+data RenamingCommalist = RenamingCommalist Renaming
+                       | RenamingCommalistCons RenamingCommalist Renaming
+    deriving (Show)
+
+data Renaming = Renaming AttributeRef IntroducedName
+              | RenamingPrefix CharacterStringLiteral CharacterStringLiteral
+              | RenamingSuffix CharacterStringLiteral CharacterStringLiteral
+    deriving (Show)
+
+data CharacterStringLiteral = CharacterStringLiteral String
     deriving (Show)
 
 data Where = Where RelationExp BoolExp
@@ -765,6 +781,142 @@ data Where = Where RelationExp BoolExp
 
 data BoolExp = BoolExpTrue
              | BoolExpFalse
+    deriving (Show)
+
+data MonadicOtherBuiltInRelationOpInv = MonadicOtherBuiltInRelationOpInvRename Rename
+                                      | MonadicOtherBuiltInRelationOpInvWhere Where
+                                      | MonadicOtherBuiltInRelationOpInvExtend Extend
+                                      | MonadicOtherBuiltInRelationOpInvWrap Wrap
+                                      | MonadicOtherBuiltInRelationOpInvUnwrap Unwrap
+                                      | MonadicOtherBuiltInRelationOpInvGroup Group
+                                      | MonadicOtherBuiltInRelationOpInvUngroup Ungroup
+                                      | MonadicOtherBuiltInRelationOpInvTclose Tclose
+    deriving (Show)
+
+data MonadicOrDyadicOtherBuiltInRelationOpInv = MonadicOrDyadicOtherBuiltInRelationOpInvMonadic MonadicOtherBuiltInRelationOpInv
+                                              | MonadicOrDyadicOtherBuiltInRelationOpInvDyadic DyadicOtherBuiltInRelationOpInv
+    deriving (Show)
+
+data RelationExpCommalist = RelationExpCommalist RelationExp
+                          | RelationExpCommalistCons RelationExpCommalist RelationExp
+    deriving (Show)
+
+data NadicUnion = NadicUnion RelationExpCommalist
+                | NadicUnionHeaded Heading RelationExpCommalist
+    deriving (Show)
+
+data NadicDisjointUnion = NadicDisjointUnion RelationExpCommalist
+                        | NadicDisjointUnionHeaded Heading RelationExpCommalist
+    deriving (Show)
+
+data NadicIntersect = NadicIntersect RelationExpCommalist
+                    | NadicIntersectHeaded Heading RelationExpCommalist
+    deriving (Show)
+
+data NadicJoin = NadicJoin RelationExpCommalist
+    deriving (Show)
+
+data NadicTimes = NadicTimes RelationExpCommalist
+    deriving (Show)
+
+data NadicXunion = NadicXunion RelationExpCommalist
+                 | NadicXunionHeaded Heading RelationExpCommalist
+    deriving (Show)
+
+data NadicCompose = NadicCompose RelationExpCommalist
+    deriving (Show)
+
+data NadicOtherBuiltInRelationOpInv = NadicOtherBuiltInRelationOpInvUnion NadicUnion
+                                    | NadicOtherBuiltInRelationOpInvDisjointUnion NadicDisjointUnion
+                                    | NadicOtherBuiltInRelationOpInvIntersect NadicIntersect
+                                    | NadicOtherBuiltInRelationOpInvJoin NadicJoin
+                                    | NadicOtherBuiltInRelationOpInvTimes NadicTimes
+                                    | NadicOtherBuiltInRelationOpInvXunion NadicXunion
+                                    | NadicOtherBuiltInRelationOpInvCompose NadicCompose
+    deriving (Show)
+
+data Project = Project RelationExp AttributeRefCommalist
+             | ProjectAllBut RelationExp AttributeRefCommalist
+    deriving (Show)
+
+data THE_OpInv = THE_OpInv THE_OpName ScalarExp
+    deriving (Show)
+
+data THE_OpName = THE_OpName String
+    deriving (Show)
+
+data TupleWrap = TupleWrap TupleExp Wrapping
+    deriving (Show)
+
+data TupleUnwrap = TupleUnwrap TupleExp Unwrapping
+    deriving (Show)
+
+data DyadicTupleUnion = DyadicTupleUnion TupleExp TupleExp
+    deriving (Show)
+
+data DyadicTupleCompose = DyadicTupleCompose TupleExp TupleExp
+    deriving (Show)
+
+data TupleRename = TupleRename TupleExp RenamingCommalist
+    deriving (Show)
+
+data TupleExtend = TupleExtend TupleExp AttributeAssignCommalist
+    deriving (Show)
+
+data MonadicOtherBuiltInTupleOpInv = MonadicOtherBuiltInTupleOpInvRename TupleRename
+                                   | MonadicOtherBuiltInTupleOpInvExtend TupleExtend
+                                   | MonadicOtherBuiltInTupleOpInvWrap TupleWrap
+                                   | MonadicOtherBuiltInTupleOpInvUnwrap TupleUnwrap
+    deriving (Show)
+
+data NadicTupleUnion = NadicTupleUnion TupleExpCommalist
+    deriving (Show)
+
+data TupleProject = TupleProject TupleExp AttributeRefCommalist
+                  | TupleProjectAllBut TupleExp AttributeRefCommalist
+    deriving (Show)
+
+data TupleComponent = TupleComponent AttributeName Exp
+    deriving (Show)
+
+data TupleComponentCommalist = TupleComponentCommalist TupleComponent
+                             | TupleComponentCommalistCons TupleComponentCommalist TupleComponent
+    deriving (Show)
+
+data NadicOtherBuiltInTupleOpInv = NadicOtherBuiltInTupleOpInv NadicTupleUnion
+
+data TupleExtractorInv = TupleExtractorInv RelationExp
+    deriving (Show)
+
+data AttributeExtractorInv = AttributeExtractorInv AttributeRef TupleExp
+    deriving (Show)
+
+data TupleSelectorInv = TupleSelectorInv TupleComponentCommalist
+    deriving (Show)
+
+data TupleTypeName = TupleTypeName String
+    deriving (Show)
+
+data UserScalarTypeName = UserScalarTypeName String
+    deriving (Show)
+
+data BuiltInScalarTypeName = BuiltInScalarTypeNameInteger
+                           | BuiltInScalarTypeNameRational
+                           | BuiltInScalarTypeNameCharacter
+                           | BuiltInScalarTypeNameBoolean
+    deriving (Show)
+
+data TupleTypeSpec = TupleTypeSpecTupleTypeName TupleTypeName
+                   | TupleTypeSpecSameTypeAs TupleExp
+                   | TupleTypeSpecSameHeadingAs NonscalarExp
+    deriving (Show)
+
+data NonscalarTypeSpec = NonscalarTypeSpecTupleTypeSpec TupleTypeSpec
+                       | NonscalarTypeSpecRelationTypeSpec RelationTypeSpec
+    deriving (Show)
+
+data MonadicOrDyadicOtherBuiltInTupleOpInv = MonadicOrDyadicOtherBuiltInTupleOpInvMonadic MonadicOtherBuiltInTupleOpInv
+                                           | MonadicOrDyadicOtherBuiltInTupleOpInvDyadic DyadicOtherBuiltInTupleOpInv
     deriving (Show)
 
 }
