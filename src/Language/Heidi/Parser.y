@@ -109,14 +109,14 @@ AttributeCommalist : Attribute                                      { AttributeC
 
 Attribute : AttributeName TypeSpec                                  { Attribute $1 $2 }
 
-TypeSpec : ScalarTypeSpec                                           { TypeSpec $1 }
-         | NonscalarTypeSpec                                        { TypeSpec $1 }
+TypeSpec : ScalarTypeSpec                                           { TypeSpecScalar $1 }
+         | NonscalarTypeSpec                                        { TypeSpecNonscalar $1 }
 
 ScalarTypeSpec : ScalarTypeName                                     { ScalarTypeSpecScalarTypeName $1 }
                | same_type_as '(' ScalarExp ')'                     { ScalarTypeSpecSameTypeAs $3 }
 
-ScalarTypeName : UserScalarTypeName                                 { ScalarTypeName $1 }
-               | BuiltInScalarTypeName                              { ScalarTypeName $1 }
+ScalarTypeName : UserScalarTypeName                                 { ScalarTypeNameUser $1 }
+               | BuiltInScalarTypeName                              { ScalarTypeNameBuiltIn $1 }
 
 UserScalarTypeName : varName                                        { UserScalarTypeName $1 }
 
@@ -137,8 +137,8 @@ TupleTypeName : tuple Heading                                       { TupleTypeN
 NonscalarExp : TupleExp                                             { NonscalarExpTupleExp $1 }
              | RelationExp                                          { NonscalarExpRelationExp $1 }
 
-TupleExp : TupleWithExp                                             { $1 }
-         | TupleNonwithExp                                          { $1 }
+TupleExp : TupleWithExp                                             { TupleExpWith $1 }
+         | TupleNonwithExp                                          { TupleExpNonwith $1 }
 
 TupleWithExp : with '(' NameIntroCommalist ')' ':' TupleExp         { TupleWithExp $3 $6 }
 
@@ -262,8 +262,8 @@ RelationNonwithExp : RelationVarRef                                 { RelationNo
 
 RelationVarRef : RelationVarName                                    { RelationVarRef $1 }
 
-RelationOpInv : UserOpInv                                           { RelationOpInv $1 }
-              | BuiltInRelationOpInv                                { RelationOpInv $1 }
+RelationOpInv : UserOpInv                                           { RelationOpInvUserOpInv $1 }
+              | BuiltInRelationOpInv                                { RelationOpInvBuiltInRelationOpInv $1 }
 
 UserOpInv : UserOpName '(' ArgumentExpCommalist ')'                 { UserOpInv $1 $3 }
 
@@ -398,9 +398,9 @@ ScalarVarName : varName                                             { ScalarVarN
 ScalarOpInv : UserOpInv                                             { ScalarOpInvUserOpInv $1 }
             | BuiltInScalarOpInv                                    { ScalarOpInvBuiltInScalarOpInv $1 }
 
-BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInScalarOpInv $1 }
-                   | THE_OpInv                                      { BuiltInScalarOpInv $1 }
-                   | AttributeExtractorInv                          { BuiltInScalarOpInv $1 }
+BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInScalarOpInvScalarSelectorInv $1 }
+                   | THE_OpInv                                      { BuiltInScalarOpInvTHE_OpInv $1 }
+                   | AttributeExtractorInv                          { BuiltInScalarOpInvAttributeExtractorInv $1 }
                    --| AggOpInv                                       { BuiltInScalarOpInv $1 }
                    -- "plus the usual possibilities...eh?"
 
@@ -426,8 +426,8 @@ PossrepName : varName                                               { PossrepNam
          --AggOpName '(' RelationExp Exp ')'
          -- Nadic Count Etc?
 
-RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { RelationSelectorInv $1 $2 }
-                    | relation Heading '{' TupleExpCommalist '}'           { RelationSelectorInv $1 $2 }
+RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { RelationSelectorInv $1 }
+                    | relation Heading '{' TupleExpCommalist '}'           { RelationSelectorInvHeaded $1 $2 }
                     | table_dee                                            { RelationSelectorInvTableDee }
                     | table_dum                                            { RelationSelectorInvTableDum }
 {
@@ -492,6 +492,75 @@ data ScalarNonwithExp = ScalarNonwithExpScalarVarRef ScalarVarRef
 
 data ScalarOpInv = ScalarOpInvUserOpInv UserOpInv
                  | ScalarOpInvBuiltInScalarOpInv BuiltInScalarOpInv
+    deriving (Show)
+
+data BuiltInScalarOpInv = BuiltInScalarOpInvScalarSelectorInv
+                        | BuiltInScalarOpInvTHE_OpInv
+                        | BuiltInScalarOpInvAttributeExtractorInv
+    deriving (Show)
+
+data UserOpInv = UserOpInv UserOpName ArgumentExpCommalist
+    deriving (Show)
+
+data ArgumentExpCommalist = ArgumentExpCommalist ArgumentExp
+                          | ArgumentExpCommalistCons ArgumentExpCommalist ArgumentExp
+    deriving (Show)
+
+data ArgumentExp = ArgumentExp Exp
+    deriving (Show)
+
+data UserOpName = UserOpName String
+    deriving (Show)
+
+data ScalarVarRef = ScalarVarRef ScalarVarName
+    deriving (Show)
+
+data ScalarVarName = ScalarVarName String
+    deriving (Show)
+
+data RelationSelectorInv = RelationSelectorInv TupleExpCommalist
+                         | RelationSelectorInvHeaded Heading TupleExpCommalist
+                         | RelationSelectorInvTableDee
+                         | RelationSelectorInvTableDum
+    deriving (Show)
+
+data Heading = Heading AttributeCommalist
+    deriving (Show)
+
+data AttributeCommalist = AttributeCommalist Attribute
+                        | AttributeCommalistCons AttributeCommalist Attribute
+    deriving (Show)
+
+data Attribute = Attribute AttributeName TypeSpec
+    deriving (Show)
+
+data TypeSpec = TypeSpecScalar
+              | TypeSpecNonScalar
+    deriving (Show)
+
+data ScalarTypeSpec = SaclarTypeSpec ScalarTypeName
+                    | ScalarTypeSpecSameTypeAs ScalarExp
+    deriving (Show)
+
+data ScalarTypeName = ScalarTypeNameUser
+                    | ScalarTypeNameBuiltIn
+    deriving (Show)
+
+data TupleExpCommalist = TupleExpCommalist TupleExp
+                       | TupleExpCommalistCons TupleExpCommalist TupleExp
+    deriving (Show)
+
+data TupleExp = TupleExpWith TupleWithExp
+              | TupleExpNonwith TupleNonwithExp
+    deriving (Show)
+
+data TupleWithExp = TupleWithExp NameIntroCommalist TupleExp
+    deriving (Show)
+
+data TupleNonwithExp = TupleNonwithExpTupleVarRef TupleVarRef
+                     | TupleNonwithExpTupleOpInv TupleOpInv
+                     | TupleNonwithExpArrayVarRefSubscript ArrayVarRef Subscript
+                     | TupleNonwithExpNestedTupleExp TupleExp
     deriving (Show)
 
 }
