@@ -85,10 +85,10 @@ KeyDefList : KeyDef                                                 { KeyDefList
            | KeyDefList ',' KeyDef                                  { KeyDefListCons $1 $3 }
 
 KeyDef : key '{' AttributeRefCommalist '}'                          { KeyDef $3 }
-       | key '{' all but AttributeRefCommalist '}'                  { KeyDefAlLBut $5 }
+       | key '{' all but AttributeRefCommalist '}'                  { KeyDefAllBut $5 }
 
-RealOrBase : real                                                   { RealTok }
-           | base                                                   { BaseTok }
+RealOrBase : real                                                   { RealOrBaseReal }
+           | base                                                   { RealOrBaseBase }
 
 RelationVarName : varName                                           { RelationVarName $1 }
 
@@ -125,8 +125,8 @@ BuiltInScalarTypeName : integer                                     { BuiltInSca
                       | character                                   { BuiltInScalarTypeNameCharacter }
                       | boolean                                     { BuiltInScalarTypeNameBoolean }
 
-NonscalarTypeSpec : TupleTypeSpec                                   { NonscalarTypeSpec $1 }
-                  | RelationTypeSpec                                { NonscalarTypeSpec $1 }
+NonscalarTypeSpec : TupleTypeSpec                                   { NonscalarTypeSpecTupleTypeSpec $1 }
+                  | RelationTypeSpec                                { NonscalarTypeSpecRelationTypeSpec $1 }
 
 TupleTypeSpec : TupleTypeName                                       { TupleTypeSpecTupleTypeName $1 }
               | same_type_as '(' TupleExp ')'                       { TupleTypeSpecSameTypeAs $3 }
@@ -535,8 +535,8 @@ data AttributeCommalist = AttributeCommalist Attribute
 data Attribute = Attribute AttributeName TypeSpec
     deriving (Show)
 
-data TypeSpec = TypeSpecScalar
-              | TypeSpecNonScalar
+data TypeSpec = TypeSpecScalar ScalarTypeSpec
+              | TypeSpecNonscalar NonscalarTypeSpec
     deriving (Show)
 
 data ScalarTypeSpec = SaclarTypeSpec ScalarTypeName
@@ -645,6 +645,9 @@ data DyadicIntersect = DyadicIntersect RelationExp RelationExp
 data DyadicUnion = DyadicUnion RelationExp RelationExp
     deriving (Show)
 
+data DyadicDisjointUnion = DyadicDisjointUnion RelationExp RelationExp
+    deriving (Show)
+
 data DyadicXunion = DyadicXunion RelationExp RelationExp
     deriving (Show)
 
@@ -675,6 +678,37 @@ data RelationVarRef = RelationVarDef RelationVarName
     deriving (Show)
 
 data RelationVarName = RelationVarName String
+    deriving (Show)
+
+data RealRelationVarDef = RealRelationVarDef RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList RealRelationVarDef
+    deriving (Show)
+
+data KeyDefList = KeyDefList KeyDef
+                | KeyDefListCons KeyDefList KeyDef
+    deriving (Show)
+
+data KeyDef = KeyDef AttributeCommalist
+            | KeyDefAllBut AttributeCommalist
+    deriving (Show)
+
+data RelationTypeOrInitValue = RelationTypeOrInitValueRelationTypeSpec RelationTypeSpec
+                             | RelationTypeOrInitValueInit RelationExp
+                             | RelationTypeOrInitValueRelationTypeSpecInit RelationTypeSpec RelationExp
+    deriving (Show)
+
+data RelationTypeSpec = RelationTypeSpecRelationTypeName RelationTypeName
+                      | RelationTypeSpecSameTypeAs RelationExp
+                      | RelationTypeSpecSameHeadingAs NonscalarExp
+    deriving (Show)
+
+data RelationTypeName = RelationTypeName Heading
+    deriving (Show)
+
+data RealOrBase = RealOrBaseReal
+                | RealOrBaseBase
+    deriving (Show)
+
+data IncludedMinus = IncludedMinus RelationExp RelationExp
     deriving (Show)
 
 }
