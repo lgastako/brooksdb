@@ -78,7 +78,7 @@ import Language.Heidi.Lexer
 
 %%
 
-RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList { RealRelationVarDef }
+RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList { RealRelationVarDef $2 $3 $4 $5 }
 
 -- I assume this is a commalist?
 KeyDefList : KeyDef                                                 { KeyDefList $1 }
