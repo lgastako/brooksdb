@@ -24,25 +24,29 @@ tokens :-
   ']'                   { \s -> RightSquareTok  }
   ':'                   { \s -> ColonTok        }
 
-  var                   { \s -> VarTok      }
-  init                  { \s -> InitTok     }
-  tuple                 { \s -> TupleTok    }
-  from                  { \s -> FromTok     }
-  all                   { \s -> AllTok      }
-  but                   { \s -> ButTok      }
-  union                 { \s -> UnionTok    }
-  rename                { \s -> RenameTok   }
-  extend                { \s -> ExtendTok   }
-  wrap                  { \s -> WrapTok     }
-  unwrap                { \s -> UnwrapTok   }
-  as                    { \s -> AsTok       }
-  compose               { \s -> ComposeTok  }
-  real                  { \s -> RealTok     }
-  base                  { \s -> BaseTok     }
-  relation              { \s -> RelationTok }
-  with                  { \s -> WithTok     }
-  table_dee             { \s -> TableDeeTok }
-  table_dum             { \s -> TableDumTok }
+  var                   { \s -> VarTok       }
+  init                  { \s -> InitTok      }
+  tuple                 { \s -> TupleTok     }
+  from                  { \s -> FromTok      }
+  all                   { \s -> AllTok       }
+  but                   { \s -> ButTok       }
+  union                 { \s -> UnionTok     }
+  rename                { \s -> RenameTok    }
+  extend                { \s -> ExtendTok    }
+  wrap                  { \s -> WrapTok      }
+  unwrap                { \s -> UnwrapTok    }
+  as                    { \s -> AsTok        }
+  compose               { \s -> ComposeTok   }
+  heading               { \s -> HeadingTok   }
+  d_union               { \s -> DunionTok    }
+  intersect             { \s -> IntersectTok }
+  join                  { \s -> JoinTok      }
+  real                  { \s -> RealTok      }
+  base                  { \s -> BaseTok      }
+  relation              { \s -> RelationTok  }
+  with                  { \s -> WithTok      }
+  table_dee             { \s -> TableDeeTok  }
+  table_dum             { \s -> TableDumTok  }
 
   $ident+               { \s -> IdentTok s  }
 {

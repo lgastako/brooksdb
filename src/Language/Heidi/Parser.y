@@ -26,6 +26,10 @@ import Language.Heidi.Lexer
         unwrap          { UnwrapTok        }
         as              { AsTok            }
         compose         { ComposeTok       }
+        heading         { HeadingTok       }
+        d_union         { DunionTok        }
+        intersect       { IntersectTok     }
+        join            { JoinTok          }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -184,6 +188,25 @@ BuiltInRelationOpInv : RelationSelectorInv                          { BuiltInRel
 THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv $3 }
 
 THE_OpName : varName                                                { THE_OpName $1 }
+
+NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOtherBuiltInRelationOpInv $1 }
+                               | NadicDisjointUnion                 { NadicOtherBuiltInRelationOpInv $1 }
+                               | NadicIntersect                     { NadicOtherBuiltInRelationOpInv $1 }
+                               | NadicJoin                          { NadicOtherBuiltInRelationOpInv $1 }
+                               | NadicTimes                         { NadicOtherBuiltInRelationOpInv $1 }
+                               | NadicXunion                        { NadicOtherBuiltInRelationOpInv $1 }
+                               | NadicCompose                       { NadicOtherBuiltInRelationOpInv $1 }
+
+NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion $1          }
+           | union heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $1 $2 }
+
+NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $1 }
+                   | d_union heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $1 $2 }
+
+NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicIntersect $1          }
+               | intersect heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $1 $2 }
+
+NadicJoin : join '{' RelationExpCommalist '}'                       { NadicJoin $3 }
 
 ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
           | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
