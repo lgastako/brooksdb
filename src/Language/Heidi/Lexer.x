@@ -12,15 +12,17 @@ $ident    = [$alphanum _]
 tokens :-
   $white+				;
   "--".*				;
+
   $digit+				{ \s -> IntTok (read s) }
-  "\"".*"\""            { \s -> StrTok s }
-  '('                   { \s -> LeftRoundTok }
-  ')'                   { \s -> RightRoundTok }
-  '{'                   { \s -> LeftCurlyTok }
-  '}'                   { \s -> RightCurlyTok }
-  '['                   { \s -> LeftSquareTok }
-  ']'                   { \s -> RightSquareTok }
-  ':'                   { \s -> ColonTok }
+  "\"".*"\""            { \s -> StrTok s        }
+
+  '('                   { \s -> LeftRoundTok    }
+  ')'                   { \s -> RightRoundTok   }
+  '{'                   { \s -> LeftCurlyTok    }
+  '}'                   { \s -> RightCurlyTok   }
+  '['                   { \s -> LeftSquareTok   }
+  ']'                   { \s -> RightSquareTok  }
+  ':'                   { \s -> ColonTok        }
 
   var                   { \s -> VarTok      }
   init                  { \s -> InitTok     }
