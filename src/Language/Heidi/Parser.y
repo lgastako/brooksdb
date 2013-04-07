@@ -59,6 +59,7 @@ import Language.Heidi.Lexer
 --        '['             { LeftSquareTok    }
 --        ']'             { RightSquareTok   }
         ':'             { ColonTok         }
+        ','             { CommaTok         }
 
 --      Parameterized tokens
         varName         { IdentTok $$      }
@@ -124,6 +125,9 @@ TupleSelectorInv : tuple '{' TupleComponentCommalist '}'            { TupleSelec
 AttributeExtractorInv : AttributeRef from TupleExp                  { AttributeExtractorInv $1 $3 }
 
 AttributeRef : AttributeName                                        { AttributeRef $1 }
+
+AttributeRefCommalist : AttributeRef                                { AttributeRefCommalist $1 }
+                      | AttributeRefCommalist ',' AttributeRef      { AttributeRefCommalistCons $1 $3 }
 
 AttributeName : varName                                             { AttributeName $1 }
 
@@ -231,6 +235,9 @@ NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunio
             | xunion heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $1 $2 }
 
 NadicCompose : join '{' RelationExpCommalist '}'                    { NadicCompose $3 }
+
+RelationExpCommalist : RelationExp                                  { RelationExpCommalist $1 }
+                     | RelationExpCommalist ',' RelationExp         { RelationExpCommaListCons $1 $3 }
 
 MonadicOrDyadicOtherBuiltInRelationOpInv
     : MonadicOtherBuiltInRelationOpInv                              { MonadicOrDyadicOtherBuiltInRelationOpInv $1 }
