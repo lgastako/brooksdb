@@ -602,4 +602,19 @@ data PerOrBy = PerOrByPer Per
              | PerOrByBy By
     deriving (Show)
 
+data Summarize = Summarize RelationExp AttributeAssignCommalist
+               | SummarizePerOrBy RelationExp PerOrBy AttributeAssignCommalist
+    deriving (Show)
+
+data AttributeAssignCommalist = AttributeAssignCommalist AttributeAssign
+                              | AttributeAssignCommalistCons AttributeAssignCommalist AttributeAssign
+    deriving (Show)
+
+data AttributeAssign = AttributeAssign Exp IntroducedName
+    deriving (Show)
+
+
+data ScalarSelectorInv = ScalarSelectorInvPossrepName PossrepName ArgumentExpCommalist
+    deriving (Show)
+
 }
