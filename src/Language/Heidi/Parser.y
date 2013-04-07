@@ -47,6 +47,10 @@ import Language.Heidi.Lexer
         prefix          { PrefixTok        }
         suffix          { SuffixTok        }
         key             { KeyTok           }
+        integer         { IntegerTok       }
+        rational        { RationalTok      }
+        character       { CharacterTok     }
+        boolean         { BooleanTok       }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -63,6 +67,7 @@ import Language.Heidi.Lexer
 --        ']'             { RightSquareTok   }
         ':'             { ColonTok         }
         ','             { CommaTok         }
+        ':='            { AssignerTok      }
 
 --      Parameterized tokens
         varName         { IdentTok $$      }
@@ -137,6 +142,11 @@ TupleNonwithExp : TupleVarRef                                       { $1 }
                 | TupleOpInv                                        { $1 }
                 | ArrayVarRef '(' Subscript ')'                     { $1 }
                 | '(' TupleExp ')'                                  { $1 }
+
+NameIntroCommalist : NameIntro                                      { NameIntroCommalist $1 }
+                   | NameIntroCommalist ',' NameIntro               { NameIntroCommalistCons $1 $3 }
+
+NameIntro : IntroducedName ':=' Exp                                 { NameIntro $1 $3 }
 
 ArrayVarRef : ArrayVarName                                          { ArrayVarRef $1 }
 

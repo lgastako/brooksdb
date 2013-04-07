@@ -24,6 +24,7 @@ tokens :-
 --  ']'                   { \s -> RightSquareTok  }
   ':'                   { \s -> ColonTok        }
   ','                   { \s -> CommaTok        }
+  ':='                  { \s -> AssignerTok     }
 
   var                   { \s -> VarTok       }
   init                  { \s -> InitTok      }
@@ -59,6 +60,10 @@ tokens :-
   prefix                { \s -> PrefixTok    }
   suffix                { \s -> SuffixTok    }
   key                   { \s -> KeyTok       }
+  integer               { \s -> IntegerTok   }
+  rational              { \s -> RationalTok  }
+  character             { \s -> CharacterTok }
+  boolean               { \s -> BooleanTok   }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }
