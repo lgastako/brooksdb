@@ -93,7 +93,7 @@ RealOrBase : real                                                   { RealTok }
 RelationVarName : varName                                           { RelationVarName $1 }
 
 RelationTypeOrInitValue : RelationTypeSpec                          { RelationTypeOrInitValueRelationTypeSpec $1        }
-                        | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit Nothing $3            }
+                        | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit $3                    }
                         | RelationTypeSpec init '(' RelationExp ')' { RelationTypeOrInitValueRelationTypeSpecInit $1 $4 }
 
 RelationTypeSpec : RelationTypeName                                 { RelationTypeSpecRelationTypeName $1 }
@@ -382,8 +382,8 @@ PerOrBy : Per                                                       { PerOrBy $1
 By : by '{' AttributeRefCommalist '}'                               { By $1 }
    | by '{' all but AttributeRefCommalist '}'                       { ByAllBut $1 }
 
-ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
-          | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
+ScalarExp : ScalarWithExp                                           { ScalarExpWith $1    }
+          | ScalarNonwithExp                                        { ScalarExpNonwith $1 }
 
 ScalarWithExp : with '(' NameIntroCommalist ')' ':' ScalarExp       { ScalarWithExp $3 $6 }
 
@@ -416,8 +416,8 @@ ArgumentExpCommalist : ArgumentExp                                  { ArgumentEx
 
 ArgumentExp : Exp                                                   { ArgumentExp $1 }
 
-Exp : ScalarExp                                                     { Exp $1 }
-    | NonscalarExp                                                  { Exp $1 }
+Exp : ScalarExp                                                     { ExpScalar $1     }
+    | NonscalarExp                                                  { ExpNonscalar $1 }
 
 PossrepName : varName                                               { PossrepName $1 }
 
@@ -442,5 +442,25 @@ data VarDec = RelVarDec String RelationDef
 
 data RelationDef = RelationDef
     deriving (Show)
+
+data PossrepName = PossrepName String
+    deriving (Show)
+
+data Exp = ExpScalar ScalarExp
+           ExpNonscalar NonscalarExp
+    deriving (Show)
+
+data ScalarExp = ScalarExpWith ScalarWithExp
+               | ScalarExpNonWith ScalarNonwithExp
+    deriving (Show)
+
+data ScalarWithExp = ScalarWithExp NameIntroCommalist ScalarExp
+    deriving (Show)
+
+data NonscalarExp = NonscalarExpTupleExp TupleExp
+                  | NonscalarExpRelationExp RelationExp
+    deriving (Show)
+
+data RelationExp
 
 }
