@@ -20,8 +20,8 @@ tokens :-
   ')'                   { \s -> RightRoundTok   }
   '{'                   { \s -> LeftCurlyTok    }
   '}'                   { \s -> RightCurlyTok   }
-  '['                   { \s -> LeftSquareTok   }
-  ']'                   { \s -> RightSquareTok  }
+--  '['                   { \s -> LeftSquareTok   }
+--  ']'                   { \s -> RightSquareTok  }
   ':'                   { \s -> ColonTok        }
 
   var                   { \s -> VarTok       }
@@ -49,6 +49,12 @@ tokens :-
   tclose                { \s -> TcloseTok    }
   minus                 { \s -> MinusTok     }
   i_minus               { \s -> IminusTok    }
+  not                   { \s -> NotTok       }
+  matching              { \s -> MatchingTok  }
+  divideby              { \s -> DividebyTok  }
+  summarize             { \s -> SummarizeTok }
+  per                   { \s -> PerTok       }
+  by                    { \s -> ByTok        }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }

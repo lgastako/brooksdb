@@ -37,7 +37,13 @@ import Language.Heidi.Lexer
         ungroup         { UngroupTok       }
         tclose          { TcloseTok        }
         minus           { MinusTok         }
-        i_minus         { i_minusTok       }
+        i_minus         { IminusTok        }
+        not             { NotTok           }
+        matching        { MatchingTok      }
+        divideby        { DividebyTok      }
+        summarize       { SummarizeTok     }
+        per             { PerTok           }
+        by              { ByTok            }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -50,8 +56,8 @@ import Language.Heidi.Lexer
         ')'             { RightRoundTok    }
         '{'             { LeftCurlyTok     }
         '}'             { RightCurlyTok    }
-        '['             { LeftSquareTok    }
-        ']'             { RightSquareTok   }
+--        '['             { LeftSquareTok    }
+--        ']'             { RightSquareTok   }
         ':'             { ColonTok         }
 
 --      Parameterized tokens
@@ -267,16 +273,29 @@ DyadicOtherBuiltInRelationOpInv : DyadicUnion                       { DyadicOthe
                                 | Summarize                         { DyadicOtherBuiltInRelationOpInvSummarize $1 }
 
 DyadicUnion : RelationExp union RelationExp                         { DyadicUnion $1 $3 }
-
 DyadicDisjointUnion : RelationExp d_union RelationExp               { DyadicDisjointUnion $1 $3 }
-
 DyadicIntersect : RelationExp intersect RelationExp                 { DyadicIntersect $1 $3 }
-
 Minus : RelationExp minus RelationExp                               { Minus $1 $3 }
-
 IncludedMinus : RelationExp i_minus RelationExp                     { IncludedMinus $1 $3 }
-
+DyadicJoin : RelationExp join RelationExp                           { DyadicJoin $1 $3 }
+DyadicTimes : RelationExp times RelationExp                         { DyadicTimes $1 $3 }
 DyadicXunion : RelationExp union RelationExp                        { DyadicXunion $1 $3 }
+DyadicCompose : RelationExp compose RelationExp                     { DyadicCompose $1 $3 }
+Matching : RelationExp matching RelationExp                         { Matching $1 $3 }
+NotMatching : RelationExp not matching RelationExp                  { NotMatching $1 $4 }
+Divide : RelationExp divideby RelationExp Per                       { Divide $1 $3 $4 }
+Summarize : summarize RelationExp ':' '{' AttributeAssignCommalist '}'           { Summarize $2 $5           }
+          | summarize RelationExp PerOrBy ':' '{' AttributeAssignCommalist '}'   { SummarizePerOrBy $2 $3 $6 }
+
+Per : per '(' RelationExp ')'                                       { Per $3 }
+    --| per '(' RelationExp ... many
+
+PerOrBy : Per                                                       { PerOrBy $1 }
+        | By                                                        { PerOrBy $1 }
+
+-- Note: I inserted By as it's own element, the original grammar had it nested underPerOrBy.
+By : by '{' AttributeRefCommalist '}'                               { By $1 }
+   | by '{' all but AttributeRefCommalist '}'                       { ByAllBut $1 }
 
 ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
           | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
@@ -312,11 +331,10 @@ PossrepName : varName                                               { PossrepNam
          --AggOpName '(' RelationExp Exp ')'
          -- Nadic Count Etc?
 
--- TODO: This should be OPTIONAL heading, not a mandatory heading with braces required around it.
-RelationSelectorInv : relation '[' Heading ']' '{' TupleExpCommalist '}'   { RelationSelectorInv $1 $2 }
+RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { RelationSelectorInv $1 $2 }
+                    | relation Heading '{' TupleExpCommalist '}'           { RelationSelectorInv $1 $2 }
                     | table_dee                                            { RelationSelectorInvTableDee }
                     | table_dum                                            { RelationSelectorInvTableDum }
-
 {
 
 parseError :: [Token] -> a
