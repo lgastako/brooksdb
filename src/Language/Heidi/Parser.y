@@ -15,6 +15,10 @@ import Language.Heidi.Lexer
 --      Keywords
         var             { VarTok           }
         init            { InitTok          }
+        tuple           { TupleTok         }
+        from            { FromTok          }
+        all             { AllTok           }
+        but             { ButTok           }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -85,10 +89,19 @@ TupleOpInv : UserOpInv                                              { TupleOpInv
 BuiltInTupleOpInv : TupleSelectorInv                                { BuiltInTupleOpInv $1 }
                   | THE_OpInv                                       { BuiltInTupleOpInv $1 }
                   | AttributeExtractorInv                           { BuiltInTupleOpInv $1 }
-                  | TupleExptractorInv                              { BuiltInTupleOpInv $1 }
+                  | TupleExtractorInv                               { BuiltInTupleOpInv $1 }
                   | TupleProject                                    { BuiltInTupleOpInv $1 }
                   | NadicOtherBuiltInTupleOpInv                     { BuiltInTupleOpInv $1 }
                   | MonadicOrDyadicOtherBuiltInTupleOpInv           { BuiltInTupleOpInv $1 }
+
+TupleSelectorInv : tuple '{' TupleComponentCommalist '}'            { TupleSelectorInv $3 }
+
+AttributeExtractorInv : AttributeRef from TupleExp                  { AttributeExtractorInv $1 $3 }
+
+TupleExtractorInv : tuple from RelationExp                          { TupleExtractorInv $3 }
+
+TupleProject : TupleExp '{' AttributeRefList '}'                    { TupleProject $1 $3 }
+             | TupleExp '{' all but AttributeRefList '}'            { TupleProjectAllBut $1 $5 }
 
 Subscript : IntegerExp                                              { Subscript $1 }
 

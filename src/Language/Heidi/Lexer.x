@@ -26,6 +26,10 @@ tokens :-
 
   var                   { \s -> VarTok      }
   init                  { \s -> InitTok     }
+  tuple                 { \s -> TupleTok    }
+  from                  { \s -> FromTok     }
+  all                   { \s -> AllTok      }
+  but                   { \s -> ButTok      }
   real                  { \s -> RealTok     }
   base                  { \s -> BaseTok     }
   relation              { \s -> RelationTok }
