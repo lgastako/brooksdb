@@ -711,4 +711,60 @@ data RealOrBase = RealOrBaseReal
 data IncludedMinus = IncludedMinus RelationExp RelationExp
     deriving (Show)
 
+data DyadicOtherBuiltInRelationOpInv = DyadicOtherBuiltInRelationOpInvDyadicUnion
+                                     | DyadicOtherBuiltInRelationOpInvDyadicDisjointUnion
+                                     | DyadicOtherBuiltInRelationOpInvDyadicIntersect
+                                     | DyadicOtherBuiltInRelationOpInvMinus
+                                     | DyadicOtherBuiltInRelationOpInvIncludedMinus
+                                     | DyadicOtherBuiltInRelationOpInvDyadicJoin
+                                     | DyadicOtherBuiltInRelationOpInvDyadicTimes
+                                     | DyadicOtherBuiltInRelationOpInvDyadicXunion
+                                     | DyadicOtherBuiltInRelationOpInvDyadicCompose
+                                     | DyadicOtherBuiltInRelationOpInvMatching
+                                     | DyadicOtherBuiltInRelationOpInvNotMatching
+                                     | DyadicOtherBuiltInRelationOpInvDivide
+                                     | DyadicOtherBuiltInRelationOpInvSummarize
+    deriving (Show)
+
+data Group = Group RelationExp Grouping
+    deriving (Show)
+
+data Ungroup = Ungroup RelationExp Ungrouping
+    deriving (Show)
+
+data Grouping = Grouping AttributeRefCommalist
+              | GroupingAllBut AttributeRefCommalist
+
+data Ungrouping = Ungrouping AttributeRef
+    deriving (Show)
+
+data Wrap = Wrap Wrapping
+    deriving (Show)
+
+data Unwrap = Unwrap Unwrapping
+    deriving (Show)
+
+data Unwrapping = Unwrapping AttributeRef
+    deriving (Show)
+
+data Tclose = Tclose RelationExp
+    deriving (Show)
+
+data Extend = Extend RelationExp AttributeAssignCommalist
+    deriving (Show)
+
+data Rename = Rename RelationExp RenamingCommalist
+    deriving (Show)
+
+data RenamingCommalist = RenamingCommalist Rename
+                       | RenamingCommalistCons RenamingCommalist Rename
+    deriving (Show)
+
+data Where = Where RelationExp BoolExp
+    deriving (Show)
+
+data BoolExp = BoolExpTrue
+             | BoolExpFalse
+    deriving (Show)
+
 }
