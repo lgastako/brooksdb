@@ -47,6 +47,8 @@ tokens :-
   group                 { \s -> GroupTok     }
   ungroup               { \s -> UngroupTok   }
   tclose                { \s -> TcloseTok    }
+  minus                 { \s -> MinusTok     }
+  i_minus               { \s -> IminusTok    }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }

@@ -36,6 +36,8 @@ import Language.Heidi.Lexer
         group           { GroupTok         }
         ungroup         { UngroupTok       }
         tclose          { TcloseTok        }
+        minus           { MinusTok         }
+        i_minus         { i_minusTok       }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -264,6 +266,17 @@ DyadicOtherBuiltInRelationOpInv : DyadicUnion                       { DyadicOthe
                                 | Divide                            { DyadicOtherBuiltInRelationOpInvDivide $1 }
                                 | Summarize                         { DyadicOtherBuiltInRelationOpInvSummarize $1 }
 
+DyadicUnion : RelationExp union RelationExp                         { DyadicUnion $1 $3 }
+
+DyadicDisjointUnion : RelationExp d_union RelationExp               { DyadicDisjointUnion $1 $3 }
+
+DyadicIntersect : RelationExp intersect RelationExp                 { DyadicIntersect $1 $3 }
+
+Minus : RelationExp minus RelationExp                               { Minus $1 $3 }
+
+IncludedMinus : RelationExp i_minus RelationExp                     { IncludedMinus $1 $3 }
+
+DyadicXunion : RelationExp union RelationExp                        { DyadicXunion $1 $3 }
 
 ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
           | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
