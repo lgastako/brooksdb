@@ -310,7 +310,7 @@ NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunio
 NadicCompose : join '{' RelationExpCommalist '}'                    { NadicCompose $3 }
 
 RelationExpCommalist : RelationExp                                  { RelationExpCommalist $1 }
-                     | RelationExpCommalist ',' RelationExp         { RelationExpCommaListCons $1 $3 }
+                     | RelationExpCommalist ',' RelationExp         { RelationExpCommalistCons $1 $3 }
 
 MonadicOrDyadicOtherBuiltInRelationOpInv
     : MonadicOtherBuiltInRelationOpInv                              { MonadicOrDyadicOtherBuiltInRelationOpInv $1 }
@@ -463,6 +463,23 @@ data NonscalarExp = NonscalarExpTupleExp TupleExp
 
 data By = By AttributeRefCommalist
         | ByAllBut AttributeRefCommalist
+    deriving (Show)
+
+data AttributeRefCommalist = AttributeRefCommalist AttributeRef
+                           | AttributeRefCommalistCons AttributeRefCommalist AttributeRef
+    deriving (Show)
+
+data AttributeRef = AttributeRef AttributeName
+    deriving (Show)
+
+data AttributeName = AttributeName String
+    deriving (Show)
+
+data NameIntroCommalist = NameIntroCommalist NameIntro
+                        | NameIntroCommalistCons NameIntroCommalist NameIntro
+    deriving (Show)
+
+data NameIntro = NameIntro IntroducedName Exp
     deriving (Show)
 
 }
