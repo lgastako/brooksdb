@@ -78,7 +78,6 @@ import Language.Heidi.Lexer
 
 RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList { RealRelationVarDef $2 $3 $4 $5 }
 
--- I assume this is a commalist?
 KeyDefList : KeyDef                                                 { KeyDefList $1 }
            | KeyDefList ',' KeyDef                                  { KeyDefListCons $1 $3 }
 
@@ -212,7 +211,7 @@ DyadicTupleUnion : TupleExp union TupleExp                          { DyadicTupl
 
 DyadicTupleCompose : TupleExp compose TupleExp                      { DyadicTupleCompose $1 $3 }
 
-TupleRename : TupleExp rename '{' RenamingCommalist '}'             { TupleRename $2 $4 }
+TupleRename : TupleExp rename '{' RenamingCommalist '}'             { TupleRename $1 $4 }
 
 TupleExtend : extend TupleExp ':' '{' AttributeAssignCommalist '}'  { TupleExtend $2 $5 }
 
@@ -221,9 +220,9 @@ RenamingCommalist : Renaming                                        { RenamingCo
 
 Renaming : AttributeRef as IntroducedName                           { Renaming $1 $3 }
          | prefix CharacterStringLiteral
-               as CharacterStringLiteral                            { RenamingPrefix $2 $3 }
+               as CharacterStringLiteral                            { RenamingPrefix $2 $4 }
          | suffix CharacterStringLiteral
-               as CharacterStringLiteral                            { RenamingSuffix $2 $3 }
+               as CharacterStringLiteral                            { RenamingSuffix $2 $4 }
 
 CharacterStringLiteral : strLiteral                                 { CharacterStringLiteral $1 }
 
@@ -252,7 +251,7 @@ IntegerExp : int                                                    { IntegerExp
 RelationExp : RelationWithExp                                       { RelationExpWith $1 }
             | RelationNonwithExp                                    { RelationExpNonwith $1 }
 
-RelationWithExp : with '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $4 }
+RelationWithExp : with '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $6 }
 
 RelationNonwithExp : RelationVarRef                                 { RelationNonwithExpRelationVarRef $1 }
                    | RelationOpInv                                  { RelationNonwithExpRelationOpInv $1  }
@@ -295,7 +294,7 @@ NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion
 NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $3          }
                    | d_union Heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $2 $4 }
 
-NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicIntersect $1          }
+NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicIntersect $3          }
                | intersect Heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $2 $4 }
 
 NadicJoin : join '{' RelationExpCommalist '}'                       { NadicJoin $3 }
@@ -378,8 +377,8 @@ PerOrBy : Per                                                       { PerOrByPer
         | By                                                        { PerOrByBy $1  }
 
 -- Note: I inserted By as it's own element, the original grammar had it nested underPerOrBy.
-By : by '{' AttributeRefCommalist '}'                               { By $1 }
-   | by '{' all but AttributeRefCommalist '}'                       { ByAllBut $1 }
+By : by '{' AttributeRefCommalist '}'                               { By $3 }
+   | by '{' all but AttributeRefCommalist '}'                       { ByAllBut $5 }
 
 ScalarExp : ScalarWithExp                                           { ScalarExpWith $1    }
           | ScalarNonwithExp                                        { ScalarExpNonwith $1 }
@@ -388,7 +387,7 @@ ScalarWithExp : with '(' NameIntroCommalist ')' ':' ScalarExp       { ScalarWith
 
 ScalarNonwithExp : ScalarVarRef                                     { ScalarNonwithExpScalarVarRef $1 }
                  | ScalarOpInv                                      { ScalarNonwithExpScalarOpInv $1  }
-                 | '(' ScalarExp ')'                                { ScalarNonwithExpScalarExp $1    }
+                 | '(' ScalarExp ')'                                { ScalarNonwithExpScalarExp $2    }
 
 ScalarVarRef : ScalarVarName                                        { ScalarVarRef $1 }
 
@@ -425,8 +424,8 @@ PossrepName : varName                                               { PossrepNam
          --AggOpName '(' RelationExp Exp ')'
          -- Nadic Count Etc?
 
-RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { RelationSelectorInv $1 }
-                    | relation Heading '{' TupleExpCommalist '}'           { RelationSelectorInvHeaded $1 $2 }
+RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { RelationSelectorInv $3 }
+                    | relation Heading '{' TupleExpCommalist '}'           { RelationSelectorInvHeaded $2 $4 }
                     | table_dee                                            { RelationSelectorInvTableDee }
                     | table_dum                                            { RelationSelectorInvTableDum }
 {
@@ -434,15 +433,7 @@ RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { Rel
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-data VarDec = RelVarDec String RelationDef
-            | IntVarDec String Int
-            | BareName String
-    deriving (Show)
-
-data RelationDef = RelationDef
-    deriving (Show)
-
-data PossrepName = PossrepName String
+data PossrepName = PossrepName Identifier
     deriving (Show)
 
 data Exp = ExpScalar ScalarExp
@@ -471,7 +462,7 @@ data AttributeRefCommalist = AttributeRefCommalist AttributeRef
 data AttributeRef = AttributeRef AttributeName
     deriving (Show)
 
-data AttributeName = AttributeName String
+data AttributeName = AttributeName Identifier
     deriving (Show)
 
 data NameIntroCommalist = NameIntroCommalist NameIntro
@@ -481,7 +472,7 @@ data NameIntroCommalist = NameIntroCommalist NameIntro
 data NameIntro = NameIntro IntroducedName Exp
     deriving (Show)
 
-data IntroducedName = IntroducedName String
+data IntroducedName = IntroducedName Identifier
     deriving (Show)
 
 data ScalarNonwithExp = ScalarNonwithExpScalarVarRef ScalarVarRef
@@ -493,9 +484,9 @@ data ScalarOpInv = ScalarOpInvUserOpInv UserOpInv
                  | ScalarOpInvBuiltInScalarOpInv BuiltInScalarOpInv
     deriving (Show)
 
-data BuiltInScalarOpInv = BuiltInScalarOpInvScalarSelectorInv
-                        | BuiltInScalarOpInvTHE_OpInv
-                        | BuiltInScalarOpInvAttributeExtractorInv
+data BuiltInScalarOpInv = BuiltInScalarOpInvScalarSelectorInv ScalarSelectorInv
+                        | BuiltInScalarOpInvTHE_OpInv THE_OpInv
+                        | BuiltInScalarOpInvAttributeExtractorInv AttributeExtractorInv
     deriving (Show)
 
 data UserOpInv = UserOpInv UserOpName ArgumentExpCommalist
@@ -508,13 +499,13 @@ data ArgumentExpCommalist = ArgumentExpCommalist ArgumentExp
 data ArgumentExp = ArgumentExp Exp
     deriving (Show)
 
-data UserOpName = UserOpName String
+data UserOpName = UserOpName Identifier
     deriving (Show)
 
 data ScalarVarRef = ScalarVarRef ScalarVarName
     deriving (Show)
 
-data ScalarVarName = ScalarVarName String
+data ScalarVarName = ScalarVarName Identifier
     deriving (Show)
 
 data RelationSelectorInv = RelationSelectorInv TupleExpCommalist
@@ -568,7 +559,7 @@ data Subscript = Subscript IntegerExp
 data ArrayVarRef = ArrayVarRef ArrayVarName
     deriving (Show)
 
-data ArrayVarName = ArrayVarName String
+data ArrayVarName = ArrayVarName Identifier
     deriving (Show)
 
 data IntegerExp = IntegerExp Int
@@ -594,7 +585,7 @@ data DyadicOtherBuiltInTupleOpInv = DyadicOtherBuiltInTupleOpInvCompose DyadicTu
 data TupleVarRef = TupleVarRef TupleVarName
     deriving (Show)
 
-data TupleVarName = TupleVarName String
+data TupleVarName = TupleVarName Identifier
     deriving (Show)
 
 data Per = Per RelationExp
@@ -668,29 +659,29 @@ data RelationOpInv = RelationOpInvUserOpInv UserOpInv
                    | RelationOpInvBuiltInRelationOpInv BuiltInRelationOpInv
     deriving (Show)
 
-data BuiltInRelationOpInv = BuiltInRelationOpInvRelationSelectorInv
-                          | BuiltInRelationOpInvTHE_OpInv
-                          | BuiltInRelationOpInvAttributeExtractorInv
-                          | BuiltInRelationOpInvProject
-                          | BuiltInRelationOpInvNadicOtherBuiltInRelationOpInv
-                          | BuiltInRelationOpInvMonadicOrDyadicOtherBuiltInRelationOpInv
+data BuiltInRelationOpInv = BuiltInRelationOpInvRelationSelectorInv RelationSelectorInv
+                          | BuiltInRelationOpInvTHE_OpInv THE_OpInv
+                          | BuiltInRelationOpInvAttributeExtractorInv AttributeExtractorInv
+                          | BuiltInRelationOpInvProject Project
+                          | BuiltInRelationOpInvNadicOtherBuiltInRelationOpInv NadicOtherBuiltInRelationOpInv
+                          | BuiltInRelationOpInvMonadicOrDyadicOtherBuiltInRelationOpInv MonadicOrDyadicOtherBuiltInRelationOpInv
     deriving (Show)
 
 data RelationVarRef = RelationVarRef RelationVarName
     deriving (Show)
 
-data RelationVarName = RelationVarName String
+data RelationVarName = RelationVarName Identifier
     deriving (Show)
 
-data RealRelationVarDef = RealRelationVarDef RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList RealRelationVarDef
+data RealRelationVarDef = RealRelationVarDef RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList
     deriving (Show)
 
 data KeyDefList = KeyDefList KeyDef
                 | KeyDefListCons KeyDefList KeyDef
     deriving (Show)
 
-data KeyDef = KeyDef AttributeCommalist
-            | KeyDefAllBut AttributeCommalist
+data KeyDef = KeyDef AttributeRefCommalist
+            | KeyDefAllBut AttributeRefCommalist
     deriving (Show)
 
 data RelationTypeOrInitValue = RelationTypeOrInitValueRelationTypeSpec RelationTypeSpec
@@ -741,14 +732,14 @@ data Grouping = Grouping AttributeRefCommalist
 data Ungrouping = Ungrouping AttributeRef
     deriving (Show)
 
-data Wrap = Wrap Wrapping
+data Wrap = Wrap RelationExp Wrapping
     deriving (Show)
 
 data Wrapping = Wrapping AttributeRefCommalist IntroducedName
               | WrappingAllBut AttributeRefCommalist IntroducedName
     deriving (Show)
 
-data Unwrap = Unwrap Unwrapping
+data Unwrap = Unwrap RelationExp Unwrapping
     deriving (Show)
 
 data Unwrapping = Unwrapping AttributeRef
@@ -841,7 +832,7 @@ data Project = Project RelationExp AttributeRefCommalist
 data THE_OpInv = THE_OpInv THE_OpName ScalarExp
     deriving (Show)
 
-data THE_OpName = THE_OpName String
+data THE_OpName = THE_OpName Identifier
     deriving (Show)
 
 data TupleWrap = TupleWrap TupleExp Wrapping
@@ -894,10 +885,10 @@ data AttributeExtractorInv = AttributeExtractorInv AttributeRef TupleExp
 data TupleSelectorInv = TupleSelectorInv TupleComponentCommalist
     deriving (Show)
 
-data TupleTypeName = TupleTypeName String
+data TupleTypeName = TupleTypeName Heading
     deriving (Show)
 
-data UserScalarTypeName = UserScalarTypeName String
+data UserScalarTypeName = UserScalarTypeName Identifier
     deriving (Show)
 
 data BuiltInScalarTypeName = BuiltInScalarTypeNameInteger
@@ -918,5 +909,7 @@ data NonscalarTypeSpec = NonscalarTypeSpecTupleTypeSpec TupleTypeSpec
 data MonadicOrDyadicOtherBuiltInTupleOpInv = MonadicOrDyadicOtherBuiltInTupleOpInvMonadic MonadicOtherBuiltInTupleOpInv
                                            | MonadicOrDyadicOtherBuiltInTupleOpInvDyadic DyadicOtherBuiltInTupleOpInv
     deriving (Show)
+
+type Identifier = String
 
 }
