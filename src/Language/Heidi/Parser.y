@@ -461,6 +461,8 @@ data NonscalarExp = NonscalarExpTupleExp TupleExp
                   | NonscalarExpRelationExp RelationExp
     deriving (Show)
 
-data RelationExp
+data By = By AttributeRefCommalist
+        | ByAllBut AttributeRefCommalist
+    deriving (Show)
 
 }
