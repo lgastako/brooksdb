@@ -118,6 +118,13 @@ BuiltInScalarTypeName : integer                                     { BuiltInSca
                       | character                                   { BuiltInScalarTypeNameCharacter }
                       | boolean                                     { BuiltInScalarTypeNameBoolean }
 
+NonscalarTypeSpec : TupleTypeSpec                                   { NonscalarTypeSpec $1 }
+                  | RelationTypeSpec                                { NonscalarTypeSpec $1 }
+
+TupleTypeSpec : TupleTypeName                                       { TupleTypeSpecTupleTypeName $1 }
+              | same_type_as '(' TupleExp ')'                       { TupleTypeSpecSameTypeAs $3 }
+              | tuple same_heading_as '(' NonscalarExp ')'          { TupleTypeSpecSameHeadingAs $4 }
+
 NonscalarExp : TupleExp                                             { NonscalarExpTupleExp $1 }
              | RelationExp                                          { NonscalarExpRelationExp $1 }
 
