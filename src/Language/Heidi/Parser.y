@@ -97,6 +97,27 @@ RelationTypeName : relation Heading                                 { RelationTy
 
 Heading : '{' AttributeCommalist '}'                                { Heading $2 }
 
+AttributeCommalist : Attribute                                      { AttributeCommalist $1 }
+                   | AttributeCommalist ',' Attribute               { AttributeCommalistCons $1 $3 }
+
+Attribute : AttributeName TypeSpec                                  { Attribute $1 $2 }
+
+TypeSpec : ScalarTypeSpec                                           { TypeSpec $1 }
+         | NonscalarTypeSpec                                        { TypeSpec $1 }
+
+ScalarTypeSpec : ScalarTypeName                                     { ScalarTypeSpecScalarTypeName $1 }
+               | same_type_as '(' ScalarExp ')'                     { ScalarTypeSpecSameTypeAs $1 }
+
+ScalarTypeName : UserScalarTypeName                                 { ScalarTypeName $1 }
+               | BuiltInScalarTypeName                              { ScalarTypeName $1 }
+
+UserScalarTypeName : varName                                        { UserScalarTypeName $1 }
+
+BuiltInScalarTypeName : integer                                     { BuiltInScalarTypeNameInteger }
+                      | rational                                    { BuiltInScalarTypeNameRational }
+                      | character                                   { BuiltInScalarTypeNameCharacter }
+                      | boolean                                     { BuiltInScalarTypeNameBoolean }
+
 NonscalarExp : TupleExp                                             { NonscalarExpTupleExp $1 }
              | RelationExp                                          { NonscalarExpRelationExp $1 }
 
