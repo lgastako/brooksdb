@@ -171,6 +171,11 @@ BuiltInTupleOpInv : TupleSelectorInv                                { BuiltInTup
 
 TupleSelectorInv : tuple '{' TupleComponentCommalist '}'            { TupleSelectorInv $3 }
 
+TupleComponentCommalist : TupleComponent                             { TupleComponentCommalist $1 }
+                        | TupleComponentCommalist ',' TupleComponent { TupleComponentCommalistCons $1 $3 }
+
+TupleComponent : AttributeName Exp                                  { TupleComponent $1 $2 }
+
 AttributeExtractorInv : AttributeRef from TupleExp                  { AttributeExtractorInv $1 $3 }
 
 AttributeRef : AttributeName                                        { AttributeRef $1 }
