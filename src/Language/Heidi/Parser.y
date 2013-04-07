@@ -541,8 +541,8 @@ data ScalarTypeSpec = ScalarTypeSpecScalarTypeName ScalarTypeName
                     | ScalarTypeSpecSameTypeAs ScalarExp
     deriving (Show)
 
-data ScalarTypeName = ScalarTypeNameUser
-                    | ScalarTypeNameBuiltIn
+data ScalarTypeName = ScalarTypeNameUser UserScalarTypeName
+                    | ScalarTypeNameBuiltIn BuiltInScalarTypeName
     deriving (Show)
 
 data TupleExpCommalist = TupleExpCommalist TupleExp
