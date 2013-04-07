@@ -36,6 +36,7 @@ tokens :-
   wrap                  { \s -> WrapTok     }
   unwrap                { \s -> UnwrapTok   }
   as                    { \s -> AsTok       }
+  compose               { \s -> ComposeTok  }
   real                  { \s -> RealTok     }
   base                  { \s -> BaseTok     }
   relation              { \s -> RelationTok }

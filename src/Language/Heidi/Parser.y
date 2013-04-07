@@ -25,6 +25,7 @@ import Language.Heidi.Lexer
         wrap            { WrapTok          }
         unwrap          { UnwrapTok        }
         as              { AsTok            }
+        compose         { ComposeTok       }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -124,6 +125,13 @@ MonadicOtherBuiltInTupleOpInv : TupleRename                         { MonadicOth
                               | TupleExtend                         { MonadicOtherBuiltInTupleOpInv $1 }
                               | TupleWrap                           { MonadicOtherBuiltInTupleOpInv $1 }
                               | TupleUnwrap                         { MonadicOtherBuiltInTupleOpInv $1 }
+
+DyadicOtherBuiltInTupleOpInv : DyadicTupleUnion                     { DyadicOtherBuiltInTupleOpInvUnion $1 }
+                             | DyadicTupleCompose                   { DyadicOtherBuiltInTupleOpInvCompose $1 }
+
+DyadicTupleUnion : TupleExp union TupleExp                          { DyadicTupleUnion $1 $3 }
+
+DyadicTupleCompose : TupleExp compose TupleExp                      { DyadicTupleCompose $1 $3 }
 
 TupleRename : TupleExp rename '{' RenamingCommalist '}'             { TupleRename $2 $4 }
 
