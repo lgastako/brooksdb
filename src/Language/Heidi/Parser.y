@@ -617,4 +617,28 @@ data AttributeAssign = AttributeAssign Exp IntroducedName
 data ScalarSelectorInv = ScalarSelectorInvPossrepName PossrepName ArgumentExpCommalist
     deriving (Show)
 
+data Divide = Divide RelationExp RelationExp Per
+    deriving (Show)
+
+data Matching = Matching RelationExp RelationExp
+    deriving (Show)
+
+data NotMatching = NotMatching RelationExp RelationExp
+    deriving (Show)
+
+data RelationExp = RelationExpWith RelationWithExp
+                 | RelationExpNonwith RelationNonWithExp
+    deriving (Show)
+
+data DyadicCompose = DyadicCompose RelationExp RelationExp
+    deriving (Show)
+
+data RelationWithExp = RelationWithExp NameIntroCommalist RelationExp
+    deriving (Show)
+
+data RelationNonwithExp = RelationNonwithExpRelationVarRef RelationVarRef
+                        | RelationNonwithExpRelationOpInv RelationOpInv
+                        | RelationNonwithExpNested RelationExp
+    deriving (Show)
+
 }
