@@ -42,7 +42,11 @@ tokens :-
   intersect             { \s -> IntersectTok }
   join                  { \s -> JoinTok      }
   times                 { \s -> TimesTok     }
-  xunion                { \s -> XUnionTok    }
+  xunion                { \s -> XunionTok    }
+  where                 { \s -> WhereTok     }
+  group                 { \s -> GroupTok     }
+  ungroup               { \s -> UngroupTok   }
+  tclose                { \s -> TcloseTok    }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }

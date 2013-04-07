@@ -32,6 +32,10 @@ import Language.Heidi.Lexer
         join            { JoinTok          }
         times           { TimesTok         }
         xunion          { XunionTok        }
+        where           { WhereTok         }
+        group           { GroupTok         }
+        ungroup         { UngroupTok       }
+        tclose          { TcloseTok        }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -216,6 +220,28 @@ NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunio
             | xunion heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $1 $2 }
 
 NadicCompose : join '{' RelationExpCommalist '}'                    { NadicCompose $3 }
+
+MonadicOrDyadicOtherBuiltInRelationOpInv
+    : MonadicOtherBuiltInRelationOpInv                              { MonadicOrDyadicOtherBuiltInRelationOpInv $1 }
+    | DyadicOtherBuiltInRelationOpInv                               { MonadicOrDyadicOtherBuiltInRelationOpInv $1 }
+
+MonadicOtherBuiltInRelationOpInv : Rename                           { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Where                            { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Extend                           { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Wrap                             { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Unwrap                           { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Group                            { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Ungroup                          { MonadicOtherBuiltInRelationOpInv $1 }
+                                 | Tclose                           { MonadicOtherBuiltInRelationOpInv $1 }
+
+Rename : RelationExp rename '{' RenamingCommalist '}'               { Rename $1 $4 }
+Where : RelationExp where BoolExp                                   { Where $1 $3 }
+Extend : extend RelationExp ':' '{' AttributeAssignCommalist '}'    { Extend $2 $5 }
+Wrap : RelationExp wrap '(' Wrapping ')'                            { Wrap $1 $4 }
+Unwrap : RelationExp unwrap '(' Unwrapping ')'                      { Unwrap $1 $4 }
+Group : RelationExp group '(' Grouping ')'                          { Group $1 $4 }
+Ungroup : RelationExp ungroup '(' Ungrouping ')'                    { Ungroup $1 $4 }
+Tclose : tclose '(' RelationExp ')'                                 { Tclose $3 }
 
 ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
           | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
