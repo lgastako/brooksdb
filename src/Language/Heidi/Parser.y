@@ -399,8 +399,12 @@ BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInSca
                    --| AggOpInv                                       { BuiltInScalarOpInv $1 }
                    -- "plus the usual possibilities...eh?"
 
-ScalarSelectorInv : BuiltInScalarLiteral                            { ScalarSelectorInv $1 }
-                  | PossrepName '(' ArgumentExpCommalist ')'        { ScalarSelectorInv $1 $3 }
+--ScalarSelectorInv : BuiltInScalarLiteral                            { ScalarSelectorInvBuiltInScalarLiteral $1 }
+--                  | PossrepName '(' ArgumentExpCommalist ')'        { ScalarSelectorInvPossrepName $1 $3 }
+
+ScalarSelectorInv : PossrepName '(' ArgumentExpCommalist ')'         { ScalarSelectorInvPossrepName $1 $3 }
+
+-- BuiltInScalarLiteral : ?
 
 ArgumentExpCommalist : ArgumentExp                                  { ArgumentExpCommalist $1 }
                      | ArgumentExpCommalist ',' ArgumentExp         { ArgumentExpCommalistCons $1 $3 }
@@ -409,8 +413,6 @@ ArgumentExp : Exp                                                   { ArgumentEx
 
 Exp : ScalarExp                                                     { Exp $1 }
     | NonscalarExp                                                  { Exp $1 }
-
--- BuiltInScalarLiteral : ?
 
 PossrepName : varName                                               { PossrepName $1 }
 
