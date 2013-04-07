@@ -234,14 +234,36 @@ MonadicOtherBuiltInRelationOpInv : Rename                           { MonadicOth
                                  | Ungroup                          { MonadicOtherBuiltInRelationOpInv $1 }
                                  | Tclose                           { MonadicOtherBuiltInRelationOpInv $1 }
 
-Rename : RelationExp rename '{' RenamingCommalist '}'               { Rename $1 $4 }
-Where : RelationExp where BoolExp                                   { Where $1 $3 }
-Extend : extend RelationExp ':' '{' AttributeAssignCommalist '}'    { Extend $2 $5 }
-Wrap : RelationExp wrap '(' Wrapping ')'                            { Wrap $1 $4 }
-Unwrap : RelationExp unwrap '(' Unwrapping ')'                      { Unwrap $1 $4 }
-Group : RelationExp group '(' Grouping ')'                          { Group $1 $4 }
+Rename : RelationExp rename '{' RenamingCommalist '}'               { Rename $1 $4  }
+Where : RelationExp where BoolExp                                   { Where $1 $3   }
+Extend : extend RelationExp ':' '{' AttributeAssignCommalist '}'    { Extend $2 $5  }
+Wrap : RelationExp wrap '(' Wrapping ')'                            { Wrap $1 $4    }
+Unwrap : RelationExp unwrap '(' Unwrapping ')'                      { Unwrap $1 $4  }
+Group : RelationExp group '(' Grouping ')'                          { Group $1 $4   }
 Ungroup : RelationExp ungroup '(' Ungrouping ')'                    { Ungroup $1 $4 }
-Tclose : tclose '(' RelationExp ')'                                 { Tclose $3 }
+Tclose : tclose '(' RelationExp ')'                                 { Tclose $3     }
+
+-- BoolExp : ?
+
+Grouping : '{' AttributeRefCommalist '}'                            { Grouping $2       }
+         | '{' all but AttributeRefCommalist '}'                    { GroupingAllBut $4 }
+
+Ungrouping : AttributeRef                                           { Ungrouping $1 }
+
+DyadicOtherBuiltInRelationOpInv : DyadicUnion                       { DyadicOtherBuiltInRelationOpInvDyadicUnion $1 }
+                                | DyadicDisjointUnion               { DyadicOtherBuiltInRelationOpInvDyadicDisjointUnion $1 }
+                                | DyadicIntersect                   { DyadicOtherBuiltInRelationOpInvDyadicIntersect $1 }
+                                | Minus                             { DyadicOtherBuiltInRelationOpInvMinus $1 }
+                                | IncludedMinus                     { DyadicOtherBuiltInRelationOpInvIncludedMinus $1 }
+                                | DyadicJoin                        { DyadicOtherBuiltInRelationOpInvDyadicJoin $1 }
+                                | DyadicTimes                       { DyadicOtherBuiltInRelationOpInvDyadicTimes $1 }
+                                | DyadicXunion                      { DyadicOtherBuiltInRelationOpInvDyadicXunion $1 }
+                                | DyadicCompose                     { DyadicOtherBuiltInRelationOpInvDyadicCompose $1 }
+                                | Matching                          { DyadicOtherBuiltInRelationOpInvMatching $1 }
+                                | NotMatching                       { DyadicOtherBuiltInRelationOpInvNotMatching $1 }
+                                | Divide                            { DyadicOtherBuiltInRelationOpInvDivide $1 }
+                                | Summarize                         { DyadicOtherBuiltInRelationOpInvSummarize $1 }
+
 
 ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
           | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
