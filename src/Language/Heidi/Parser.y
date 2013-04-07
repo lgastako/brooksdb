@@ -41,10 +41,10 @@ RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyD
 
 --KeyDefList : ?
 
-RealOrBase : real         { RealTok }
-           | base         { BaseTok }
+RealOrBase : real                                                   { RealTok }
+           | base                                                   { BaseTok }
 
-RelationVarName : varName                                           { RelationVarName $1 } -- guessed
+RelationVarName : varName                                           { RelationVarName $1 }
 
 RelationTypeOrInitValue : RelationTypeSpec                          { RelationTypeOrInitValueRelationTypeSpec $1 Nothing }
                         | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit Nothing $3             }
@@ -71,6 +71,10 @@ TupleNonwithExp : TupleVarRef                                       { $1 }
                 | ArrayVarRef '(' Subscript ')'                     { $1 }
                 | '(' TupleExp ')'                                  { $1 }
 
+TupleVarRef : TupleVarName                                          { $1 }
+
+TupleVarName : varName                                              { TupleVarName $1 }
+
 Subscript : IntegerExp                                              { Subscript $1 }
 
 IntegerExp : int                                                    { IntegerExpInt $1 }
@@ -91,33 +95,36 @@ RelationOpInv : UserOpInv                                           { $1 }
 
 UserOpInv : UserOpName '(' ArgumentExpCommalist ')'                 { UserOpInv $1 $3 }
 
-UserOpName : varName                                                { UserOpName $1 } -- guessed
+UserOpName : varName                                                { UserOpName $1 }
 
 -- ArgumentExpCommalist : ?
 
-BuiltInRelationOpInv : RelationSelectorInv                          { $1 }
-                     | THE_OpInv                                    { $1 }
-                     | AttributeExtractorInv                        { $1 }
-                     | Project                                      { $1 }
-                     | NadicOtherBuiltInRelationOpInv               { $1 }
-                     | MonadicOrDyadicOtherBuiltInRelationOpInv     { $1 }
+BuiltInRelationOpInv : RelationSelectorInv                          { BuiltInRelationOpInvRelationSelectorInv $1                      }
+                     | THE_OpInv                                    { BuiltInRelationOpInvTHE_OpInv $1                                }
+                     | AttributeExtractorInv                        { BuiltInRelationOpInvAttributeExtractorInv $1                    }
+                     | Project                                      { BuiltInRelationOpInvProject $1                                  }
+                     | NadicOtherBuiltInRelationOpInv               { BuiltInRelationOpInvNadicOtherBuiltInRelationOpInv $1           }
+                     | MonadicOrDyadicOtherBuiltInRelationOpInv     { BuiltInRelationOpInvMonadicOrDyadicOtherBuiltInRelationOpInv $1 }
 
 THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv $3 }
 
-THE_OpName : varName                                                { THE_OpName $1 } -- guessed
+THE_OpName : varName                                                { THE_OpName $1 }
 
-ScalarExp : ScalarWithExp                                           { $1 }
-          | ScalarNonwithExp                                        { $1 }
+ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
+          | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }
 
 ScalarWithExp : with '(' NameIntroCommalist ')' ':' ScalarExp       { ScalarWithExp $3 $6 }
 
-ScalarNonwithExp : ScalarVarRef                                     { $1 }
-                 | ScalarOpInv                                      { $1 }
-                 | '(' ScalarExp ')'                                { $1 }
+ScalarNonwithExp : ScalarVarRef                                     { ScalarNonwithExpScalarVarRef $1 }
+                 | ScalarOpInv                                      { ScalarNonwithExpScalarOpInv $1  }
+                 | '(' ScalarExp ')'                                { ScalarNonwithExpScalarExp $1    }
 
 ScalarVarRef : ScalarVarName                                        { ScalarVarRef $1 }
 
-ScalarVarName : varName                                             { ScalarVarName $1 } -- guessed
+ScalarVarName : varName                                             { ScalarVarName $1 }
+
+ScalarOpInv : UserOpInv                                             { ScalarOpInv $1 }
+            | BuiltInScalarOpInv                                    { ScalarOpInv $1 }
 
 RelationSelectorInv : relation '[' Heading ']' '{' TupleExpCommalist '}'   { RelationSelectorInv $1 $2 }
                     | table_dee                                            { RelationSelectorInvTableDee }
