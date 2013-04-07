@@ -19,6 +19,12 @@ import Language.Heidi.Lexer
         from            { FromTok          }
         all             { AllTok           }
         but             { ButTok           }
+        union           { UnionTok         }
+        rename          { RenameTok        }
+        extend          { ExtendTok        }
+        wrap            { WrapTok          }
+        unwrap          { UnwrapTok        }
+        as              { AsTok            }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -104,8 +110,37 @@ AttributeName : varName                                             { AttributeN
 
 TupleExtractorInv : tuple from RelationExp                          { TupleExtractorInv $3 }
 
-TupleProject : TupleExp '{' AttributeRefList '}'                    { TupleProject $1 $3 }
-             | TupleExp '{' all but AttributeRefList '}'            { TupleProjectAllBut $1 $5 }
+TupleProject : TupleExp '{' AttributeRefCommalist '}'               { TupleProject $1 $3 }
+             | TupleExp '{' all but AttributeRefCommalist '}'       { TupleProjectAllBut $1 $5 }
+
+NadicOtherBuiltInTupleOpInv : NadicTupleUnion                       { NadicOtherBuiltInTupleOpInv $1 }
+
+NadicTupleUnion : union '{' TupleExpCommalist '}'                   { NadicTupleUnion $3 }
+
+MonadicOrDyadicOtherBuiltInTupleOpInv : MonadicOtherBuiltInTupleOpInv { MonadicOrDyadicOtherBuiltInTupleOpInv $1 }
+                                      | DyadicOtherBuiltInTupleOpInv  { MonadicOrDyadicOtherBuiltInTupleOpInv $1 }
+
+MonadicOtherBuiltInTupleOpInv : TupleRename                         { MonadicOtherBuiltInTupleOpInv $1 }
+                              | TupleExtend                         { MonadicOtherBuiltInTupleOpInv $1 }
+                              | TupleWrap                           { MonadicOtherBuiltInTupleOpInv $1 }
+                              | TupleUnwrap                         { MonadicOtherBuiltInTupleOpInv $1 }
+
+TupleRename : TupleExp rename '{' RenamingCommalist '}'             { TupleRename $2 $4 }
+
+TupleExtend : extend TupleExp ':' '{' AttributeAssignCommalist '}'  { TupleExtend $2 $5 }
+
+TupleWrap : TupleExp wrap '(' Wrapping ')'                          { TupleWrap $1 $4 }
+
+TupleUnwrap : TupleExp unwrap '(' Unwrapping ')'                    { TupleUnwrap $1 $4 }
+
+Wrapping : '{' AttributeRefCommalist '}' as IntroducedName          { Wrapping $2 $5 }
+         | '{' all but AttributeRefCommalist '}' as IntroducedName  { WrappingAllBut $4 $7 }
+
+IntroducedName : varName                                            { IntroducedName $1 }
+
+Unwrapping : AttributeRef                                           { Unwrapping $1 }
+
+-- AttributeRefCommalist : ?
 
 Subscript : IntegerExp                                              { Subscript $1 }
 
@@ -163,6 +198,13 @@ BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInSca
                    | AttributeExtractorInv                          { BuiltInScalarOpInv $1 }
                    --| AggOpInv                                       { BuiltInScalarOpInv $1 }
                    -- "plus the usual possibilities...eh?"
+
+ScalarSelectorInv : BuiltInScalarLiteral                            { ScalarSelectorInv $1 }
+                  | PossrepName '(' ArgumentExpCommalist ')'        { ScalarSelectorInv $1 $3 }
+
+-- BuiltInScalarLiteral : ?
+
+PossrepName : varName                                               { PossrepName $1 }
 
 --AggOpInv : AggOpName '(' RelationExp ')'
            --AggOpName '(' IntegerExp RelationExp ')'

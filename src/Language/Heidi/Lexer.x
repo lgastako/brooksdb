@@ -30,14 +30,20 @@ tokens :-
   from                  { \s -> FromTok     }
   all                   { \s -> AllTok      }
   but                   { \s -> ButTok      }
+  union                 { \s -> UnionTok    }
+  rename                { \s -> RenameTok   }
+  extend                { \s -> ExtendTok   }
+  wrap                  { \s -> WrapTok     }
+  unwrap                { \s -> UnwrapTok   }
+  as                    { \s -> AsTok       }
   real                  { \s -> RealTok     }
   base                  { \s -> BaseTok     }
   relation              { \s -> RelationTok }
   with                  { \s -> WithTok     }
   table_dee             { \s -> TableDeeTok }
   table_dum             { \s -> TableDumTok }
-  $ident+               { \s -> IdentTok s  }
 
+  $ident+               { \s -> IdentTok s  }
 {
 -- Each action has type :: String -> Token
 
