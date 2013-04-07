@@ -163,13 +163,13 @@ TupleVarName : varName                                              { TupleVarNa
 TupleOpInv : UserOpInv                                              { TupleOpInvUser $1 }
            | BuiltInTupleOpInv                                      { TupleOpInvBuiltIn $1 }
 
-BuiltInTupleOpInv : TupleSelectorInv                                { BuiltInTupleOpInv $1 }
-                  | THE_OpInv                                       { BuiltInTupleOpInv $1 }
-                  | AttributeExtractorInv                           { BuiltInTupleOpInv $1 }
-                  | TupleExtractorInv                               { BuiltInTupleOpInv $1 }
-                  | TupleProject                                    { BuiltInTupleOpInv $1 }
-                  | NadicOtherBuiltInTupleOpInv                     { BuiltInTupleOpInv $1 }
-                  | MonadicOrDyadicOtherBuiltInTupleOpInv           { BuiltInTupleOpInv $1 }
+BuiltInTupleOpInv : TupleSelectorInv                                { BuiltInTupleOpInvTupleSelectorInv $1 }
+                  | THE_OpInv                                       { BuiltInTupleOpInvTHE_OpInv $1 }
+                  | AttributeExtractorInv                           { BuiltInTupleOpInvAttributeExtractorInv $1 }
+                  | TupleExtractorInv                               { BuiltInTupleOpInvTupleExtractorInv $1 }
+                  | TupleProject                                    { BuiltInTupleOpInvTupleProject $1 }
+                  | NadicOtherBuiltInTupleOpInv                     { BuiltInTupleOpInvNadicOtherBuiltInTupleOpInv $1 }
+                  | MonadicOrDyadicOtherBuiltInTupleOpInv           { BuiltInTupleOpInvMonadicOrDyadicOtherBuiltInTupleOpInv $1 }
 
 TupleSelectorInv : tuple '{' TupleComponentCommalist '}'            { TupleSelectorInv $3 }
 
@@ -280,7 +280,7 @@ THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv 
 
 THE_OpName : varName                                                { THE_OpName $1 }
 
-Project : RelationExp '{' AttributeRefCommalist '}'                 { Project $1 $3 }
+Project : RelationExp '{' AttributeRefCommalist '}'                 { Project $1 $3       }
         | RelationExp '{' all but AttributeRefCommalist '}'         { ProjectAllBut $1 $5 }
 
 NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOtherBuiltInRelationOpInv $1 }
@@ -294,7 +294,7 @@ NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOther
 NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion $3          }
            | union Heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $2 $4 }
 
-NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $3 }
+NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $3          }
                    | d_union Heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $2 $4 }
 
 NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicIntersect $1          }
@@ -343,40 +343,41 @@ Grouping : '{' AttributeRefCommalist '}'                            { Grouping $
 
 Ungrouping : AttributeRef                                           { Ungrouping $1 }
 
-DyadicOtherBuiltInRelationOpInv : DyadicUnion                       { DyadicOtherBuiltInRelationOpInvDyadicUnion $1 }
+DyadicOtherBuiltInRelationOpInv : DyadicUnion                       { DyadicOtherBuiltInRelationOpInvDyadicUnion $1         }
                                 | DyadicDisjointUnion               { DyadicOtherBuiltInRelationOpInvDyadicDisjointUnion $1 }
-                                | DyadicIntersect                   { DyadicOtherBuiltInRelationOpInvDyadicIntersect $1 }
-                                | Minus                             { DyadicOtherBuiltInRelationOpInvMinus $1 }
-                                | IncludedMinus                     { DyadicOtherBuiltInRelationOpInvIncludedMinus $1 }
-                                | DyadicJoin                        { DyadicOtherBuiltInRelationOpInvDyadicJoin $1 }
-                                | DyadicTimes                       { DyadicOtherBuiltInRelationOpInvDyadicTimes $1 }
-                                | DyadicXunion                      { DyadicOtherBuiltInRelationOpInvDyadicXunion $1 }
-                                | DyadicCompose                     { DyadicOtherBuiltInRelationOpInvDyadicCompose $1 }
-                                | Matching                          { DyadicOtherBuiltInRelationOpInvMatching $1 }
-                                | NotMatching                       { DyadicOtherBuiltInRelationOpInvNotMatching $1 }
-                                | Divide                            { DyadicOtherBuiltInRelationOpInvDivide $1 }
-                                | Summarize                         { DyadicOtherBuiltInRelationOpInvSummarize $1 }
+                                | DyadicIntersect                   { DyadicOtherBuiltInRelationOpInvDyadicIntersect $1     }
+                                | Minus                             { DyadicOtherBuiltInRelationOpInvMinus $1               }
+                                | IncludedMinus                     { DyadicOtherBuiltInRelationOpInvIncludedMinus $1       }
+                                | DyadicJoin                        { DyadicOtherBuiltInRelationOpInvDyadicJoin $1          }
+                                | DyadicTimes                       { DyadicOtherBuiltInRelationOpInvDyadicTimes $1         }
+                                | DyadicXunion                      { DyadicOtherBuiltInRelationOpInvDyadicXunion $1        }
+                                | DyadicCompose                     { DyadicOtherBuiltInRelationOpInvDyadicCompose $1       }
+                                | Matching                          { DyadicOtherBuiltInRelationOpInvMatching $1            }
+                                | NotMatching                       { DyadicOtherBuiltInRelationOpInvNotMatching $1         }
+                                | Divide                            { DyadicOtherBuiltInRelationOpInvDivide $1              }
+                                | Summarize                         { DyadicOtherBuiltInRelationOpInvSummarize $1           }
 
-DyadicUnion : RelationExp union RelationExp                         { DyadicUnion $1 $3 }
+DyadicUnion : RelationExp union RelationExp                         { DyadicUnion $1 $3         }
 DyadicDisjointUnion : RelationExp d_union RelationExp               { DyadicDisjointUnion $1 $3 }
-DyadicIntersect : RelationExp intersect RelationExp                 { DyadicIntersect $1 $3 }
-Minus : RelationExp minus RelationExp                               { Minus $1 $3 }
-IncludedMinus : RelationExp i_minus RelationExp                     { IncludedMinus $1 $3 }
-DyadicJoin : RelationExp join RelationExp                           { DyadicJoin $1 $3 }
-DyadicTimes : RelationExp times RelationExp                         { DyadicTimes $1 $3 }
-DyadicXunion : RelationExp union RelationExp                        { DyadicXunion $1 $3 }
-DyadicCompose : RelationExp compose RelationExp                     { DyadicCompose $1 $3 }
-Matching : RelationExp matching RelationExp                         { Matching $1 $3 }
-NotMatching : RelationExp not matching RelationExp                  { NotMatching $1 $4 }
-Divide : RelationExp divideby RelationExp Per                       { Divide $1 $3 $4 }
+DyadicIntersect : RelationExp intersect RelationExp                 { DyadicIntersect $1 $3     }
+Minus : RelationExp minus RelationExp                               { Minus $1 $3               }
+IncludedMinus : RelationExp i_minus RelationExp                     { IncludedMinus $1 $3       }
+DyadicJoin : RelationExp join RelationExp                           { DyadicJoin $1 $3          }
+DyadicTimes : RelationExp times RelationExp                         { DyadicTimes $1 $3         }
+DyadicXunion : RelationExp union RelationExp                        { DyadicXunion $1 $3        }
+DyadicCompose : RelationExp compose RelationExp                     { DyadicCompose $1 $3       }
+Matching : RelationExp matching RelationExp                         { Matching $1 $3            }
+NotMatching : RelationExp not matching RelationExp                  { NotMatching $1 $4         }
+Divide : RelationExp divideby RelationExp Per                       { Divide $1 $3 $4           }
+
 Summarize : summarize RelationExp ':' '{' AttributeAssignCommalist '}'           { Summarize $2 $5           }
           | summarize RelationExp PerOrBy ':' '{' AttributeAssignCommalist '}'   { SummarizePerOrBy $2 $3 $6 }
 
 Per : per '(' RelationExp ')'                                       { Per $3 }
     --| per '(' RelationExp ... many
 
-PerOrBy : Per                                                       { PerOrBy $1 }
-        | By                                                        { PerOrBy $1 }
+PerOrBy : Per                                                       { PerOrByPer $1 }
+        | By                                                        { PerOrByBy $1  }
 
 -- Note: I inserted By as it's own element, the original grammar had it nested underPerOrBy.
 By : by '{' AttributeRefCommalist '}'                               { By $1 }
@@ -395,11 +396,11 @@ ScalarVarRef : ScalarVarName                                        { ScalarVarR
 
 ScalarVarName : varName                                             { ScalarVarName $1 }
 
-ScalarOpInv : UserOpInv                                             { ScalarOpInvUserOpInv $1 }
+ScalarOpInv : UserOpInv                                             { ScalarOpInvUserOpInv $1          }
             | BuiltInScalarOpInv                                    { ScalarOpInvBuiltInScalarOpInv $1 }
 
-BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInScalarOpInvScalarSelectorInv $1 }
-                   | THE_OpInv                                      { BuiltInScalarOpInvTHE_OpInv $1 }
+BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInScalarOpInvScalarSelectorInv $1     }
+                   | THE_OpInv                                      { BuiltInScalarOpInvTHE_OpInv $1             }
                    | AttributeExtractorInv                          { BuiltInScalarOpInvAttributeExtractorInv $1 }
                    --| AggOpInv                                       { BuiltInScalarOpInv $1 }
                    -- "plus the usual possibilities...eh?"
@@ -561,6 +562,44 @@ data TupleNonwithExp = TupleNonwithExpTupleVarRef TupleVarRef
                      | TupleNonwithExpTupleOpInv TupleOpInv
                      | TupleNonwithExpArrayVarRefSubscript ArrayVarRef Subscript
                      | TupleNonwithExpNestedTupleExp TupleExp
+    deriving (Show)
+
+data Subscript = Subscript IntegerExp
+    deriving (Show)
+
+data ArrayVarRef = ArrayVarRef ArrayVarName
+    deriving (Show)
+
+data ArrayVarName = ArrayVarName String
+    deriving (Show)
+
+data IntegerExp = IntegerExp Int
+    deriving (Show)
+
+data TupleOpInv = TupleOpInvUser UserOpInv
+                | TupleOpInvBuiltIn BuiltInTupleOpInv
+    deriving (Show)
+
+data BuiltInTupleOpInv = BuiltInTupleOpInvTupleSelectorInv
+                       | BuiltInTupleOpInvTHE_OpInv
+                       | BuiltInTupleOpInvAttributeExtractorInv
+                       | BuiltInTupleOpInvTupleExtractorInv
+                       | BuiltInTupleOpInvTupleProject
+                       | BuiltInTupleOpInvNadicOtherBuiltInTupleOpInv
+                       | BuiltInTupleOpInvMonadicOrDyadicOtherBuiltInTupleOpInv
+    deriving (Show)
+
+data TupleVarRef = TupleVarRef TupleVarName
+    deriving (Show)
+
+data TupleVarName = TupleVarName String
+    deriving (Show)
+
+data Per = Per RelationExp
+    deriving (Show)
+
+data PerOrBy = PerOrByPer Per
+             | PerOrByBy By
     deriving (Show)
 
 }
