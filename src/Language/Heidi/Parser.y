@@ -395,8 +395,8 @@ ScalarVarRef : ScalarVarName                                        { ScalarVarR
 
 ScalarVarName : varName                                             { ScalarVarName $1 }
 
-ScalarOpInv : UserOpInv                                             { ScalarOpInv $1 }
-            | BuiltInScalarOpInv                                    { ScalarOpInv $1 }
+ScalarOpInv : UserOpInv                                             { ScalarOpInvUserOpInv $1 }
+            | BuiltInScalarOpInv                                    { ScalarOpInvBuiltInScalarOpInv $1 }
 
 BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInScalarOpInv $1 }
                    | THE_OpInv                                      { BuiltInScalarOpInv $1 }
@@ -416,7 +416,7 @@ ArgumentExpCommalist : ArgumentExp                                  { ArgumentEx
 
 ArgumentExp : Exp                                                   { ArgumentExp $1 }
 
-Exp : ScalarExp                                                     { ExpScalar $1     }
+Exp : ScalarExp                                                     { ExpScalar $1    }
     | NonscalarExp                                                  { ExpNonscalar $1 }
 
 PossrepName : varName                                               { PossrepName $1 }
@@ -480,6 +480,18 @@ data NameIntroCommalist = NameIntroCommalist NameIntro
     deriving (Show)
 
 data NameIntro = NameIntro IntroducedName Exp
+    deriving (Show)
+
+data IntroducedName = IntroducedName String
+    deriving (Show)
+
+data ScalarNonwithExp = ScalarNonwithExpScalarVarRef ScalarVarRef
+                      | ScalarNonwithExpScalarOpInv ScalarOpInv
+                      | ScalarNonwithExpScalarExp ScalarExp
+    deriving (Show)
+
+data ScalarOpInv = ScalarOpInvUserOpInv UserOpInv
+                 | ScalarOpInvBuiltInScalarOpInv BuiltInScalarOpInv
     deriving (Show)
 
 }
