@@ -71,9 +71,24 @@ TupleNonwithExp : TupleVarRef                                       { $1 }
                 | ArrayVarRef '(' Subscript ')'                     { $1 }
                 | '(' TupleExp ')'                                  { $1 }
 
+ArrayVarRef : ArrayVarName                                          { ArrayVarRef $1 }
+
+ArrayVarName : varName                                              { ArrayVarName $1 }
+
 TupleVarRef : TupleVarName                                          { TupleVarRef $1 }
 
 TupleVarName : varName                                              { TupleVarName $1 }
+
+TupleOpInv : UserOpInv                                              { TupleOpInvUser $1 }
+           | BuiltInTupleOpInv                                      { TupleOpInvBuiltIn $1 }
+
+BuiltInTupleOpInv : TupleSelectorInv                                { BuiltInTupleOpInv $1 }
+                  | THE_OpInv                                       { BuiltInTupleOpInv $1 }
+                  | AttributeExtractorInv                           { BuiltInTupleOpInv $1 }
+                  | TupleExptractorInv                              { BuiltInTupleOpInv $1 }
+                  | TupleProject                                    { BuiltInTupleOpInv $1 }
+                  | NadicOtherBuiltInTupleOpInv                     { BuiltInTupleOpInv $1 }
+                  | MonadicOrDyadicOtherBuiltInTupleOpInv           { BuiltInTupleOpInv $1 }
 
 Subscript : IntegerExp                                              { Subscript $1 }
 
