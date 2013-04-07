@@ -66,6 +66,7 @@ import Language.Heidi.Lexer
 --      Parameterized tokens
         varName         { IdentTok $$      }
         int             { IntTok $$        }
+        strLiteral      { StrTok $$        }
 
 %%
 
@@ -90,8 +91,8 @@ RelationTypeName : relation Heading                                 { RelationTy
 
 Heading : '{' AttributeCommalist '}'                                { Heading $2 }
 
-NonscalarExp : TupleExp                                             { NonScalarExpTupleExp $1 }
-             | RelationExp                                          { NonScalarExpRelationExp $1 }
+NonscalarExp : TupleExp                                             { NonscalarExpTupleExp $1 }
+             | RelationExp                                          { NonscalarExpRelationExp $1 }
 
 TupleExp : TupleWithExp                                             { $1 }
          | TupleNonwithExp                                          { $1 }
@@ -172,6 +173,8 @@ Renaming : AttributeRef as IntroducedName                           { Renaming $
                as CharacterStringLiteral                            { RenamingPrefix $2 $3 }
          | suffix CharacterStringLiteral
                as CharacterStringLiteral                            { RenamingSuffix $2 $3 }
+
+CharacterStringLiteral : strLiteral                                 { CharacterStringLiteral $1 }
 
 -- AttributeAssignCommaList : ?
 
@@ -348,6 +351,9 @@ ArgumentExpCommalist : ArgumentExp                                  { ArgumentEx
                      | ArgumentExpCommalist ',' ArgumentExp         { ArgumentExpCommalistCons $1 $3 }
 
 ArgumentExp : Exp                                                   { ArgumentExp $1 }
+
+Exp : ScalarExp                                                     { Exp $1 }
+    | NonscalarExp                                                  { Exp $2 }
 
 -- BuiltInScalarLiteral : ?
 
