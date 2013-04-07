@@ -203,6 +203,9 @@ THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv 
 
 THE_OpName : varName                                                { THE_OpName $1 }
 
+Project : RelationExp '{' AttributeRefCommalist '}'                 { Project $1 $3 }
+        | RelationExp '{' all but AttributeRefCommalist '}'         { ProjectAllBut $1 $5 }
+
 NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOtherBuiltInRelationOpInv $1 }
                                | NadicDisjointUnion                 { NadicOtherBuiltInRelationOpInv $1 }
                                | NadicIntersect                     { NadicOtherBuiltInRelationOpInv $1 }
