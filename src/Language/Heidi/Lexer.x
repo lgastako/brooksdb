@@ -70,6 +70,8 @@ tokens :-
   with                  { \s -> WithTok      }
   table_dee             { \s -> TableDeeTok  }
   table_dum             { \s -> TableDumTok  }
+  true                  { \s -> TrueTok      }
+  false                 { \s -> FalseTok     }
 
   $ident+               { \s -> IdentTok s  }
 {

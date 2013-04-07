@@ -56,6 +56,8 @@ import Language.Heidi.Lexer
         relation        { RelationTok      }
         table_dee       { TableDeeTok      }
         table_dum       { TableDumTok      }
+        true            { TrueTok          }
+        false           { FalseTok         }
         same_type_as    { SameTypeAsTok    }
         same_heading_as { SameHeadingAsTok }
         with            { WithTok          }
@@ -327,7 +329,9 @@ Group : RelationExp group '(' Grouping ')'                          { Group $1 $
 Ungroup : RelationExp ungroup '(' Ungrouping ')'                    { Ungroup $1 $4 }
 Tclose : tclose '(' RelationExp ')'                                 { Tclose $3     }
 
--- BoolExp : ?
+-- JUST FOR NOW.
+BoolExp : true                                                      { BoolExpTrue  }
+        | false                                                     { BoolExpFalse }
 
 Grouping : '{' AttributeRefCommalist '}'                            { Grouping $2       }
          | '{' all but AttributeRefCommalist '}'                    { GroupingAllBut $4 }
