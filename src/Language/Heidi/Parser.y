@@ -65,8 +65,6 @@ import Language.Heidi.Lexer
         ')'             { RightRoundTok    }
         '{'             { LeftCurlyTok     }
         '}'             { RightCurlyTok    }
---        '['             { LeftSquareTok    }
---        ']'             { RightSquareTok   }
         ':'             { ColonTok         }
         ','             { CommaTok         }
         ':='            { AssignerTok      }
