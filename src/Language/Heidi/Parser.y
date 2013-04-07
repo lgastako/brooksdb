@@ -82,17 +82,17 @@ RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyD
 KeyDefList : KeyDef                                                 { KeyDefList $1 }
            | KeyDefList ',' KeyDef                                  { KeyDefListCons $1 $3 }
 
-KeyDef : key '{' AttributeRefCommalist '}'                          { KeyDef $1 }
-       | key '{' all but AttributeRefCommalist '}'                  { KeyDefAlLBut $1 }
+KeyDef : key '{' AttributeRefCommalist '}'                          { KeyDef $3 }
+       | key '{' all but AttributeRefCommalist '}'                  { KeyDefAlLBut $5 }
 
 RealOrBase : real                                                   { RealTok }
            | base                                                   { BaseTok }
 
 RelationVarName : varName                                           { RelationVarName $1 }
 
-RelationTypeOrInitValue : RelationTypeSpec                          { RelationTypeOrInitValueRelationTypeSpec $1 Nothing }
-                        | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit Nothing $3             }
-                        | RelationTypeSpec init '(' RelationExp ')' { RelationTypeOrInitValueRelationTypeSpecInit $1 $4  }
+RelationTypeOrInitValue : RelationTypeSpec                          { RelationTypeOrInitValueRelationTypeSpec $1        }
+                        | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit Nothing $3            }
+                        | RelationTypeSpec init '(' RelationExp ')' { RelationTypeOrInitValueRelationTypeSpecInit $1 $4 }
 
 RelationTypeSpec : RelationTypeName                                 { RelationTypeSpecRelationTypeName $1 }
                  | same_type_as '(' RelationExp ')'                 { RelationTypeSpecSameTypeAs $3       }
@@ -111,7 +111,7 @@ TypeSpec : ScalarTypeSpec                                           { TypeSpec $
          | NonscalarTypeSpec                                        { TypeSpec $1 }
 
 ScalarTypeSpec : ScalarTypeName                                     { ScalarTypeSpecScalarTypeName $1 }
-               | same_type_as '(' ScalarExp ')'                     { ScalarTypeSpecSameTypeAs $1 }
+               | same_type_as '(' ScalarExp ')'                     { ScalarTypeSpecSameTypeAs $3 }
 
 ScalarTypeName : UserScalarTypeName                                 { ScalarTypeName $1 }
                | BuiltInScalarTypeName                              { ScalarTypeName $1 }
@@ -130,6 +130,8 @@ TupleTypeSpec : TupleTypeName                                       { TupleTypeS
               | same_type_as '(' TupleExp ')'                       { TupleTypeSpecSameTypeAs $3 }
               | tuple same_heading_as '(' NonscalarExp ')'          { TupleTypeSpecSameHeadingAs $4 }
 
+TupleTypeName : tuple Heading                                       { TupleTypeName $2 }
+
 NonscalarExp : TupleExp                                             { NonscalarExpTupleExp $1 }
              | RelationExp                                          { NonscalarExpRelationExp $1 }
 
@@ -138,10 +140,10 @@ TupleExp : TupleWithExp                                             { $1 }
 
 TupleWithExp : with '(' NameIntroCommalist ')' ':' TupleExp         { TupleWithExp $3 $6 }
 
-TupleNonwithExp : TupleVarRef                                       { $1 }
-                | TupleOpInv                                        { $1 }
-                | ArrayVarRef '(' Subscript ')'                     { $1 }
-                | '(' TupleExp ')'                                  { $1 }
+TupleNonwithExp : TupleVarRef                                       { TupleNonwithExpTupleVarRef $1 }
+                | TupleOpInv                                        { TupleNonwithExpTupleOpInv $1 }
+                | ArrayVarRef '(' Subscript ')'                     { TupleNonwithExpArrayVarRefSubscript $1 $3 }
+                | '(' TupleExp ')'                                  { TupleNonwithExpNestedTupleExp $2 }
 
 NameIntroCommalist : NameIntro                                      { NameIntroCommalist $1 }
                    | NameIntroCommalist ',' NameIntro               { NameIntroCommalistCons $1 $3 }
@@ -277,21 +279,21 @@ NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOther
                                | NadicXunion                        { NadicOtherBuiltInRelationOpInv $1 }
                                | NadicCompose                       { NadicOtherBuiltInRelationOpInv $1 }
 
-NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion $1          }
-           | union heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $1 $2 }
+NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion $3          }
+           | union Heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $2 $4 }
 
-NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $1 }
-                   | d_union heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $1 $2 }
+NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $3 }
+                   | d_union Heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $2 $4 }
 
 NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicIntersect $1          }
-               | intersect heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $1 $2 }
+               | intersect Heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $2 $4 }
 
 NadicJoin : join '{' RelationExpCommalist '}'                       { NadicJoin $3 }
 
 NadicTimes : join '{' RelationExpCommalist '}'                      { NadicTimes $3 }
 
-NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunion $1          }
-            | xunion heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $1 $2 }
+NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunion $3          }
+            | xunion Heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $2 $4 }
 
 NadicCompose : join '{' RelationExpCommalist '}'                    { NadicCompose $3 }
 
