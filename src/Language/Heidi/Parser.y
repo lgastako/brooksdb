@@ -1,10 +1,10 @@
 {
--- Starting with example calculator from
--- http://www.haskell.org/happy/doc/html/sec-using.html#sec-other-datatypes
+
 module Language.Heidi.Parser ( parse ) where
 
 import Data.Char ( isSpace, isAlpha, isDigit )
 import Language.Heidi.Lexer
+
 }
 
 %name parse
@@ -12,32 +12,89 @@ import Language.Heidi.Lexer
 %error     { parseError }
 
 %token
-        var      { VarTok      }
-        varName  { IdentTok $$ }
-        real     { RealTok     }
-        relation { RelationTok }
-        int      { IntTok   $$ }
+--      Keywords
+        var             { VarTok           }
+        init            { InitTok          }
+        real            { RealTok          }
+        base            { BaseTok          }
+        relation        { RelationTok      }
+        table_dee       { TableDeeTok      }
+        table_dum       { TableDumTok      }
+        same_type_as    { SameTypeAsTok    }
+        same_heading_as { SameHeadingAsTok }
+        with            { WithTok          }
+
+--      Parameterized tokens
+        varName         { IdentTok $$      }
+        int             { IntTok $$        }
 
 %%
 
--- should we return a token here?  why not for now? it has
--- everything we need, namely the int to be pulled out later
+RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList { RealRelationVarDef }
 
-Int    : int     { IntTok $1 }
+--KeyDefList : ?
 
-Exp    : var varName RealRelationDef { VarDec $2 $3 }
---       | varName                     { BareName $1 }
+RealOrBase : real         { RealTok }
+           | base         { BaseTok }
 
-RealRelationDef : real relation { RelationDef }
+RelationVarName : varName                                           { RelationVarName $1 }
+
+RelationTypeOrInitValue : RelationTypeSpec                          { RelationTypeOrInitValueRelationTypeSpec $1 Nothing }
+                        | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit Nothing $3             }
+                        | RelationTypeSpec init '(' RelationExp ')' { RelationTypeOrInitValueRelationTypeSpecInit $1 $4  }
+
+RelationTypeSpec : RelationTypeName                                 { RelationTypeSpecRelationTypeName $1 }
+                 | same_type_as '(' RelationExp ')'                 { RelationTypeSpecSameTypeAs $3       }
+                 | relation same_heading_as '(' NonscalarExp ')'    { RelationTypeSpecSameHeadingAs $4    }
+
+RelationTypeName : relation Heading                                 { RelationTypeName $2 }
+
+Heading : '{' AttributeCommalist '}'                                { Heading $2 }
+
+NonscalarExp : TupleExp                                             { NonScalarExpTupleExp $1 }
+             | RelationExp                                          { NonScalarExpRelationExp $1 }
+
+RelationExp : RelationWithExp                                       { $1 }
+            | RelationNonwithExp                                    { $1 }
+
+RelationWithExp : with '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $4 }  -- is the colon really right?
+
+RelationNonwithExp : RelationVarRef                                 { RelationNonwithExpRelationVarRef $1 }
+                   | RelationOpInv                                  { RelationNonwithExpRelationOpInv $1  }
+                   | '(' RelationExp ')'                            { RelationNonwithExpRelationExp $2    }
+
+RelationVarRef : RelationVarName                                    { RelationVarRef $1 }
+
+RelationOpInv : UserOpInv                                           { $1 }
+              | BuiltInRelationOpInv                                { $1 }
+
+UserOpInv : UserOpName '(' ArgumentExpCommalist ')'                 { UserOpInv $1 $3 }
+
+-- UserOpName : ?
+
+-- ArgumentExpCommalist : ?
+
+BuiltInRelationOpInv : RelationSelectorInv                          { $1 }
+                     | THE_OpInv                                    { $1 }
+                     | AttributeExtractorInv                        { $1 }
+                     | Project                                      { $1 }
+                     | NadicOtherBuiltInRelationOpInv               { $1 }
+                     | MonadicOrDyadicOtherBuiltInRelationOpInv     { $1 }
+
+RelationSelectorInv : relation '[' Heading ']' '{' TupleExpCommalist '}'   { RelationSelectorInv $1 $2 }
+                    | table_dee                                            { RelationSelectorInvTableDee }
+                    | table_dum                                            { RelationSelectorInvTableDum }
+
+
 
 {
+
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-data VarDec = VarDec String RelationDef
-    deriving (Show)
-
-data BareName = BareName String
+data VarDec = RelVarDec String RelationDef
+            | IntVarDec String Int
+            | BareName String
     deriving (Show)
 
 data RelationDef = RelationDef

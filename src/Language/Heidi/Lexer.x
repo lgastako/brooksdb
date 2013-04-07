@@ -13,12 +13,17 @@ tokens :-
   $white+				;
   "--".*				;
   $digit+				{ \s -> IntTok (read s) }
-  $ident                { \s -> IdentTok s }
   "\"".*"\""            { \s -> StrTok s }
 
-  var                   { \s -> VarTok }
-  real                  { \s -> RealTok }
+  var                   { \s -> VarTok      }
+  init                  { \s -> InitTok     }
+  real                  { \s -> RealTok     }
+  base                  { \s -> BaseTok     }
   relation              { \s -> RelationTok }
+  with                  { \s -> WithTok     }
+  table_dee             { \s -> TableDeeTok }
+  table_dum             { \s -> TableDumTok }
+  $ident+               { \s -> IdentTok s  }
 
 {
 -- Each action has type :: String -> Token
@@ -27,7 +32,11 @@ tokens :-
 data Token =
     VarTok           |
     RealTok          |
+    BaseTok          |
+    WithTok          |
     RelationTok      |
+    TableDeeTok      |
+    TableDumTok      |
     IntTok Int       |
     StrTok String    |
     IdentTok String

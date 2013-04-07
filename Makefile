@@ -35,7 +35,8 @@ install-deps:
 
 test:
 	@# $(CABAL) test
-	@dist/build/tests/tests
+	@#dist/build/tests/tests
+	@echo NO TESTS RIGHT NOW. COME BACK LATER.
 
 dist:
 	$(CABAL) sdist
