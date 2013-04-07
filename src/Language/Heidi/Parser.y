@@ -98,6 +98,10 @@ TupleSelectorInv : tuple '{' TupleComponentCommalist '}'            { TupleSelec
 
 AttributeExtractorInv : AttributeRef from TupleExp                  { AttributeExtractorInv $1 $3 }
 
+AttributeRef : AttributeName                                        { AttributeRef $1 }
+
+AttributeName : varName                                             { AttributeName $1 }
+
 TupleExtractorInv : tuple from RelationExp                          { TupleExtractorInv $3 }
 
 TupleProject : TupleExp '{' AttributeRefList '}'                    { TupleProject $1 $3 }
@@ -154,6 +158,18 @@ ScalarVarName : varName                                             { ScalarVarN
 ScalarOpInv : UserOpInv                                             { ScalarOpInv $1 }
             | BuiltInScalarOpInv                                    { ScalarOpInv $1 }
 
+BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInScalarOpInv $1 }
+                   | THE_OpInv                                      { BuiltInScalarOpInv $1 }
+                   | AttributeExtractorInv                          { BuiltInScalarOpInv $1 }
+                   --| AggOpInv                                       { BuiltInScalarOpInv $1 }
+                   -- "plus the usual possibilities...eh?"
+
+--AggOpInv : AggOpName '(' RelationExp ')'
+           --AggOpName '(' IntegerExp RelationExp ')'
+         --AggOpName '(' RelationExp Exp ')'
+         -- Nadic Count Etc?
+
+-- TODO: This should be OPTIONAL heading, not a mandatory heading with braces required around it.
 RelationSelectorInv : relation '[' Heading ']' '{' TupleExpCommalist '}'   { RelationSelectorInv $1 $2 }
                     | table_dee                                            { RelationSelectorInvTableDee }
                     | table_dum                                            { RelationSelectorInvTableDum }
