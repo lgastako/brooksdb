@@ -452,7 +452,7 @@ data Exp = ExpScalar ScalarExp
     deriving (Show)
 
 data ScalarExp = ScalarExpWith ScalarWithExp
-               | ScalarExpNonWith ScalarNonwithExp
+               | ScalarExpNonwith ScalarNonwithExp
     deriving (Show)
 
 data ScalarWithExp = ScalarWithExp NameIntroCommalist ScalarExp
@@ -627,7 +627,25 @@ data NotMatching = NotMatching RelationExp RelationExp
     deriving (Show)
 
 data RelationExp = RelationExpWith RelationWithExp
-                 | RelationExpNonwith RelationNonWithExp
+                 | RelationExpNonwith RelationNonwithExp
+    deriving (Show)
+
+data Minus = Minus RelationExp RelationExp
+    deriving (Show)
+
+data DyadicJoin = DyadicJoin RelationExp RelationExp
+    deriving (Show)
+
+data DyadicTimes = DyadicTimes RelationExp RelationExp
+    deriving (Show)
+
+data DyadicIntersect = DyadicIntersect RelationExp RelationExp
+    deriving (Show)
+
+data DyadicUnion = DyadicUnion RelationExp RelationExp
+    deriving (Show)
+
+data DyadicXunion = DyadicXunion RelationExp RelationExp
     deriving (Show)
 
 data DyadicCompose = DyadicCompose RelationExp RelationExp
@@ -639,6 +657,24 @@ data RelationWithExp = RelationWithExp NameIntroCommalist RelationExp
 data RelationNonwithExp = RelationNonwithExpRelationVarRef RelationVarRef
                         | RelationNonwithExpRelationOpInv RelationOpInv
                         | RelationNonwithExpNested RelationExp
+    deriving (Show)
+
+data RelationOpInv = RelationOpInvUserOpInv UserOpInv
+                   | RelationOpInvBuiltInRelationOpInv BuiltInRelationOpInv
+    deriving (Show)
+
+data BuiltInRelationOpInv = BuiltInRelationOpInvRelationSelectorInv
+                          | BuiltInRelationOpInvTHE_OpInv
+                          | BuiltInRelationOpInvAttributeExtractorInv
+                          | BuiltInRelationOpInvProject
+                          | BuiltInRelationOpInvNadicOtherBuiltInRelationOpInv
+                          | BuiltInRelationOpInvMonadicOrDyadicOtherBuiltInRelationOpInv
+    deriving (Show)
+
+data RelationVarRef = RelationVarDef RelationVarName
+    deriving (Show)
+
+data RelationVarName = RelationVarName String
     deriving (Show)
 
 }
