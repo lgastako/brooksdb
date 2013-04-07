@@ -71,7 +71,7 @@ TupleNonwithExp : TupleVarRef                                       { $1 }
                 | ArrayVarRef '(' Subscript ')'                     { $1 }
                 | '(' TupleExp ')'                                  { $1 }
 
-TupleVarRef : TupleVarName                                          { $1 }
+TupleVarRef : TupleVarName                                          { TupleVarRef $1 }
 
 TupleVarName : varName                                              { TupleVarName $1 }
 
@@ -79,10 +79,10 @@ Subscript : IntegerExp                                              { Subscript 
 
 IntegerExp : int                                                    { IntegerExpInt $1 }
 
-RelationExp : RelationWithExp                                       { $1 }
-            | RelationNonwithExp                                    { $1 }
+RelationExp : RelationWithExp                                       { RelationExpWith $1 }
+            | RelationNonwithExp                                    { RelationExpNonwith $1 }
 
-RelationWithExp : with '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $4 }  -- is the colon really right?
+RelationWithExp : with '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $4 }
 
 RelationNonwithExp : RelationVarRef                                 { RelationNonwithExpRelationVarRef $1 }
                    | RelationOpInv                                  { RelationNonwithExpRelationOpInv $1  }
@@ -90,8 +90,8 @@ RelationNonwithExp : RelationVarRef                                 { RelationNo
 
 RelationVarRef : RelationVarName                                    { RelationVarRef $1 }
 
-RelationOpInv : UserOpInv                                           { $1 }
-              | BuiltInRelationOpInv                                { $1 }
+RelationOpInv : UserOpInv                                           { RelationOpInv $1 }
+              | BuiltInRelationOpInv                                { RelationOpInv $1 }
 
 UserOpInv : UserOpName '(' ArgumentExpCommalist ')'                 { UserOpInv $1 $3 }
 
@@ -129,8 +129,6 @@ ScalarOpInv : UserOpInv                                             { ScalarOpIn
 RelationSelectorInv : relation '[' Heading ']' '{' TupleExpCommalist '}'   { RelationSelectorInv $1 $2 }
                     | table_dee                                            { RelationSelectorInvTableDee }
                     | table_dum                                            { RelationSelectorInvTableDum }
-
-
 
 {
 
