@@ -44,6 +44,8 @@ import Language.Heidi.Lexer
         summarize       { SummarizeTok     }
         per             { PerTok           }
         by              { ByTok            }
+        prefix          { PrefixTok        }
+        suffix          { SuffixTok        }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -140,6 +142,9 @@ NadicOtherBuiltInTupleOpInv : NadicTupleUnion                       { NadicOther
 
 NadicTupleUnion : union '{' TupleExpCommalist '}'                   { NadicTupleUnion $3 }
 
+TupleExpCommalist : TupleExp                                        { TupleExpCommalist $1 }
+                  | TupleExpCommalist ',' TupleExp                  { TupleExpCommalistCons $1 $3 }
+
 MonadicOrDyadicOtherBuiltInTupleOpInv : MonadicOtherBuiltInTupleOpInv { MonadicOrDyadicOtherBuiltInTupleOpInv $1 }
                                       | DyadicOtherBuiltInTupleOpInv  { MonadicOrDyadicOtherBuiltInTupleOpInv $1 }
 
@@ -159,6 +164,17 @@ TupleRename : TupleExp rename '{' RenamingCommalist '}'             { TupleRenam
 
 TupleExtend : extend TupleExp ':' '{' AttributeAssignCommalist '}'  { TupleExtend $2 $5 }
 
+RenamingCommalist : Renaming                                        { RenamingCommalist $1 }
+                  | RenamingCommalist ',' Renaming                  { RenamingCommalistCons $1 $3 }
+
+Renaming : AttributeRef as IntroducedName                           { Renaming $1 $3 }
+         | prefix CharacterStringLiteral
+               as CharacterStringLiteral                            { RenamingPrefix $2 $3 }
+         | suffix CharacterStringLiteral
+               as CharacterStringLiteral                            { RenamingSuffix $2 $3 }
+
+-- AttributeAssignCommaList : ?
+
 TupleWrap : TupleExp wrap '(' Wrapping ')'                          { TupleWrap $1 $4 }
 
 TupleUnwrap : TupleExp unwrap '(' Unwrapping ')'                    { TupleUnwrap $1 $4 }
@@ -169,8 +185,6 @@ Wrapping : '{' AttributeRefCommalist '}' as IntroducedName          { Wrapping $
 IntroducedName : varName                                            { IntroducedName $1 }
 
 Unwrapping : AttributeRef                                           { Unwrapping $1 }
-
--- AttributeRefCommalist : ?
 
 Subscript : IntegerExp                                              { Subscript $1 }
 
@@ -193,8 +207,6 @@ RelationOpInv : UserOpInv                                           { RelationOp
 UserOpInv : UserOpName '(' ArgumentExpCommalist ')'                 { UserOpInv $1 $3 }
 
 UserOpName : varName                                                { UserOpName $1 }
-
--- ArgumentExpCommalist : ?
 
 BuiltInRelationOpInv : RelationSelectorInv                          { BuiltInRelationOpInvRelationSelectorInv $1                      }
                      | THE_OpInv                                    { BuiltInRelationOpInvTHE_OpInv $1                                }
@@ -331,6 +343,11 @@ BuiltInScalarOpInv : ScalarSelectorInv                              { BuiltInSca
 
 ScalarSelectorInv : BuiltInScalarLiteral                            { ScalarSelectorInv $1 }
                   | PossrepName '(' ArgumentExpCommalist ')'        { ScalarSelectorInv $1 $3 }
+
+ArgumentExpCommalist : ArgumentExp                                  { ArgumentExpCommalist $1 }
+                     | ArgumentExpCommalist ',' ArgumentExp         { ArgumentExpCommalistCons $1 $3 }
+
+ArgumentExp : Exp                                                   { ArgumentExp $1 }
 
 -- BuiltInScalarLiteral : ?
 

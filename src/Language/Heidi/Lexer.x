@@ -23,6 +23,7 @@ tokens :-
 --  '['                   { \s -> LeftSquareTok   }
 --  ']'                   { \s -> RightSquareTok  }
   ':'                   { \s -> ColonTok        }
+  ','                   { \s -> CommaTok        }
 
   var                   { \s -> VarTok       }
   init                  { \s -> InitTok      }
@@ -55,6 +56,8 @@ tokens :-
   summarize             { \s -> SummarizeTok }
   per                   { \s -> PerTok       }
   by                    { \s -> ByTok        }
+  prefix                { \s -> PrefixTok    }
+  suffix                { \s -> SuffixTok    }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }
