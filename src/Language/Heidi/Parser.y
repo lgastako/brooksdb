@@ -30,6 +30,8 @@ import Language.Heidi.Lexer
         d_union         { DunionTok        }
         intersect       { IntersectTok     }
         join            { JoinTok          }
+        times           { TimesTok         }
+        xunion          { XunionTok        }
         real            { RealTok          }
         base            { BaseTok          }
         relation        { RelationTok      }
@@ -207,6 +209,13 @@ NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicInter
                | intersect heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $1 $2 }
 
 NadicJoin : join '{' RelationExpCommalist '}'                       { NadicJoin $3 }
+
+NadicTimes : join '{' RelationExpCommalist '}'                      { NadicTimes $3 }
+
+NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunion $1          }
+            | xunion heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $1 $2 }
+
+NadicCompose : join '{' RelationExpCommalist '}'                    { NadicCompose $3 }
 
 ScalarExp : ScalarWithExp                                           { SclarExpScalarWithExp $1    }
           | ScalarNonwithExp                                        { SclarExpScalarNonwithExp $1 }

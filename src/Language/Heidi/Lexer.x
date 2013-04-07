@@ -41,6 +41,8 @@ tokens :-
   d_union               { \s -> DunionTok    }
   intersect             { \s -> IntersectTok }
   join                  { \s -> JoinTok      }
+  times                 { \s -> TimesTok     }
+  xunion                { \s -> XUnionTok    }
   real                  { \s -> RealTok      }
   base                  { \s -> BaseTok      }
   relation              { \s -> RelationTok  }
