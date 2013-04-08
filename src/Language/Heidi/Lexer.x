@@ -41,6 +41,10 @@ tokens :-
   constraint            { \s -> ConstraintTok    }
   drop                  { \s -> DropTok          }
   virtual               { \s -> VirtualTok       }
+  asc                   { \s -> AscTok           }
+  desc                  { \s -> DescTok          }
+  ordinal               { \s -> OrdinalTok       }
+  ordered               { \s -> OrderedTok       }
   return                { \s -> ReturnTok        }
   commit                { \s -> CommitTok        }
   rollback              { \s -> RollbackTok      }
@@ -183,6 +187,10 @@ data Token =
     ConstraintTok    |
     DropTok          |
     VirtualTok       |
+    AscTok           |
+    DescTok          |
+    OrdinalTok       |
+    OrderedTok       |
     ReturnTok        |
     CommitTok        |
     RollbackTok      |

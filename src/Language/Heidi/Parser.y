@@ -29,6 +29,10 @@ import Language.Heidi.Lexer
         constraint      { ConstraintTok    }
         drop            { DropTok          }
         virtual         { VirtualTok       }
+        asc             { AscTok           }
+        desc            { DescTok          }
+        ordinal         { OrdinalTok       }
+        ordered         { OrderedTok       }
         return          { ReturnTok        }
         commit          { CommitTok        }
         rollback        { RollbackTok      }
@@ -617,6 +621,25 @@ DatabaseRelationVarDef : RealRelationVarDef                         { DatabaseRe
 
 VirtualRelationVarDef : var RelationVarName
                             virtual '(' RelationExp ')' KeyDefList  { VirtualRelationVarDef $2 $5 $7 }
+
+Direction : asc                                                     { DirectionAsc }
+          | desc                                                    { DirectionDesc }
+
+
+NonscalarSelectorInv : TupleSelectorInv                             { NonscalarSelectorInvTuple $1 }
+                     | RelationSelectorInv                          { NonscalarSelectorInvRelation $1 }
+
+NonscalarVarRef : TupleVarRef                                       { NonscalarVarRefTuple $1 }
+                | RelationVarRef                                    { NonscalarVarRefRelation $1 }
+
+OrderItem : Direction AttributeRef                                  { OrderItem $1 $2 }
+
+Ordering : ordinal                                                  { OrderingOrdinal }
+         | ordered                                                  { OrderingOrdered }
+
+ParameterDef : ParameterName TypeSpec                               { ParameterDef $1 $2 }
+
+ParameterName : varName                                             { ParameterName $1 }
 
 {
 
@@ -1299,6 +1322,31 @@ data DatabaseRelationVarDef = DatabaseRelationVarDefReal RealRelationVarDef
     deriving (Show)
 
 data VirtualRelationVarDef = VirtualRelationVarDef RelationVarName RelationExp KeyDefList
+    deriving (Show)
+
+data Direction = DirectionAsc
+               | DirectionDesc
+    deriving (Show)
+
+data NonscalarSelectorInv = NonscalarSelectorInvTuple TupleSelectorInv
+                          | NonscalarSelectorInvRelation RelationSelectorInv
+    deriving (Show)
+
+data NonscalarVarRef = NonscalarVarRefTuple TupleVarRef
+                     | NonscalarVarRefRelation RelationVarRef
+    deriving (Show)
+
+data OrderItem = OrderItem Direction AttributeRef
+    deriving (Show)
+
+data Ordering = OrderingOrdinal
+              | OrderingOrdered
+    deriving (Show)
+
+data ParameterDef = ParameterDef ParameterName TypeSpec
+    deriving (Show)
+
+data ParameterName = ParameterName Identifier
     deriving (Show)
 
 }
