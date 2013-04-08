@@ -71,6 +71,7 @@ tokens :-
   private               { \s -> PrivateTok       }
   public                { \s -> PublicTok        }
   count                 { \s -> CountTok         }
+  array                 { \s -> ArrayTok         }
   same_type_as          { \s -> SameTypeAsTok    }
   same_heading_as       { \s -> SameHeadingAsTok }
   true                  { \s -> TrueTok          }
@@ -134,6 +135,7 @@ data Token =
     PrivateTok       |
     PublicTok        |
     CountTok         |
+    ArrayTok         |
     VarTok           |
     RealTok          |
     BaseTok          |

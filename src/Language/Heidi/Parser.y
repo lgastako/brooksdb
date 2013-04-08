@@ -61,6 +61,7 @@ import Language.Heidi.Lexer
         private         { PrivateTok       }
         public          { PublicTok        }
         count           { CountTok         }
+        array           { ArrayTok         }
         same_type_as    { SameTypeAsTok    }
         same_heading_as { SameHeadingAsTok }
         with            { WithTok          }
@@ -442,6 +443,9 @@ RelationSelectorInv : relation '{' TupleExpCommalist '}'            { RelationSe
 ArrayCardinality : count '(' ArrayVarRef ')'                        { ArrayCardinality $3 }
 
 ArrayTarget : ArrayVarRef                                           { ArrayTarget $1 }
+
+ArrayVarDef : var ArrayVarName array TupleTypeSpec                  { ArrayVarDef $2 $4 }
+
 
 {
 
@@ -940,5 +944,7 @@ data ArrayCardinality = ArrayCardinality ArrayVarRef
 data ArrayTarget = ArrayTarget ArrayVarRef
     deriving (Show)
 
+data ArrayVarDef = ArrayVarDef ArrayVarName TupleTypeSpec
+    deriving (Show)
 
 }
