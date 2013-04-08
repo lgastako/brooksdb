@@ -766,6 +766,9 @@ ScalarComp : ScalarExp ScalarCompOp ScalarExp                       { ScalarComp
 ScalarCompOp : '='                                                  { ScalarCompOpEq }
              | '<>'                                                 { ScalarCompOpNe }
 
+SelectorInv : ScalarSelectorInv                                     { SelectorInvScalar $1 }
+            | NonscalarSelectorInv                                  { SelectorInvNonscalar $1 }
+
 {
 
 parseError :: [Token] -> a
@@ -1603,6 +1606,10 @@ data ScalarComp = ScalarComp ScalarExp ScalarCompOp ScalarExp
 
 data ScalarCompOp = ScalarCompOpEq
                   | ScalarCompOpNe
+    deriving (Show)
+
+data SelectorInv = SelectorInvScalar ScalarSelectorInv
+                 | SelectorInvNonscalar NonscalarSelectorInv
     deriving (Show)
 
 }
