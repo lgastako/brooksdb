@@ -150,6 +150,7 @@ data Token =
     IdeleteTok       |
     BeginTok         |
     TransactionTok   |
+    CallTok          |
     VarTok           |
     RealTok          |
     BaseTok          |
