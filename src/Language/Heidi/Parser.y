@@ -109,6 +109,8 @@ import Language.Heidi.Lexer
         ';'             { SemiColonTok     }
         ','             { CommaTok         }
         ':='            { AssignerTok      }
+        '='             { EqualTok         }
+        '<>'            { NotEqualTok      }
 
 --      Parameterized tokens
         varName         { IdentTok $$      }
@@ -752,6 +754,12 @@ RelationSet : load RelationTarget from ArrayVarRef                  { RelationSe
 ScalarTypeOrInitValue : ScalarTypeSpec                              { ScalarTypeOrInitValueScalarTypeSpec $1 }
                       | init '(' ScalarExp ')'                      { ScalarTypeOrInitValueInit $3 }
                       | ScalarTypeSpec init '(' ScalarExp ')'       { ScalarTypeOrInitValueScalarTypeSpecInit $1 $4 }
+
+RelationComp : RelationExp RelationCompOp RelationExp               { RelationComp $1 $2 $3 }
+
+RelationCompOp : '='                                                { RelationCompOpEq }
+               | '<>'                                               { RelationCompOpNe }
+               -- others, but we'll get to them.
 
 {
 
@@ -1578,5 +1586,11 @@ data PossrepDefList = PossrepDefList PossrepDef
                     | PossrepDefListCons PossrepDefList PossrepDef
     deriving (Show)
 
-}
+data RelationComp = RelationComp RelationExp RelationCompOp RelationExp
+    deriving (Show)
 
+data RelationCompOp = RelationCompOpEq
+                    | RelationCompOpNe
+    deriving (Show)
+
+}

@@ -24,7 +24,9 @@ tokens :-
   ':'                   { \s -> ColonTok         }
   ';'                   { \s -> SemiColonTok     }
   '\,'                  { \s -> CommaTok         }
-  ':='                  { \s -> AssignerTok      }
+  ":="                  { \s -> AssignerTok      }
+  "="                   { \s -> EqualTok         }
+  "<>"                  { \s -> NotEqualTok      }
 
   begin                 { \s -> BeginTok         }
   transaction           { \s -> TransactionTok   }
@@ -150,6 +152,8 @@ data Token =
     SameTypeAsTok    |
     SameHeadingAsTok |
     AssignerTok      |
+    EqualTok         |
+    NotEqualTok      |
     InitTok          |
     TupleTok         |
     FromTok          |
