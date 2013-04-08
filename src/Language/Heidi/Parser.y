@@ -803,6 +803,12 @@ SummarySpec : count                                                 { SummarySpe
             | intersect                                             { SummarySpecIntersect }
             | xunion                                                { SummarySpecXunion    }
 
+TupleComp : TupleExp TupleCompOp TupleExp                           { TupleComp $1 $2 $3 }
+               -- TODO: add the other two later.
+
+TupleCompOp : '='                                                   { TupleCompOpEq }
+            | '<>'                                                  { TupleCompOpNe }
+
 {
 
 parseError :: [Token] -> a
@@ -1670,4 +1676,11 @@ data SummarySpec = SummarySpecCount
                  | SummarySpecXunion
     deriving (Show)
 
+data TupleComp = TupleComp TupleExp TupleCompOp TupleExp
+               -- TODO: add the other two later.
+    deriving (Show)
+
+data TupleCompOp = TupleCompOpEq
+                 | TupleCompOpNe
+    deriving (Show)
 }
