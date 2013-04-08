@@ -641,6 +641,12 @@ ParameterDef : ParameterName TypeSpec                               { ParameterD
 
 ParameterName : varName                                             { ParameterName $1 }
 
+PossrepComponentDef : PossrepComponentName TypeSpec                 { PossrepComponentDef $1 $2 }
+
+PossrepComponentRef : PossrepComponentName                          { PossrepComponentRef $1 }
+
+PossrepComponentName : varName                                      { PossrepComponentName $1 }
+
 {
 
 parseError :: [Token] -> a
@@ -1347,6 +1353,15 @@ data ParameterDef = ParameterDef ParameterName TypeSpec
     deriving (Show)
 
 data ParameterName = ParameterName Identifier
+    deriving (Show)
+
+data PossrepComponentDef = PossrepComponentDef PossrepComponentName TypeSpec
+    deriving (Show)
+
+data PossrepComponentRef = PossrepComponentRef PossrepComponentName
+    deriving (Show)
+
+data PossrepComponentName = PossrepComponentName Identifier
     deriving (Show)
 
 }
