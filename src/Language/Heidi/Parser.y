@@ -100,6 +100,18 @@ import Language.Heidi.Lexer
         d_insert        { DinsertTok       }
         same_type_as    { SameTypeAsTok    }
         same_heading_as { SameHeadingAsTok }
+        countd          { CountdTok        }
+        sum             { SumTok           }
+        sumd            { SumdTok          }
+        avg             { AvgTok           }
+        avgd            { AvgdTok          }
+        min             { MinTok           }
+        max             { MaxTok           }
+        and             { AndTok           }
+        or              { OrTok            }
+        xor             { XorTok           }
+        exactly         { ExactlyTok       }
+        exactlyd        { ExactlydTok      }
         with            { WithTok          }
         '('             { LeftRoundTok     }
         ')'             { RightRoundTok    }
@@ -768,6 +780,28 @@ ScalarCompOp : '='                                                  { ScalarComp
 
 SelectorInv : ScalarSelectorInv                                     { SelectorInvScalar $1 }
             | NonscalarSelectorInv                                  { SelectorInvNonscalar $1 }
+
+Summary : SummarySpec '(' ')'                                       { Summary $1 }
+        | SummarySpec '(' Exp ')'                                   { SummaryExp $1 $3 }
+        | SummarySpec '(' IntegerExp ',' Exp ')'                    { SummaryExpIntegerExpExp $1 $3 $5 }
+
+SummarySpec : count                                                 { SummarySpecCount     }
+            | countd                                                { SummarySpecCountd    }
+            | sum                                                   { SummarySpecSum       }
+            | sumd                                                  { SummarySpecSumd      }
+            | avg                                                   { SummarySpecAvg       }
+            | avgd                                                  { SummarySpecAvgd      }
+            | max                                                   { SummarySpecMax       }
+            | min                                                   { SummarySpecMin       }
+            | and                                                   { SummarySpecAnd       }
+            | or                                                    { SummarySpecOr        }
+            | xor                                                   { SummarySpecXor       }
+            | exactly                                               { SummarySpecExactly   }
+            | exactlyd                                              { SummarySpecExactlyd  }
+            | union                                                 { SummarySpecUnion     }
+            | d_union                                               { SummarySpecDunion    }
+            | intersect                                             { SummarySpecIntersect }
+            | xunion                                                { SummarySpecXunion    }
 
 {
 
@@ -1610,6 +1644,30 @@ data ScalarCompOp = ScalarCompOpEq
 
 data SelectorInv = SelectorInvScalar ScalarSelectorInv
                  | SelectorInvNonscalar NonscalarSelectorInv
+    deriving (Show)
+
+data Summary = Summary SummarySpec
+             | SummaryExp SummarySpec Exp
+             | SummaryExpIntegerExpExp SummarySpec IntegerExp Exp
+    deriving (Show)
+
+data SummarySpec = SummarySpecCount
+                 | SummarySpecCountd
+                 | SummarySpecSum
+                 | SummarySpecSumd
+                 | SummarySpecAvg
+                 | SummarySpecAvgd
+                 | SummarySpecMax
+                 | SummarySpecMin
+                 | SummarySpecAnd
+                 | SummarySpecOr
+                 | SummarySpecXor
+                 | SummarySpecExactly
+                 | SummarySpecExactlyd
+                 | SummarySpecUnion
+                 | SummarySpecDunion
+                 | SummarySpecIntersect
+                 | SummarySpecXunion
     deriving (Show)
 
 }

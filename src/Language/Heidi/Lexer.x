@@ -112,6 +112,18 @@ tokens :-
   i_delete              { \s -> IdeleteTok       }
   same_type_as          { \s -> SameTypeAsTok    }
   same_heading_as       { \s -> SameHeadingAsTok }
+  countd                { \s -> CountdTok        }
+  sum                   { \s -> SumTok           }
+  sumd                  { \s -> SumdTok          }
+  avg                   { \s -> AvgTok           }
+  avgd                  { \s -> AvgdTok          }
+  max                   { \s -> MaxTok           }
+  min                   { \s -> MinTok           }
+  and                   { \s -> AndTok           }
+  or                    { \s -> OrTok            }
+  xor                   { \s -> XorTok           }
+  exactly               { \s -> ExactlyTok       }
+  exactlyd              { \s -> ExactlydTok      }
   true                  { \s -> TrueTok          }
   false                 { \s -> FalseTok         }
 
@@ -151,6 +163,18 @@ data Token =
     LeftRoundTok     |
     SameTypeAsTok    |
     SameHeadingAsTok |
+    CountdTok        |
+    SumTok           |
+    SumdTok          |
+    AvgTok           |
+    AvgdTok          |
+    MinTok           |
+    MaxTok           |
+    AndTok           |
+    OrTok            |
+    XorTok           |
+    ExactlyTok       |
+    ExactlydTok      |
     AssignerTok      |
     EqualTok         |
     NotEqualTok      |
