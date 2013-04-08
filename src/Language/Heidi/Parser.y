@@ -441,7 +441,7 @@ RelationSelectorInv : relation '{' TupleExpCommalist '}'            { RelationSe
 
 ArrayCardinality : count '(' ArrayVarRef ')'                        { ArrayCardinality $3 }
 
-
+ArrayTarget : ArrayVarRef                                           { ArrayTarget $1 }
 
 {
 
@@ -935,6 +935,9 @@ data ApplicationRelationVarDef = ApplicationRelationVarDef RelationVarName Priva
     deriving (Show)
 
 data ArrayCardinality = ArrayCardinality ArrayVarRef
+    deriving (Show)
+
+data ArrayTarget = ArrayTarget ArrayVarRef
     deriving (Show)
 
 
