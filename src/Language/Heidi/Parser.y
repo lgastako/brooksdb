@@ -518,6 +518,11 @@ Assignment : AssignCommalist Attribute                              { Assignment
 AssignCommalist : Assign                                            { AssignCommalist $1 }
                 | AssignCommalist ',' Assign                        { AssignCommalistCons $1 $3 }
 
+AttributeTarget : AttributeRef                                      { AttributeTargetRef $1 }
+                | AttributeTHE_PvRef                                { AttributeTargetTHE_PvRef $1 }
+
+AttributeTHE_PvRef : THE_PvName '(' AttributeTarget ')'             { AttributeTHE_PvRef $1 $3 }
+
 {
 
 parseError :: [Token] -> a
@@ -1101,6 +1106,13 @@ data Assignment = Assignment AssignCommalist Attribute
 
 data AssignCommalist = AssignCommalist Assign
                      | AssignCommalistCons AssignCommalist Assign
+    deriving (Show)
+
+data AttributeTarget = AttributeTargetRef AttributeRef
+                     | AttributeTargetTHE_PvRef AttributeTHE_PvRef
+    deriving (Show)
+
+data AttributeTHE_PvRef = AttributeTHE_PvRef THE_PvName AttributeTarget
     deriving (Show)
 
 }
