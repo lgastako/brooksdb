@@ -47,6 +47,12 @@ tokens :-
   ordered               { \s -> OrderedTok       }
   possrep               { \s -> PossrepTok       }
   return                { \s -> ReturnTok        }
+  returns               { \s -> ReturnsTok       }
+  type                  { \s -> TypeTok          }
+  load                  { \s -> LoadTok          }
+  order                 { \s -> OrderTok         }
+  operator              { \s -> OperatorTok      }
+  updates               { \s -> UpdatesTok       }
   commit                { \s -> CommitTok        }
   rollback              { \s -> RollbackTok      }
   var                   { \s -> VarTok           }
@@ -194,6 +200,12 @@ data Token =
     OrderedTok       |
     PossrepTok       |
     ReturnTok        |
+    ReturnsTok       |
+    TypeTok          |
+    LoadTok          |
+    OrderTok         |
+    OperatorTok      |
+    UpdatesTok       |
     CommitTok        |
     RollbackTok      |
     VarTok           |

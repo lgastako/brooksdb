@@ -1,6 +1,7 @@
 {
-
 module Language.Heidi.Parser ( parse ) where
+
+import Prelude hiding (Ordering)
 
 import Data.Char ( isSpace, isAlpha, isDigit )
 import Language.Heidi.Lexer
@@ -35,6 +36,12 @@ import Language.Heidi.Lexer
         ordered         { OrderedTok       }
         possrep         { PossrepTok       }
         return          { ReturnTok        }
+        returns         { ReturnsTok       }
+        type            { TypeTok          }
+        load            { LoadTok          }
+        order           { OrderTok         }
+        operator        { OperatorTok      }
+        updates         { UpdatesTok       }
         commit          { CommitTok        }
         rollback        { RollbackTok      }
         var             { VarTok           }
@@ -613,7 +620,7 @@ Leave : leave StatementName                                         { Leave $2 }
 
 ConstraintDef : constraint ConstraintName BoolExp                   { ConstraintDef $2 $3 }
 
-ConstraintDrop : drop constraint ConstraintName BoolExp             { ConstraintDef $3 $4 }
+ConstraintDrop : drop constraint ConstraintName                     { ConstraintDrop $3 }
 
 ConstraintName : varName                                            { ConstraintName $1 }
 
@@ -635,12 +642,21 @@ NonscalarVarRef : TupleVarRef                                       { NonscalarV
 
 OrderItem : Direction AttributeRef                                  { OrderItem $1 $2 }
 
+OrderItemCommalist : OrderItem                                      { OrderItemCommalist $1 }
+                   | OrderItemCommalist ',' OrderItem               { OrderItemCommalistCons $1 $3 }
+
 Ordering : ordinal                                                  { OrderingOrdinal }
          | ordered                                                  { OrderingOrdered }
 
 ParameterDef : ParameterName TypeSpec                               { ParameterDef $1 $2 }
 
+ParameterDefCommalist : ParameterDef                                { ParameterDefCommalist $1 }
+                      | ParameterDefCommalist ',' ParameterDef      { ParameterDefCommalistCons $1 $3 }
+
 ParameterName : varName                                             { ParameterName $1 }
+
+ParameterNameCommalist : ParameterName                              { ParameterNameCommalist $1 }
+                       | ParameterNameCommalist ',' ParameterName   { ParameterNameCommalistCons $1 $3 }
 
 PossrepComponentDef : PossrepComponentName TypeSpec                 { PossrepComponentDef $1 $2 }
 
@@ -664,9 +680,78 @@ PossrepDef : possrep '{' PossrepComponentDefCommalist '}'           { PossrepDef
                      '{' PossrepComponentDefCommalist
                          PossrepConstraintDef         '}'           { PossrepDefNamedConstrained $2 $4 $5 }
 
+PossrepDefList : PossrepDef                                         { PossrepDefList $1 }
+               | PossrepDefList ';' PossrepDef                      { PossrepDefListCons $1 $3 }
+
 PossrepComponentDefCommalist : PossrepComponentDef                  { PossrepComponentDefCommalist $1 }
                              | PossrepComponentDefCommalist ','
                                PossrepComponentDef                  { PossrepComponentDefCommalistCons $1 $3 }
+
+PreviouslyDefinedStatementBody : Assignment                         { PDSBAssignment $1 }
+                               | UserOpDef                          { PDSBUserOpDef $1 }
+                               | UserOpDrop                         { PDSBUserOpDrop $1 }
+                               | UserScalarTypeDef                  { PDSBUserScalarTypeDef $1 }
+                               | UserScalarTypeDrop                 { PDSBUserScalarTypeDrop $1 }
+                               | ScalarVarDef                       { PDSBScalarVarDef $1 }
+                               | TupleVarDef                        { PDSBTupleVarDef $1 }
+                               | RelationVarDef                     { PDSBRelationVarDef $1 }
+                               | RelationVarDrop                    { PDSBRelationVarDrop $1 }
+                               | ConstraintDef                      { PDSBConstraintDef $1 }
+                               | ConstraintDrop                     { PDSBConstraintDrop $1 }
+                               | ArrayVarDef                        { PDSBArrayVarDef $1 }
+                               | RelationGet                        { PDSBRelationGet $1 }
+                               | RelationSet                        { PDSBRelationSet $1 }
+
+UserOpDef : UserUpdateOpDef                                         { UserOpDefUpdate $1 }
+          | UserReadOnlyOpDef                                       { UserOpDefReadOnly $1 }
+
+UserUpdateOpDef : operator UserOpName '(' ParameterDefCommalist ')'
+                           updates '{' ParameterNameCommalist '}' ';'
+                           Statement end operator                   { UserUpdateOpDef $2 $4 $8 $11 }
+                | operator UserOpName '(' ParameterDefCommalist ')'
+                           updates '{' all but ParameterNameCommalist '}' ';'
+                           Statement end operator                   { UserUpdateOpDefAllBut $2 $4 $10 $13 }
+
+UserReadOnlyOpDef : operator UserOpName '(' ParameterDefCommalist ')'
+                             returns TypeSpec ';' Statement
+                             end operator                           { UserReadOnlyOpDef $2 $4 $7 $9 }
+
+UserOpDrop : drop operator UserOpName                               { UserOpDrop $3 }
+
+UserScalarTypeDef : UserScalarRootTypeDef                           { UserScalarTypeDef $1 }
+
+UserScalarRootTypeDef : type UserScalarTypeName PossrepDefList
+                             init '(' Literal ')'                   { UserScalarRootTypeDef $2 $3 $6 }
+                      | type UserScalarTypeName Ordering
+                             PossrepDefList init '(' Literal ')'    { UserScalarRootTypeDefOrdered $2 $3 $4 $7 }
+
+-- eh? undefined
+Literal : varName                                                   { Literal $1 }
+
+UserScalarTypeDrop : drop type UserScalarTypeName                   { UserScalarTypeDrop $3 }
+
+ScalarVarDef : var ScalarVarName ScalarTypeOrInitValue              { ScalarVarDef $2 $3 }
+
+TupleVarDef : var TupleVarName TupleTypeOrInitValue                 { TupleVarDef $2 $3 }
+
+TupleTypeOrInitValue : TupleTypeSpec                                { TupleTypeOrInitValueTupleTypeSpec $1 }
+                     | init '(' TupleExp ')'                        { TupleTypeOrInitValueInit $3 }
+                     | TupleTypeSpec init '(' TupleExp ')'          { TupleTypeOrInitValueTupleTypeSpecInit $1 $4 }
+
+RelationVarDef : DatabaseRelationVarDef                             { RelationVarDefDatabase $1 }
+               | ApplicationRelationVarDef                          { RelationVarDefApplication $1 }
+
+RelationVarDrop : drop var RelationVarRef                           { RelationVarDrop $3 }
+
+RelationGet : load ArrayTarget
+              from RelationExp
+              order '(' OrderItemCommalist ')'                      { RelationGet $2 $4 $7 }
+
+RelationSet : load RelationTarget from ArrayVarRef                  { RelationSet $2 $4 }
+
+ScalarTypeOrInitValue : ScalarTypeSpec                              { ScalarTypeOrInitValueScalarTypeSpec $1 }
+                      | init '(' ScalarExp ')'                      { ScalarTypeOrInitValueInit $3 }
+                      | ScalarTypeSpec init '(' ScalarExp ')'       { ScalarTypeOrInitValueScalarTypeSpecInit $1 $4 }
 
 {
 
@@ -1341,7 +1426,7 @@ data ConstraintDef = ConstraintDef ConstraintName BoolExp
 data ConstraintName = ConstraintName Identifier
     deriving (Show)
 
-data ConstraintDrop = ConstraintDrop Identifier
+data ConstraintDrop = ConstraintDrop ConstraintName
     deriving (Show)
 
 data DatabaseRelationVarDef = DatabaseRelationVarDefReal RealRelationVarDef
@@ -1376,6 +1461,10 @@ data ParameterDef = ParameterDef ParameterName TypeSpec
 data ParameterName = ParameterName Identifier
     deriving (Show)
 
+data ParameterNameCommalist = ParameterNameCommalist ParameterName
+                            | ParameterNameCommalistCons ParameterNameCommalist ParameterName
+    deriving (Show)
+
 data PossrepComponentDef = PossrepComponentDef PossrepComponentName TypeSpec
     deriving (Show)
 
@@ -1403,6 +1492,90 @@ data PossrepDef = PossrepDef PossrepComponentDefCommalist
 
 data PossrepComponentDefCommalist = PossrepComponentDefCommalist PossrepComponentDef
                                   | PossrepComponentDefCommalistCons PossrepComponentDefCommalist PossrepComponentDef
+    deriving (Show)
+
+data PreviouslyDefinedStatementBody = PDSBAssignment Assignment
+                                    | PDSBUserOpDef UserOpDef
+                                    | PDSBUserOpDrop UserOpDrop
+                                    | PDSBUserScalarTypeDef UserScalarTypeDef
+                                    | PDSBUserScalarTypeDrop UserScalarTypeDrop
+                                    | PDSBScalarVarDef ScalarVarDef
+                                    | PDSBTupleVarDef TupleVarDef
+                                    | PDSBRelationVarDef RelationVarDef
+                                    | PDSBRelationVarDrop RelationVarDrop
+                                    | PDSBConstraintDef ConstraintDef
+                                    | PDSBConstraintDrop ConstraintDrop
+                                    | PDSBArrayVarDef ArrayVarDef
+                                    | PDSBRelationGet RelationGet
+                                    | PDSBRelationSet RelationSet
+    deriving (Show)
+
+data ScalarTypeOrInitValue = ScalarTypeOrInitValueScalarTypeSpec ScalarTypeSpec
+                           | ScalarTypeOrInitValueInit ScalarExp
+                           | ScalarTypeOrInitValueScalarTypeSpecInit ScalarTypeSpec ScalarExp
+    deriving (Show)
+
+data TupleTypeOrInitValue = TupleTypeOrInitValueTupleTypeSpec TupleTypeSpec
+                          | TupleTypeOrInitValueInit TupleExp
+                          | TupleTypeOrInitValueTupleTypeSpecInit TupleTypeSpec TupleExp
+    deriving (Show)
+
+data Literal = Literal Identifier
+    deriving (Show)
+
+data RelationSet = RelationSet RelationTarget ArrayVarRef
+    deriving (Show)
+
+data RelationGet = RelationGet ArrayTarget RelationExp OrderItemCommalist
+    deriving (Show)
+
+data OrderItemCommalist = OrderItemCommalist OrderItem
+                        | OrderItemCommalistCons OrderItemCommalist OrderItem
+    deriving (Show)
+
+data RelationVarDrop = RelationVarDrop RelationVarRef
+    deriving (Show)
+
+data RelationVarDef = RelationVarDefDatabase DatabaseRelationVarDef
+                    | RelationVarDefApplication ApplicationRelationVarDef
+    deriving (Show)
+
+data TupleVarDef = TupleVarDef TupleVarName TupleTypeOrInitValue
+    deriving (Show)
+
+data ScalarVarDef = ScalarVarDef ScalarVarName ScalarTypeOrInitValue
+    deriving (Show)
+
+data UserScalarTypeDef = UserScalarTypeDef UserScalarRootTypeDef
+    deriving (Show)
+
+data UserScalarTypeDrop = UserScalarTypeDrop UserScalarTypeName
+    deriving (Show)
+
+data UserOpDef = UserOpDefUpdate UserUpdateOpDef
+               | UserOpDefReadOnly UserReadOnlyOpDef
+    deriving (Show)
+
+data UserOpDrop = UserOpDrop UserOpName
+    deriving (Show)
+
+data UserUpdateOpDef = UserUpdateOpDef UserOpName ParameterDefCommalist ParameterNameCommalist Statement
+                     | UserUpdateOpDefAllBut UserOpName ParameterDefCommalist ParameterNameCommalist Statement
+    deriving (Show)
+
+data UserReadOnlyOpDef = UserReadOnlyOpDef UserOpName ParameterDefCommalist TypeSpec Statement
+    deriving (Show)
+
+data ParameterDefCommalist = ParameterDefCommalist ParameterDef
+                           | ParameterDefCommalistCons ParameterDefCommalist ParameterDef
+    deriving (Show)
+
+data UserScalarRootTypeDef = UserScalarRootTypeDef UserScalarTypeName PossrepDefList Literal
+                           | UserScalarRootTypeDefOrdered UserScalarTypeName Ordering PossrepDefList Literal
+    deriving (Show)
+
+data PossrepDefList = PossrepDefList PossrepDef
+                    | PossrepDefListCons PossrepDefList PossrepDef
     deriving (Show)
 
 }
