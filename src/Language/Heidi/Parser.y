@@ -647,6 +647,11 @@ PossrepComponentRef : PossrepComponentName                          { PossrepCom
 
 PossrepComponentName : varName                                      { PossrepComponentName $1 }
 
+PossrepTHE_PvRef : THE_PvName '(' PossrepComponentTarget ')'        { PossrepTHE_PvRef $1 $3 }
+
+PossrepComponentTarget : PossrepComponentRef                        { PossrepComponentTargetRef $1 }
+                       | PossrepTHE_PvRef                           { PossrepComponentTargetTHE_PvRef $1 }
+
 {
 
 parseError :: [Token] -> a
@@ -1362,6 +1367,13 @@ data PossrepComponentRef = PossrepComponentRef PossrepComponentName
     deriving (Show)
 
 data PossrepComponentName = PossrepComponentName Identifier
+    deriving (Show)
+
+data PossrepComponentTarget = PossrepComponentTargetRef PossrepComponentRef
+                            | PossrepComponentTargetTHE_PvRef PossrepTHE_PvRef
+    deriving (Show)
+
+data PossrepTHE_PvRef = PossrepTHE_PvRef THE_PvName PossrepComponentTarget
     deriving (Show)
 
 }
