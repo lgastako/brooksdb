@@ -62,6 +62,11 @@ import Language.Heidi.Lexer
         public          { PublicTok        }
         count           { CountTok         }
         array           { ArrayTok         }
+        update          { UpdateTok        }
+        insert          { InsertTok        }
+        delete          { DeleteTok        }
+        i_delete        { IdeleteTok       }
+        d_insert        { DinsertTok       }
         same_type_as    { SameTypeAsTok    }
         same_heading_as { SameHeadingAsTok }
         with            { WithTok          }
@@ -446,6 +451,67 @@ ArrayTarget : ArrayVarRef                                           { ArrayTarge
 
 ArrayVarDef : var ArrayVarName array TupleTypeSpec                  { ArrayVarDef $2 $4 }
 
+Assign : ScalarAssign                                               { AssignScalar $1 }
+       | NonscalarAssign                                            { AssignNonscalar $1 }
+
+ScalarAssign : ScalarTarget ':=' ScalarExp                          { ScalarAssignTarget $1 $3 }
+             | ScalarUpdate                                         { ScalarAssignUpdate $1 }
+
+ScalarUpdate : update ScalarTarget
+                      '{' PossrepComponentAssignCommalist '}'       { ScalarUpdate $2 $4 }
+
+ScalarTarget : ScalarVarRef                                         { ScalarTargetVarRef $1 }
+             | ScalarTHE_PvRef                                      { ScalarTargetTHE_PvRef $1 }
+
+ScalarTHE_PvRef : THE_PvName '(' ScalarTarget ')'                   { ScalarTHE_PvRef $1 $3 }
+
+PossrepComponentAssignCommalist
+    : PossrepComponentAssign                                        { PossrepComponentAssignCommalist $1 }
+    | PossrepComponentAssignCommalist ',' PossrepComponentAssign    { PossrepComponentAssignCommalistCons $1 $3 }
+
+-- Not listed, not putting junk to fill the hole for now.
+PossrepComponentAssign : varName                                    { PossrepComponentAssignFake $1 }
+
+NonscalarAssign : TupleAssign                                       { NonscalarAssignTuple $1 }
+                | RelationAssign                                    { NonscalarAssignRelation $1 }
+
+TupleAssign : TupleTarget ':=' TupleExp                             { TupleAssignTarget $1 $3 }
+            | TupleUpdate                                           { TupleAssignUpdate $1 }
+
+TupleUpdate : update TupleTarget '{' AttributeAssignCommalist '}'   { TupleUpdate $2 $4 }
+
+TupleTarget : TupleVarRef                                           { TupleTargetVarRef $1 }
+            | TupleTHE_PvRef                                        { TupleTargetTHE_PvRef $1 }
+
+TupleTHE_PvRef : THE_PvName '(' ScalarTarget ')'                    { TupleTHE_PvRef $1 $3 }
+
+THE_PvName : varName                                                { THE_PvName $1 }
+
+RelationAssign : RelationTarget ':=' RelationExp                    { RelationAssignTarget $1 $3 }
+               | RelationInsert                                     { RelationAssignInsert $1    }
+               | RelationDinsert                                    { RelationAssignDinsert $1   }
+               | RelationDelete                                     { RelationAssignDelete $1    }
+               | RelationIdelete                                    { RelationAssignIdelete $1   }
+               | RelationUpdate                                     { RelationAssignUpdate $1    }
+
+RelationTarget : RelationVarRef                                     { RelationTargetVarRef $1    }
+               | RelationTHE_PvRef                                  { RelationTargetTHE_PvRef $1 }
+
+RelationTHE_PvRef : THE_PvName '(' ScalarTarget ')'                 { RelationTHE_PvRef $1 $3 }
+
+RelationInsert : insert RelationTarget RelationExp                  { RelationInsert $2 $3 }
+
+RelationDinsert : d_insert RelationTarget RelationExp               { RelationDinsert $2 $3 }
+
+RelationDelete : delete RelationTarget RelationExp                  { RelationDelete $2 $3 }
+               | delete RelationTarget where BoolExp                { RelationDeleteWhere $2 $4 }
+
+RelationIdelete : i_delete RelationTarget RelationExp               { RelationIdelete $2 $3 }
+
+RelationUpdate : update RelationTarget
+                        '{' AttributeAssignCommalist '}'            { RelationUpdate $2 $4 }
+               | update RelationTarget where BoolExp
+                        '{' AttributeAssignCommalist '}'            { RelationUpdateWhere $2 $4 $6 }
 
 {
 
@@ -945,6 +1011,84 @@ data ArrayTarget = ArrayTarget ArrayVarRef
     deriving (Show)
 
 data ArrayVarDef = ArrayVarDef ArrayVarName TupleTypeSpec
+    deriving (Show)
+
+data Assign = AssignScalar ScalarAssign
+            | AssignNonscalar NonscalarAssign
+    deriving (Show)
+
+data ScalarAssign = ScalarAssignTarget ScalarTarget ScalarExp
+                  | ScalarAssignUpdate ScalarUpdate
+    deriving (Show)
+
+data ScalarUpdate = ScalarUpdate ScalarTarget PossrepComponentAssignCommalist
+    deriving (Show)
+
+data ScalarTarget = ScalarTargetVarRef ScalarVarRef
+                  | ScalarTargetTHE_PvRef ScalarTHE_PvRef
+    deriving (Show)
+
+data ScalarTHE_PvRef = ScalarTHE_PvRef THE_PvName ScalarTarget
+    deriving (Show)
+
+data NonscalarAssign = NonscalarAssignTuple TupleAssign
+                     | NonscalarAssignRelation RelationAssign
+    deriving (Show)
+
+data TupleAssign = TupleAssignTarget TupleTarget TupleExp
+                 | TupleAssignUpdate TupleUpdate
+    deriving (Show)
+
+data TupleTarget = TupleTargetVarRef TupleVarRef
+                 | TupleTargetTHE_PvRef TupleTHE_PvRef
+    deriving (Show)
+
+data TupleUpdate = TupleUpdate TupleTarget AttributeAssignCommalist
+    deriving (Show)
+
+data TupleTHE_PvRef = TupleTHE_PvRef THE_PvName ScalarTarget
+    deriving (Show)
+
+data THE_PvName = THE_PvName String
+    deriving (Show)
+
+data RelationAssign = RelationAssignTarget RelationTarget RelationExp
+                    | RelationAssignInsert RelationInsert
+                    | RelationAssignDinsert RelationDinsert
+                    | RelationAssignDelete RelationDelete
+                    | RelationAssignIdelete RelationIdelete
+                    | RelationAssignUpdate RelationUpdate
+    deriving (Show)
+
+data RelationInsert = RelationInsert RelationTarget RelationExp
+    deriving (Show)
+
+data RelationDinsert = RelationDinsert RelationTarget RelationExp
+    deriving (Show)
+
+data RelationDelete = RelationDelete RelationTarget RelationExp
+                    | RelationDeleteWhere RelationTarget BoolExp
+    deriving (Show)
+
+data RelationIdelete = RelationIdelete RelationTarget RelationExp
+    deriving (Show)
+
+data RelationUpdate = RelationUpdate RelationTarget AttributeAssignCommalist
+                    | RelationUpdateWhere RelationTarget BoolExp AttributeAssignCommalist
+    deriving (Show)
+
+data RelationTarget = RelationTargetVarRef RelationVarRef
+                    | RelationTargetTHE_PvRef RelationTHE_PvRef
+    deriving (Show)
+
+data RelationTHE_PvRef = RelationTHE_PvRef THE_PvName ScalarTarget
+    deriving (Show)
+
+data PossrepComponentAssignCommalist = PossrepComponentAssignCommalist PossrepComponentAssign
+                                     | PossrepComponentAssignCommalistCons PossrepComponentAssignCommalist PossrepComponentAssign
+    deriving (Show)
+
+data PossrepComponentAssign = PossrepComponentAssignFake String
     deriving (Show)
 
 }

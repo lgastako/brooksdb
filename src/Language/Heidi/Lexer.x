@@ -72,6 +72,11 @@ tokens :-
   public                { \s -> PublicTok        }
   count                 { \s -> CountTok         }
   array                 { \s -> ArrayTok         }
+  update                { \s -> UpdateTok        }
+  insert                { \s -> InsertTok        }
+  delete                { \s -> DeleteTok        }
+  d_insert              { \s -> DinsertTok       }
+  i_delete              { \s -> IdeleteTok       }
   same_type_as          { \s -> SameTypeAsTok    }
   same_heading_as       { \s -> SameHeadingAsTok }
   true                  { \s -> TrueTok          }
@@ -136,6 +141,11 @@ data Token =
     PublicTok        |
     CountTok         |
     ArrayTok         |
+    UpdateTok        |
+    InsertTok        |
+    DeleteTok        |
+    DinsertTok       |
+    IdeleteTok       |
     VarTok           |
     RealTok          |
     BaseTok          |
