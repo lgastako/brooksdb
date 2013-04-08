@@ -58,6 +58,8 @@ import Language.Heidi.Lexer
         table_dum       { TableDumTok      }
         true            { TrueTok          }
         false           { FalseTok         }
+        private         { PrivateTok       }
+        public          { PublicTok        }
         same_type_as    { SameTypeAsTok    }
         same_heading_as { SameHeadingAsTok }
         with            { WithTok          }
@@ -76,7 +78,14 @@ import Language.Heidi.Lexer
 
 %%
 
-RealRelationVarDef : var RelationVarName RealOrBase RelationTypeOrInitValue KeyDefList { RealRelationVarDef $2 $3 $4 $5 }
+RealRelationVarDef : var RelationVarName RealOrBase
+                         RelationTypeOrInitValue KeyDefList         { RealRelationVarDef $2 $3 $4 $5 }
+
+ApplicationRelationVarDef : var RelationVarName PrivateOrPublic
+                                RelationTypeOrInitValue KeyDefList  { ApplicationRelationVarDef $2 $3 $4 $5 }
+
+PrivateOrPublic: private                                            { PrivateOrPublicPrivate }
+               | public                                             { PrivateOrPublicPublic }
 
 KeyDefList : KeyDef                                                 { KeyDefList $1 }
            | KeyDefList ',' KeyDef                                  { KeyDefListCons $1 $3 }
@@ -911,5 +920,12 @@ data MonadicOrDyadicOtherBuiltInTupleOpInv = MonadicOrDyadicOtherBuiltInTupleOpI
     deriving (Show)
 
 type Identifier = String
+
+data PrivateOrPublic = PrivateOrPublicPrivate
+                     | PrivateOrPublicPublic
+    deriving (Show)
+
+data ApplicationRelationVarDef = ApplicationRelationVarDef RelationVarName PrivateOrPublic RelationTypeOrInitValue KeyDefList
+    deriving (Show)
 
 }
