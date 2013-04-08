@@ -13,6 +13,8 @@ import Language.Heidi.Lexer
 
 %token
 --      Keywords
+        begin           { BeginTok         }
+        transaction     { TransactionTok   }
         var             { VarTok           }
         init            { InitTok          }
         tuple           { TupleTok         }
@@ -522,6 +524,8 @@ AttributeTarget : AttributeRef                                      { AttributeT
                 | AttributeTHE_PvRef                                { AttributeTargetTHE_PvRef $1 }
 
 AttributeTHE_PvRef : THE_PvName '(' AttributeTarget ')'             { AttributeTHE_PvRef $1 $3 }
+
+BeginTransaction : begin transaction                                { BeginTransaction }
 
 {
 
@@ -1113,6 +1117,9 @@ data AttributeTarget = AttributeTargetRef AttributeRef
     deriving (Show)
 
 data AttributeTHE_PvRef = AttributeTHE_PvRef THE_PvName AttributeTarget
+    deriving (Show)
+
+data BeginTransaction = BeginTransaction
     deriving (Show)
 
 }

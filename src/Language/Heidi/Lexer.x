@@ -24,6 +24,8 @@ tokens :-
   '\,'                  { \s -> CommaTok        }
   ':='                  { \s -> AssignerTok     }
 
+  begin                 { \s -> BeginTok         }
+  transaction           { \s -> TransactionTok   }
   var                   { \s -> VarTok           }
   init                  { \s -> InitTok          }
   tuple                 { \s -> TupleTok         }
@@ -146,6 +148,8 @@ data Token =
     DeleteTok        |
     DinsertTok       |
     IdeleteTok       |
+    BeginTok         |
+    TransactionTok   |
     VarTok           |
     RealTok          |
     BaseTok          |
