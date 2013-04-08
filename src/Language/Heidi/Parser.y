@@ -26,6 +26,7 @@ import Language.Heidi.Lexer
         to              { ToTok            }
         while           { WhileTok         }
         leave           { LeaveTok         }
+        constraint      { ConstraintTok    }
         return          { ReturnTok        }
         commit          { CommitTok        }
         rollback        { RollbackTok      }
@@ -602,6 +603,10 @@ While : while BoolExp ';' Statement end while                       { While $2 $
       | StatementName ':' while BoolExp ';' Statement end while     { WhileNamed $1 $4 $6 }
 
 Leave : leave StatementName                                         { Leave $2 }
+
+ConstraintDef : constraint ConstraintName BoolExp                   { ConstraintDef $2 $3 }
+
+ConstraintName : varName                                            { ConstraintName $1 }
 
 {
 
@@ -1268,6 +1273,12 @@ data If = If BoolExp Statement
 
 data Return = Return
             | ReturnExp Exp
+    deriving (Show)
+
+data ConstraintDef = ConstraintDef ConstraintName BoolExp
+    deriving (Show)
+
+data ConstraintName = ConstraintName Identifier
     deriving (Show)
 
 }

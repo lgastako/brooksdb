@@ -38,6 +38,7 @@ tokens :-
   to                    { \s -> ToTok            }
   while                 { \s -> WhileTok         }
   leave                 { \s -> LeaveTok         }
+  constraint            { \s -> ConstraintTok    }
   return                { \s -> ReturnTok        }
   commit                { \s -> CommitTok        }
   rollback              { \s -> RollbackTok      }
@@ -177,6 +178,7 @@ data Token =
     ToTok            |
     WhileTok         |
     LeaveTok         |
+    ConstraintTok    |
     ReturnTok        |
     CommitTok        |
     RollbackTok      |
