@@ -60,6 +60,7 @@ import Language.Heidi.Lexer
         false           { FalseTok         }
         private         { PrivateTok       }
         public          { PublicTok        }
+        count           { CountTok         }
         same_type_as    { SameTypeAsTok    }
         same_heading_as { SameHeadingAsTok }
         with            { WithTok          }
@@ -433,10 +434,15 @@ PossrepName : varName                                               { PossrepNam
          --AggOpName '(' RelationExp Exp ')'
          -- Nadic Count Etc?
 
-RelationSelectorInv : relation '{' TupleExpCommalist '}'                   { RelationSelectorInv $3 }
-                    | relation Heading '{' TupleExpCommalist '}'           { RelationSelectorInvHeaded $2 $4 }
-                    | table_dee                                            { RelationSelectorInvTableDee }
-                    | table_dum                                            { RelationSelectorInvTableDum }
+RelationSelectorInv : relation '{' TupleExpCommalist '}'            { RelationSelectorInv $3 }
+                    | relation Heading '{' TupleExpCommalist '}'    { RelationSelectorInvHeaded $2 $4 }
+                    | table_dee                                     { RelationSelectorInvTableDee }
+                    | table_dum                                     { RelationSelectorInvTableDum }
+
+ArrayCardinality : count '(' ArrayVarRef ')'                        { ArrayCardinality $3 }
+
+
+
 {
 
 parseError :: [Token] -> a
@@ -927,5 +933,9 @@ data PrivateOrPublic = PrivateOrPublicPrivate
 
 data ApplicationRelationVarDef = ApplicationRelationVarDef RelationVarName PrivateOrPublic RelationTypeOrInitValue KeyDefList
     deriving (Show)
+
+data ArrayCardinality = ArrayCardinality ArrayVarRef
+    deriving (Show)
+
 
 }

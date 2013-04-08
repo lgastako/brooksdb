@@ -70,6 +70,7 @@ tokens :-
   table_dum             { \s -> TableDumTok      }
   private               { \s -> PrivateTok       }
   public                { \s -> PublicTok        }
+  count                 { \s -> CountTok         }
   same_type_as          { \s -> SameTypeAsTok    }
   same_heading_as       { \s -> SameHeadingAsTok }
   true                  { \s -> TrueTok          }
@@ -132,6 +133,7 @@ data Token =
     FalseTok         |
     PrivateTok       |
     PublicTok        |
+    CountTok         |
     VarTok           |
     RealTok          |
     BaseTok          |
