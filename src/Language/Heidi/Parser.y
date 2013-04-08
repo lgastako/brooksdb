@@ -513,6 +513,11 @@ RelationUpdate : update RelationTarget
                | update RelationTarget where BoolExp
                         '{' AttributeAssignCommalist '}'            { RelationUpdateWhere $2 $4 $6 }
 
+Assignment : AssignCommalist Attribute                              { Assignment $1 $2 }
+
+AssignCommalist : Assign                                            { AssignCommalist $1 }
+                | AssignCommalist ',' Assign                        { AssignCommalistCons $1 $3 }
+
 {
 
 parseError :: [Token] -> a
@@ -1089,6 +1094,13 @@ data PossrepComponentAssignCommalist = PossrepComponentAssignCommalist PossrepCo
     deriving (Show)
 
 data PossrepComponentAssign = PossrepComponentAssignFake String
+    deriving (Show)
+
+data Assignment = Assignment AssignCommalist Attribute
+    deriving (Show)
+
+data AssignCommalist = AssignCommalist Assign
+                     | AssignCommalistCons AssignCommalist Assign
     deriving (Show)
 
 }
