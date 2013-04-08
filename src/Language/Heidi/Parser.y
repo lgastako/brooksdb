@@ -33,6 +33,7 @@ import Language.Heidi.Lexer
         desc            { DescTok          }
         ordinal         { OrdinalTok       }
         ordered         { OrderedTok       }
+        possrep         { PossrepTok       }
         return          { ReturnTok        }
         commit          { CommitTok        }
         rollback        { RollbackTok      }
@@ -651,6 +652,21 @@ PossrepTHE_PvRef : THE_PvName '(' PossrepComponentTarget ')'        { PossrepTHE
 
 PossrepComponentTarget : PossrepComponentRef                        { PossrepComponentTargetRef $1 }
                        | PossrepTHE_PvRef                           { PossrepComponentTargetTHE_PvRef $1 }
+
+PossrepConstraintDef : constraint BoolExp                           { PossrepConstraintDef $2 }
+
+PossrepDef : possrep '{' PossrepComponentDefCommalist '}'           { PossrepDef $3 }
+           | possrep PossrepName
+                     '{' PossrepComponentDefCommalist '}'           { PossrepDefNamed $2 $4}
+           | possrep '{' PossrepComponentDefCommalist
+                         PossrepConstraintDef         '}'           { PossrepDefConstrained $3 $4 }
+           | possrep PossrepName
+                     '{' PossrepComponentDefCommalist
+                         PossrepConstraintDef         '}'           { PossrepDefNamedConstrained $2 $4 $5 }
+
+PossrepComponentDefCommalist : PossrepComponentDef                  { PossrepComponentDefCommalist $1 }
+                             | PossrepComponentDefCommalist ','
+                               PossrepComponentDef                  { PossrepComponentDefCommalistCons $1 $3 }
 
 {
 
@@ -1374,6 +1390,19 @@ data PossrepComponentTarget = PossrepComponentTargetRef PossrepComponentRef
     deriving (Show)
 
 data PossrepTHE_PvRef = PossrepTHE_PvRef THE_PvName PossrepComponentTarget
+    deriving (Show)
+
+data PossrepConstraintDef = PossrepConstraintDef BoolExp
+    deriving (Show)
+
+data PossrepDef = PossrepDef PossrepComponentDefCommalist
+                | PossrepDefNamed PossrepName PossrepComponentDefCommalist
+                | PossrepDefConstrained PossrepComponentDefCommalist PossrepConstraintDef
+                | PossrepDefNamedConstrained PossrepName PossrepComponentDefCommalist PossrepConstraintDef
+    deriving (Show)
+
+data PossrepComponentDefCommalist = PossrepComponentDefCommalist PossrepComponentDef
+                                  | PossrepComponentDefCommalistCons PossrepComponentDefCommalist PossrepComponentDef
     deriving (Show)
 
 }

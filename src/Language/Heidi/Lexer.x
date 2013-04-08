@@ -45,6 +45,7 @@ tokens :-
   desc                  { \s -> DescTok          }
   ordinal               { \s -> OrdinalTok       }
   ordered               { \s -> OrderedTok       }
+  possrep               { \s -> PossrepTok       }
   return                { \s -> ReturnTok        }
   commit                { \s -> CommitTok        }
   rollback              { \s -> RollbackTok      }
@@ -191,6 +192,7 @@ data Token =
     DescTok          |
     OrdinalTok       |
     OrderedTok       |
+    PossrepTok       |
     ReturnTok        |
     CommitTok        |
     RollbackTok      |
