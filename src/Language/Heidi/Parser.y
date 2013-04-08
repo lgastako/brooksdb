@@ -131,6 +131,8 @@ import Language.Heidi.Lexer
 
 %%
 
+Statement : StatementBody ';'                                       { Statement $1 }
+
 RealRelationVarDef : var RelationVarName RealOrBase
                          RelationTypeOrInitValue KeyDefList         { RealRelationVarDef $2 $3 $4 $5 }
 
@@ -580,8 +582,6 @@ WhenSpecList : WhenSpec                                             { WhenSpecLi
              | WhenSpecList ',' WhenSpec                            { WhenSpecListCons $1 $3 }
 
 WhenSpec : when BoolExp then Statement                              { WhenSpec $2 $4 }
-
-Statement : StatementBody ';'                                       { Statement $1 }
 
 StatementBody : WithStatementBody                                   { StatementBodyWith $1 }
               | NonwithStatementBody                                { StatementBodyNonwith $1 }
