@@ -28,6 +28,7 @@ import Language.Heidi.Lexer
         leave           { LeaveTok         }
         constraint      { ConstraintTok    }
         drop            { DropTok          }
+        virtual         { VirtualTok       }
         return          { ReturnTok        }
         commit          { CommitTok        }
         rollback        { RollbackTok      }
@@ -607,9 +608,15 @@ Leave : leave StatementName                                         { Leave $2 }
 
 ConstraintDef : constraint ConstraintName BoolExp                   { ConstraintDef $2 $3 }
 
-ConstraintDrop : drop constraint ConstraintName BoolExp             { ConstraintDef $2 $3 }
+ConstraintDrop : drop constraint ConstraintName BoolExp             { ConstraintDef $3 $4 }
 
 ConstraintName : varName                                            { ConstraintName $1 }
+
+DatabaseRelationVarDef : RealRelationVarDef                         { DatabaseRelationVarDefReal $1 }
+                       | VirtualRelationVarDef                      { DatabaseRelationVarDefVirtual $1 }
+
+VirtualRelationVarDef : var RelationVarName
+                            virtual '(' RelationExp ')' KeyDefList  { VirtualRelationVarDef $2 $5 $7 }
 
 {
 
@@ -1285,6 +1292,13 @@ data ConstraintName = ConstraintName Identifier
     deriving (Show)
 
 data ConstraintDrop = ConstraintDrop Identifier
+    deriving (Show)
+
+data DatabaseRelationVarDef = DatabaseRelationVarDefReal RealRelationVarDef
+                            | DatabaseRelationVarDefVirtual VirtualRelationVarDef
+    deriving (Show)
+
+data VirtualRelationVarDef = VirtualRelationVarDef RelationVarName RelationExp KeyDefList
     deriving (Show)
 
 }

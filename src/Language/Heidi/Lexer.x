@@ -40,6 +40,7 @@ tokens :-
   leave                 { \s -> LeaveTok         }
   constraint            { \s -> ConstraintTok    }
   drop                  { \s -> DropTok          }
+  virtual               { \s -> VirtualTok       }
   return                { \s -> ReturnTok        }
   commit                { \s -> CommitTok        }
   rollback              { \s -> RollbackTok      }
@@ -181,6 +182,7 @@ data Token =
     LeaveTok         |
     ConstraintTok    |
     DropTok          |
+    VirtualTok       |
     ReturnTok        |
     CommitTok        |
     RollbackTok      |
