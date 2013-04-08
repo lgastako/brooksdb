@@ -809,6 +809,9 @@ TupleComp : TupleExp TupleCompOp TupleExp                           { TupleComp 
 TupleCompOp : '='                                                   { TupleCompOpEq }
             | '<>'                                                  { TupleCompOpNe }
 
+VarRef : ScalarVarRef                                               { VarRefScalar $1 }
+       | NonscalarVarRef                                            { VarRefNonscalar $1 }
+
 {
 
 parseError :: [Token] -> a
@@ -1683,4 +1686,8 @@ data TupleComp = TupleComp TupleExp TupleCompOp TupleExp
 data TupleCompOp = TupleCompOpEq
                  | TupleCompOpNe
     deriving (Show)
+
+data VarRef = VarRefScalar ScalarVarRef
+            | VarRefNonscalar NonscalarVarRef
+
 }
