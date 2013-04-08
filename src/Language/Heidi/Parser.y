@@ -761,6 +761,11 @@ RelationCompOp : '='                                                { RelationCo
                | '<>'                                               { RelationCompOpNe }
                -- others, but we'll get to them.
 
+ScalarComp : ScalarExp ScalarCompOp ScalarExp                       { ScalarComp $1 $2 $3 }
+
+ScalarCompOp : '='                                                  { ScalarCompOpEq }
+             | '<>'                                                 { ScalarCompOpNe }
+
 {
 
 parseError :: [Token] -> a
@@ -1591,6 +1596,13 @@ data RelationComp = RelationComp RelationExp RelationCompOp RelationExp
 
 data RelationCompOp = RelationCompOpEq
                     | RelationCompOpNe
+    deriving (Show)
+
+data ScalarComp = ScalarComp ScalarExp ScalarCompOp ScalarExp
+    deriving (Show)
+
+data ScalarCompOp = ScalarCompOpEq
+                  | ScalarCompOpNe
     deriving (Show)
 
 }
