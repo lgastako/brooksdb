@@ -16,6 +16,19 @@ import Language.Heidi.Lexer
         begin           { BeginTok         }
         transaction     { TransactionTok   }
         call            { CallTok          }
+        case            { CaseTok          }
+        end             { EndTok           }
+        else            { ElseTok          }
+        when            { WhenTok          }
+        then            { ThenTok          }
+        if              { IfTok            }
+        do              { DoTok            }
+        to              { ToTok            }
+        while           { WhileTok         }
+        leave           { LeaveTok         }
+        return          { ReturnTok        }
+        commit          { CommitTok        }
+        rollback        { RollbackTok      }
         var             { VarTok           }
         init            { InitTok          }
         tuple           { TupleTok         }
@@ -78,6 +91,7 @@ import Language.Heidi.Lexer
         '{'             { LeftCurlyTok     }
         '}'             { RightCurlyTok    }
         ':'             { ColonTok         }
+        ';'             { SemiColonTok     }
         ','             { CommaTok         }
         ':='            { AssignerTok      }
 
@@ -529,6 +543,65 @@ AttributeTHE_PvRef : THE_PvName '(' AttributeTarget ')'             { AttributeT
 BeginTransaction : begin transaction                                { BeginTransaction }
 
 Call : call UserOpInv                                               { Call $2 }
+
+Case : case ';' WhenSpecList end case                               { Case $3 }
+     | case ';' WhenSpecList else Statement end case                { CaseElse $3 $5 }
+
+WhenSpecList : WhenSpec                                             { WhenSpecList $1 }
+             | WhenSpecList ',' WhenSpec                            { WhenSpecListCons $1 $3 }
+
+WhenSpec : when BoolExp then Statement                              { WhenSpec $2 $4 }
+
+Statement : StatementBody ';'                                       { Statement $1 }
+
+StatementBody : WithStatementBody                                   { StatementBodyWith $1 }
+              | NonwithStatementBody                                { StatementBodyNonwith $1 }
+
+WithStatementBody : with '(' NameIntroCommalist ')'
+                         ':' StatementBody                          { WithStatementBody $3 $6 }
+
+NonwithStatementBody
+-- No def, no idea, so omitting for now.
+--   : PreviouslyDefinedStatementBodyCommalist      { NonwithStatementBodyPreviouslyDSBC $1 }
+                     : BeginTransaction                             { NonwithStatementBodyBeginTransaction $1 }
+                     | Commit                                       { NonwithStatementBodyCommit $1 }
+                     | Rollback                                     { NonwithStatementBodyRollback $1 }
+                     | Call                                         { NonwithStatementBodyCall $1 }
+                     | Return                                       { NonwithStatementBodyReturn $1 }
+                     | Case                                         { NonwithStatementBodyCase $1 }
+                     | If                                           { NonwithStatementBodyIf $1 }
+                     | Do                                           { NonwithStatementBodyDo $1 }
+                     | While                                        { NonwithStatementBodyWhile $1 }
+                     | Leave                                        { NonwithStatementBodyLeave $1 }
+                     | CompoundStatementBody                        { NonwithStatementBodyCompoundStatementBody $1 }
+                     -- | Noop                                         { NonwithStatementBodyNoop $1 }
+                     -- Don't want to think through interactions with rest of whitespace, so for now, omitted.
+
+Commit : commit                                                     { Commit }
+
+Rollback : rollback                                                 { Rollback }
+
+Return : return                                                     { Return }
+       | return Exp                                                 { ReturnExp $2 }
+
+If : if BoolExp then Statement end if                               { If $2 $4 }
+   | if BoolExp then Statement else Statement end if                { IfElse $2 $4 $6 }
+
+Do : do ScalarVarRef ':=' IntegerExp to IntegerExp Statement end do { Do $2 $4 $6 $7 }
+   | StatementName ':' do
+        ScalarVarRef ':=' IntegerExp to IntegerExp Statement end do { DoNamed $1 $4 $6 $8 $9 }
+
+StatementName : varName                                             { StatementName $1 }
+
+CompoundStatementBody : begin ';' StatementList end                 { CompoundStatementBody $3 }
+
+StatementList : Statement                                           { StatementList $1 }
+              | StatementList ';' Statement                         { StatementListCons $1 $3 }
+
+While : while BoolExp ';' Statement end while                       { While $2 $4 }
+      | StatementName ':' while BoolExp ';' Statement end while     { WhileNamed $1 $4 $6 }
+
+Leave : leave StatementName                                         { Leave $2 }
 
 {
 
@@ -1066,7 +1139,7 @@ data TupleUpdate = TupleUpdate TupleTarget AttributeAssignCommalist
 data TupleTHE_PvRef = TupleTHE_PvRef THE_PvName ScalarTarget
     deriving (Show)
 
-data THE_PvName = THE_PvName String
+data THE_PvName = THE_PvName Identifier
     deriving (Show)
 
 data RelationAssign = RelationAssignTarget RelationTarget RelationExp
@@ -1105,7 +1178,7 @@ data PossrepComponentAssignCommalist = PossrepComponentAssignCommalist PossrepCo
                                      | PossrepComponentAssignCommalistCons PossrepComponentAssignCommalist PossrepComponentAssign
     deriving (Show)
 
-data PossrepComponentAssign = PossrepComponentAssignFake String
+data PossrepComponentAssign = PossrepComponentAssignFake Identifier
     deriving (Show)
 
 data Assignment = Assignment AssignCommalist Attribute
@@ -1128,4 +1201,74 @@ data BeginTransaction = BeginTransaction
 data Call = Call UserOpInv
     deriving (Show)
 
+data Case = Case WhenSpecList
+          | CaseElse WhenSpecList Statement
+    deriving (Show)
+
+data Do = Do ScalarVarRef IntegerExp IntegerExp Statement
+        | DoNamed StatementName ScalarVarRef IntegerExp IntegerExp Statement
+    deriving (Show)
+
+data Leave = Leave StatementName
+    deriving (Show)
+
+data WhenSpecList = WhenSpecList WhenSpec
+                  | WhenSpecListCons WhenSpecList WhenSpec
+    deriving (Show)
+
+data WhenSpec = WhenSpec BoolExp Statement
+    deriving (Show)
+
+data Statement = Statement StatementBody
+    deriving (Show)
+
+data StatementBody = StatementBodyWith WithStatementBody
+                   | StatementBodyNonwith NonwithStatementBody
+    deriving (Show)
+
+data WithStatementBody = WithStatementBody NameIntroCommalist StatementBody
+    deriving (Show)
+
+data NonwithStatementBody = NonwithStatementBodyBeginTransaction BeginTransaction
+                          | NonwithStatementBodyCommit Commit
+                          | NonwithStatementBodyRollback Rollback
+                          | NonwithStatementBodyCall Call
+                          | NonwithStatementBodyReturn Return
+                          | NonwithStatementBodyCase Case
+                          | NonwithStatementBodyIf If
+                          | NonwithStatementBodyDo Do
+                          | NonwithStatementBodyWhile While
+                          | NonwithStatementBodyLeave Leave
+                          | NonwithStatementBodyCompoundStatementBody CompoundStatementBody
+    deriving (Show)
+
+data Commit = Commit
+    deriving (Show)
+
+data Rollback = Rollback
+    deriving (Show)
+
+data CompoundStatementBody = CompoundStatementBody StatementList
+    deriving (Show)
+
+data StatementList = StatementList Statement
+                   | StatementListCons StatementList Statement
+    deriving (Show)
+
+data While = While BoolExp Statement
+           | WhileNamed StatementName BoolExp Statement
+    deriving (Show)
+
+data StatementName = StatementName Identifier
+    deriving (Show)
+
+data If = If BoolExp Statement
+        | IfElse BoolExp Statement Statement
+    deriving (Show)
+
+data Return = Return
+            | ReturnExp Exp
+    deriving (Show)
+
 }
+

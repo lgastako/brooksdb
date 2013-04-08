@@ -14,18 +14,33 @@ tokens :-
   "--".*                ;
 
   $digit+               { \s -> IntTok (read s) }
---  "\"".*"\""            { \s -> StrTok s        }
 
-  '\('                   { \s -> LeftRoundTok    }
-  '\)'                   { \s -> RightRoundTok   }
+--  "\"".*"\""            { \s -> StrTok s        }
 --  '{'                   { \s -> LeftCurlyTok    }
 --  '}'                   { \s -> RightCurlyTok   }
-  ':'                   { \s -> ColonTok        }
-  '\,'                  { \s -> CommaTok        }
-  ':='                  { \s -> AssignerTok     }
+
+  '\('                  { \s -> LeftRoundTok     }
+  '\)'                  { \s -> RightRoundTok    }
+  ':'                   { \s -> ColonTok         }
+  ';'                   { \s -> SemiColonTok     }
+  '\,'                  { \s -> CommaTok         }
+  ':='                  { \s -> AssignerTok      }
 
   begin                 { \s -> BeginTok         }
   transaction           { \s -> TransactionTok   }
+  case                  { \s -> CaseTok          }
+  end                   { \s -> EndTok           }
+  else                  { \s -> ElseTok          }
+  when                  { \s -> WhenTok          }
+  then                  { \s -> ThenTok          }
+  if                    { \s -> IfTok            }
+  do                    { \s -> DoTok            }
+  to                    { \s -> ToTok            }
+  while                 { \s -> WhileTok         }
+  leave                 { \s -> LeaveTok         }
+  return                { \s -> ReturnTok        }
+  commit                { \s -> CommitTok        }
+  rollback              { \s -> RollbackTok      }
   var                   { \s -> VarTok           }
   init                  { \s -> InitTok          }
   tuple                 { \s -> TupleTok         }
@@ -114,6 +129,7 @@ data Token =
     PerTok           |
     ByTok            |
     ColonTok         |
+    SemiColonTok     |
     CommaTok         |
     RightRoundTok    |
     LeftRoundTok     |
@@ -151,6 +167,19 @@ data Token =
     BeginTok         |
     TransactionTok   |
     CallTok          |
+    CaseTok          |
+    EndTok           |
+    ElseTok          |
+    WhenTok          |
+    ThenTok          |
+    IfTok            |
+    DoTok            |
+    ToTok            |
+    WhileTok         |
+    LeaveTok         |
+    ReturnTok        |
+    CommitTok        |
+    RollbackTok      |
     VarTok           |
     RealTok          |
     BaseTok          |
