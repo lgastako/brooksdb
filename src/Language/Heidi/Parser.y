@@ -14,105 +14,105 @@ import Language.Heidi.Lexer
 
 %token
 --      Keywords
-        begin           { BeginTok         }
-        transaction     { TransactionTok   }
-        call            { CallTok          }
-        case            { CaseTok          }
-        end             { EndTok           }
-        else            { ElseTok          }
-        when            { WhenTok          }
-        then            { ThenTok          }
-        if              { IfTok            }
-        do              { DoTok            }
-        to              { ToTok            }
-        while           { WhileTok         }
-        leave           { LeaveTok         }
-        constraint      { ConstraintTok    }
-        drop            { DropTok          }
-        virtual         { VirtualTok       }
-        asc             { AscTok           }
-        desc            { DescTok          }
-        ordinal         { OrdinalTok       }
-        ordered         { OrderedTok       }
-        possrep         { PossrepTok       }
-        return          { ReturnTok        }
-        returns         { ReturnsTok       }
-        type            { TypeTok          }
-        load            { LoadTok          }
-        order           { OrderTok         }
-        operator        { OperatorTok      }
-        updates         { UpdatesTok       }
-        commit          { CommitTok        }
-        rollback        { RollbackTok      }
-        var             { VarTok           }
-        init            { InitTok          }
-        tuple           { TupleTok         }
-        from            { FromTok          }
-        all             { AllTok           }
-        but             { ButTok           }
-        union           { UnionTok         }
-        rename          { RenameTok        }
-        extend          { ExtendTok        }
-        wrap            { WrapTok          }
-        unwrap          { UnwrapTok        }
-        as              { AsTok            }
-        compose         { ComposeTok       }
-        heading         { HeadingTok       }
-        d_union         { DunionTok        }
-        intersect       { IntersectTok     }
-        join            { JoinTok          }
-        times           { TimesTok         }
-        xunion          { XunionTok        }
+        BEGIN           { BeginTok         }
+        TRANSACTION     { TransactionTok   }
+        CASE            { CaseTok          }
+        END             { EndTok           }
+        ELSE            { ElseTok          }
+        CALL            { CallTok          }
+        WHEN            { WhenTok          }
+        THEN            { ThenTok          }
+        IF              { IfTok            }
+        DO              { DoTok            }
+        TO              { ToTok            }
+        WHILE           { WhileTok         }
+        LEAVE           { LeaveTok         }
+        CONSTRAINT      { ConstraintTok    }
+        DROP            { DropTok          }
+        VIRTUAL         { VirtualTok       }
+        ASC             { AscTok           }
+        DESC            { DescTok          }
+        ORDINAL         { OrdinalTok       }
+        ORDERED         { OrderedTok       }
+        POSSREP         { PossrepTok       }
+        RETURN          { ReturnTok        }
+        RETURNS         { ReturnsTok       }
+        TYPE            { TypeTok          }
+        LOAD            { LoadTok          }
+        ORDER           { OrderTok         }
+        OPERATOR        { OperatorTok      }
+        UPDATES         { UpdatesTok       }
+        COMMIT          { CommitTok        }
+        ROLLBACK        { RollbackTok      }
+        VAR             { VarTok           }
+        INIT            { InitTok          }
+        TUPLE           { TupleTok         }
+        FROM            { FromTok          }
+        ALL             { AllTok           }
+        BUT             { ButTok           }
+        UNION           { UnionTok         }
+        RENAME          { RenameTok        }
+        EXTEND          { ExtendTok        }
+        WRAP            { WrapTok          }
+        UNWRAP          { UnwrapTok        }
+        AS              { AsTok            }
+        COMPOSE         { ComposeTok       }
+        HEADING         { HeadingTok       }
+        D_UNION         { DunionTok        }
+        INTERSECT       { IntersectTok     }
+        JOIN            { JoinTok          }
+        TIMES           { TimesTok         }
+        XUNION          { XunionTok        }
         where           { WhereTok         }
-        group           { GroupTok         }
-        ungroup         { UngroupTok       }
-        tclose          { TcloseTok        }
-        minus           { MinusTok         }
-        i_minus         { IminusTok        }
-        not             { NotTok           }
-        matching        { MatchingTok      }
-        divideby        { DividebyTok      }
-        summarize       { SummarizeTok     }
-        per             { PerTok           }
-        by              { ByTok            }
-        prefix          { PrefixTok        }
-        suffix          { SuffixTok        }
-        key             { KeyTok           }
-        integer         { IntegerTok       }
-        rational        { RationalTok      }
-        character       { CharacterTok     }
-        boolean         { BooleanTok       }
-        real            { RealTok          }
-        base            { BaseTok          }
-        relation        { RelationTok      }
-        table_dee       { TableDeeTok      }
-        table_dum       { TableDumTok      }
-        true            { TrueTok          }
-        false           { FalseTok         }
-        private         { PrivateTok       }
-        public          { PublicTok        }
-        count           { CountTok         }
-        array           { ArrayTok         }
-        update          { UpdateTok        }
-        insert          { InsertTok        }
-        delete          { DeleteTok        }
-        i_delete        { IdeleteTok       }
-        d_insert        { DinsertTok       }
-        same_type_as    { SameTypeAsTok    }
-        same_heading_as { SameHeadingAsTok }
-        countd          { CountdTok        }
-        sum             { SumTok           }
-        sumd            { SumdTok          }
-        avg             { AvgTok           }
-        avgd            { AvgdTok          }
-        min             { MinTok           }
-        max             { MaxTok           }
-        and             { AndTok           }
-        or              { OrTok            }
-        xor             { XorTok           }
-        exactly         { ExactlyTok       }
-        exactlyd        { ExactlydTok      }
-        with            { WithTok          }
+        GROUP           { GroupTok         }
+        UNGROUP         { UngroupTok       }
+        TCLOSE          { TcloseTok        }
+        MINUS           { MinusTok         }
+        I_MINUS         { IminusTok        }
+        NOT             { NotTok           }
+        MATCHING        { MatchingTok      }
+        DIVIDEBY        { DividebyTok      }
+        SUMMARIZE       { SummarizeTok     }
+        PER             { PerTok           }
+        BY              { ByTok            }
+        PREFIX          { PrefixTok        }
+        SUFFIX          { SuffixTok        }
+        KEY             { KeyTok           }
+        INTEGER         { IntegerTok       }
+        RATIONAL        { RationalTok      }
+        CHARACTER       { CharacterTok     }
+        BOOLEAN         { BooleanTok       }
+        REAL            { RealTok          }
+        BASE            { BaseTok          }
+        RELATION        { RelationTok      }
+        WITH            { WithTok          }
+        TABLE_DEE       { TableDeeTok      }
+        TABLE_DUM       { TableDumTok      }
+        PRIVATE         { PrivateTok       }
+        PUBLIC          { PublicTok        }
+        COUNT           { CountTok         }
+        ARRAY           { ArrayTok         }
+        UPDATE          { UpdateTok        }
+        INSERT          { InsertTok        }
+        DELETE          { DeleteTok        }
+        I_DELETE        { IdeleteTok       }
+        D_INSERT        { DinsertTok       }
+        SAME_TYPE_AS    { SameTypeAsTok    }
+        SAME_HEADING_AS { SameHeadingAsTok }
+        COUNTD          { CountdTok        }
+        SUM             { SumTok           }
+        SUMD            { SumdTok          }
+        AVG             { AvgTok           }
+        AVGD            { AvgdTok          }
+        MAX             { MaxTok           }
+        MIN             { MinTok           }
+        AND             { AndTok           }
+        OR              { OrTok            }
+        XOR             { XorTok           }
+        EXACTLY         { ExactlyTok       }
+        EXACTLYD        { ExactlydTok      }
+        TRUE            { TrueTok          }
+        FALSE           { FalseTok         }
         '('             { LeftRoundTok     }
         ')'             { RightRoundTok    }
         '{'             { LeftCurlyTok     }
@@ -133,35 +133,35 @@ import Language.Heidi.Lexer
 
 Statement : StatementBody ';'                                       { Statement $1 }
 
-RealRelationVarDef : var RelationVarName RealOrBase
+RealRelationVarDef : VAR RelationVarName RealOrBase
                          RelationTypeOrInitValue KeyDefList         { RealRelationVarDef $2 $3 $4 $5 }
 
-ApplicationRelationVarDef : var RelationVarName PrivateOrPublic
+ApplicationRelationVarDef : VAR RelationVarName PrivateOrPublic
                                 RelationTypeOrInitValue KeyDefList  { ApplicationRelationVarDef $2 $3 $4 $5 }
 
-PrivateOrPublic: private                                            { PrivateOrPublicPrivate }
-               | public                                             { PrivateOrPublicPublic }
+PrivateOrPublic: PRIVATE                                            { PrivateOrPublicPrivate }
+               | PUBLIC                                             { PrivateOrPublicPublic }
 
 KeyDefList : KeyDef                                                 { KeyDefList $1 }
            | KeyDefList ',' KeyDef                                  { KeyDefListCons $1 $3 }
 
-KeyDef : key '{' AttributeRefCommalist '}'                          { KeyDef $3 }
-       | key '{' all but AttributeRefCommalist '}'                  { KeyDefAllBut $5 }
+KeyDef : KEY '{' AttributeRefCommalist '}'                          { KeyDef $3 }
+       | KEY '{' ALL BUT AttributeRefCommalist '}'                  { KeyDefAllBut $5 }
 
-RealOrBase : real                                                   { RealOrBaseReal }
-           | base                                                   { RealOrBaseBase }
+RealOrBase : REAL                                                   { RealOrBaseReal }
+           | BASE                                                   { RealOrBaseBase }
 
 RelationVarName : varName                                           { RelationVarName $1 }
 
 RelationTypeOrInitValue : RelationTypeSpec                          { RelationTypeOrInitValueRelationTypeSpec $1        }
-                        | init '(' RelationExp ')'                  { RelationTypeOrInitValueInit $3                    }
-                        | RelationTypeSpec init '(' RelationExp ')' { RelationTypeOrInitValueRelationTypeSpecInit $1 $4 }
+                        | INIT '(' RelationExp ')'                  { RelationTypeOrInitValueInit $3                    }
+                        | RelationTypeSpec INIT '(' RelationExp ')' { RelationTypeOrInitValueRelationTypeSpecInit $1 $4 }
 
 RelationTypeSpec : RelationTypeName                                 { RelationTypeSpecRelationTypeName $1 }
-                 | same_type_as '(' RelationExp ')'                 { RelationTypeSpecSameTypeAs $3       }
-                 | relation same_heading_as '(' NonscalarExp ')'    { RelationTypeSpecSameHeadingAs $4    }
+                 | SAME_TYPE_AS '(' RelationExp ')'                 { RelationTypeSpecSameTypeAs $3       }
+                 | RELATION SAME_HEADING_AS '(' NonscalarExp ')'    { RelationTypeSpecSameHeadingAs $4    }
 
-RelationTypeName : relation Heading                                 { RelationTypeName $2 }
+RelationTypeName : RELATION Heading                                 { RelationTypeName $2 }
 
 Heading : '{' AttributeCommalist '}'                                { Heading $2 }
 
@@ -174,26 +174,26 @@ TypeSpec : ScalarTypeSpec                                           { TypeSpecSc
          | NonscalarTypeSpec                                        { TypeSpecNonscalar $1 }
 
 ScalarTypeSpec : ScalarTypeName                                     { ScalarTypeSpecScalarTypeName $1 }
-               | same_type_as '(' ScalarExp ')'                     { ScalarTypeSpecSameTypeAs $3 }
+               | SAME_TYPE_AS '(' ScalarExp ')'                     { ScalarTypeSpecSameTypeAs $3 }
 
 ScalarTypeName : UserScalarTypeName                                 { ScalarTypeNameUser $1 }
                | BuiltInScalarTypeName                              { ScalarTypeNameBuiltIn $1 }
 
 UserScalarTypeName : varName                                        { UserScalarTypeName $1 }
 
-BuiltInScalarTypeName : integer                                     { BuiltInScalarTypeNameInteger }
-                      | rational                                    { BuiltInScalarTypeNameRational }
-                      | character                                   { BuiltInScalarTypeNameCharacter }
-                      | boolean                                     { BuiltInScalarTypeNameBoolean }
+BuiltInScalarTypeName : INTEGER                                     { BuiltInScalarTypeNameInteger }
+                      | RATIONAL                                    { BuiltInScalarTypeNameRational }
+                      | CHARACTER                                   { BuiltInScalarTypeNameCharacter }
+                      | BOOLEAN                                     { BuiltInScalarTypeNameBoolean }
 
 NonscalarTypeSpec : TupleTypeSpec                                   { NonscalarTypeSpecTupleTypeSpec $1 }
                   | RelationTypeSpec                                { NonscalarTypeSpecRelationTypeSpec $1 }
 
 TupleTypeSpec : TupleTypeName                                       { TupleTypeSpecTupleTypeName $1 }
-              | same_type_as '(' TupleExp ')'                       { TupleTypeSpecSameTypeAs $3 }
-              | tuple same_heading_as '(' NonscalarExp ')'          { TupleTypeSpecSameHeadingAs $4 }
+              | SAME_TYPE_AS '(' TupleExp ')'                       { TupleTypeSpecSameTypeAs $3 }
+              | TUPLE SAME_HEADING_AS '(' NonscalarExp ')'          { TupleTypeSpecSameHeadingAs $4 }
 
-TupleTypeName : tuple Heading                                       { TupleTypeName $2 }
+TupleTypeName : TUPLE Heading                                       { TupleTypeName $2 }
 
 NonscalarExp : TupleExp                                             { NonscalarExpTupleExp $1 }
              | RelationExp                                          { NonscalarExpRelationExp $1 }
@@ -201,7 +201,7 @@ NonscalarExp : TupleExp                                             { NonscalarE
 TupleExp : TupleWithExp                                             { TupleExpWith $1 }
          | TupleNonwithExp                                          { TupleExpNonwith $1 }
 
-TupleWithExp : with '(' NameIntroCommalist ')' ':' TupleExp         { TupleWithExp $3 $6 }
+TupleWithExp : WITH '(' NameIntroCommalist ')' ':' TupleExp         { TupleWithExp $3 $6 }
 
 TupleNonwithExp : TupleVarRef                                       { TupleNonwithExpTupleVarRef $1 }
                 | TupleOpInv                                        { TupleNonwithExpTupleOpInv $1 }
@@ -232,14 +232,14 @@ BuiltInTupleOpInv : TupleSelectorInv                                { BuiltInTup
                   | NadicOtherBuiltInTupleOpInv                     { BuiltInTupleOpInvNadicOtherBuiltInTupleOpInv $1 }
                   | MonadicOrDyadicOtherBuiltInTupleOpInv           { BuiltInTupleOpInvMonadicOrDyadicOtherBuiltInTupleOpInv $1 }
 
-TupleSelectorInv : tuple '{' TupleComponentCommalist '}'            { TupleSelectorInv $3 }
+TupleSelectorInv : TUPLE '{' TupleComponentCommalist '}'            { TupleSelectorInv $3 }
 
 TupleComponentCommalist : TupleComponent                             { TupleComponentCommalist $1 }
                         | TupleComponentCommalist ',' TupleComponent { TupleComponentCommalistCons $1 $3 }
 
 TupleComponent : AttributeName Exp                                  { TupleComponent $1 $2 }
 
-AttributeExtractorInv : AttributeRef from TupleExp                  { AttributeExtractorInv $1 $3 }
+AttributeExtractorInv : AttributeRef FROM TupleExp                  { AttributeExtractorInv $1 $3 }
 
 AttributeRef : AttributeName                                        { AttributeRef $1 }
 
@@ -248,14 +248,14 @@ AttributeRefCommalist : AttributeRef                                { AttributeR
 
 AttributeName : varName                                             { AttributeName $1 }
 
-TupleExtractorInv : tuple from RelationExp                          { TupleExtractorInv $3 }
+TupleExtractorInv : TUPLE FROM RelationExp                          { TupleExtractorInv $3 }
 
 TupleProject : TupleExp '{' AttributeRefCommalist '}'               { TupleProject $1 $3 }
-             | TupleExp '{' all but AttributeRefCommalist '}'       { TupleProjectAllBut $1 $5 }
+             | TupleExp '{' ALL BUT AttributeRefCommalist '}'       { TupleProjectAllBut $1 $5 }
 
 NadicOtherBuiltInTupleOpInv : NadicTupleUnion                       { NadicOtherBuiltInTupleOpInv $1 }
 
-NadicTupleUnion : union '{' TupleExpCommalist '}'                   { NadicTupleUnion $3 }
+NadicTupleUnion : UNION '{' TupleExpCommalist '}'                   { NadicTupleUnion $3 }
 
 TupleExpCommalist : TupleExp                                        { TupleExpCommalist $1 }
                   | TupleExpCommalist ',' TupleExp                  { TupleExpCommalistCons $1 $3 }
@@ -271,22 +271,22 @@ MonadicOtherBuiltInTupleOpInv : TupleRename                         { MonadicOth
 DyadicOtherBuiltInTupleOpInv : DyadicTupleUnion                     { DyadicOtherBuiltInTupleOpInvUnion $1 }
                              | DyadicTupleCompose                   { DyadicOtherBuiltInTupleOpInvCompose $1 }
 
-DyadicTupleUnion : TupleExp union TupleExp                          { DyadicTupleUnion $1 $3 }
+DyadicTupleUnion : TupleExp UNION TupleExp                          { DyadicTupleUnion $1 $3 }
 
-DyadicTupleCompose : TupleExp compose TupleExp                      { DyadicTupleCompose $1 $3 }
+DyadicTupleCompose : TupleExp COMPOSE TupleExp                      { DyadicTupleCompose $1 $3 }
 
-TupleRename : TupleExp rename '{' RenamingCommalist '}'             { TupleRename $1 $4 }
+TupleRename : TupleExp RENAME '{' RenamingCommalist '}'             { TupleRename $1 $4 }
 
-TupleExtend : extend TupleExp ':' '{' AttributeAssignCommalist '}'  { TupleExtend $2 $5 }
+TupleExtend : EXTEND TupleExp ':' '{' AttributeAssignCommalist '}'  { TupleExtend $2 $5 }
 
 RenamingCommalist : Renaming                                        { RenamingCommalist $1 }
                   | RenamingCommalist ',' Renaming                  { RenamingCommalistCons $1 $3 }
 
-Renaming : AttributeRef as IntroducedName                           { Renaming $1 $3 }
-         | prefix CharacterStringLiteral
-               as CharacterStringLiteral                            { RenamingPrefix $2 $4 }
-         | suffix CharacterStringLiteral
-               as CharacterStringLiteral                            { RenamingSuffix $2 $4 }
+Renaming : AttributeRef AS IntroducedName                           { Renaming $1 $3 }
+         | PREFIX CharacterStringLiteral
+               AS CharacterStringLiteral                            { RenamingPrefix $2 $4 }
+         | SUFFIX CharacterStringLiteral
+               AS CharacterStringLiteral                            { RenamingSuffix $2 $4 }
 
 CharacterStringLiteral : strLiteral                                 { CharacterStringLiteral $1 }
 
@@ -295,14 +295,14 @@ AttributeAssignCommalist : AttributeAssign                              { Attrib
 
 -- Inferred from TTMHC's <extend add>
 -- TODO: Looks like the online stuff and book are not in sync.  Sync up I guess.  Hopefully pretty close.
-AttributeAssign : Exp as IntroducedName                             { AttributeAssign $1 $3 }
+AttributeAssign : Exp AS IntroducedName                             { AttributeAssign $1 $3 }
 
-TupleWrap : TupleExp wrap '(' Wrapping ')'                          { TupleWrap $1 $4 }
+TupleWrap : TupleExp WRAP '(' Wrapping ')'                          { TupleWrap $1 $4 }
 
-TupleUnwrap : TupleExp unwrap '(' Unwrapping ')'                    { TupleUnwrap $1 $4 }
+TupleUnwrap : TupleExp UNWRAP '(' Unwrapping ')'                    { TupleUnwrap $1 $4 }
 
-Wrapping : '{' AttributeRefCommalist '}' as IntroducedName          { Wrapping $2 $5 }
-         | '{' all but AttributeRefCommalist '}' as IntroducedName  { WrappingAllBut $4 $7 }
+Wrapping : '{' AttributeRefCommalist '}' AS IntroducedName          { Wrapping $2 $5 }
+         | '{' ALL BUT AttributeRefCommalist '}' AS IntroducedName  { WrappingAllBut $4 $7 }
 
 IntroducedName : varName                                            { IntroducedName $1 }
 
@@ -315,7 +315,7 @@ IntegerExp : int                                                    { IntegerExp
 RelationExp : RelationWithExp                                       { RelationExpWith $1 }
             | RelationNonwithExp                                    { RelationExpNonwith $1 }
 
-RelationWithExp : with '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $6 }
+RelationWithExp : WITH '(' NameIntroCommalist ')' ':' RelationExp   { RelationWithExp $3 $6 }
 
 RelationNonwithExp : RelationVarRef                                 { RelationNonwithExpRelationVarRef $1 }
                    | RelationOpInv                                  { RelationNonwithExpRelationOpInv $1  }
@@ -342,7 +342,7 @@ THE_OpInv : THE_OpName '(' ScalarExp ')'                            { THE_OpInv 
 THE_OpName : varName                                                { THE_OpName $1 }
 
 Project : RelationExp '{' AttributeRefCommalist '}'                 { Project $1 $3       }
-        | RelationExp '{' all but AttributeRefCommalist '}'         { ProjectAllBut $1 $5 }
+        | RelationExp '{' ALL BUT AttributeRefCommalist '}'         { ProjectAllBut $1 $5 }
 
 NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOtherBuiltInRelationOpInvUnion $1         }
                                | NadicDisjointUnion                 { NadicOtherBuiltInRelationOpInvDisjointUnion $1 }
@@ -352,23 +352,23 @@ NadicOtherBuiltInRelationOpInv : NadicUnion                         { NadicOther
                                | NadicXunion                        { NadicOtherBuiltInRelationOpInvXunion $1        }
                                | NadicCompose                       { NadicOtherBuiltInRelationOpInvCompose $1       }
 
-NadicUnion : union '{' RelationExpCommalist '}'                     { NadicUnion $3          }
-           | union Heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $2 $4 }
+NadicUnion : UNION '{' RelationExpCommalist '}'                     { NadicUnion $3          }
+           | UNION Heading '{' RelationExpCommalist '}'             { NadicUnionHeaded $2 $4 }
 
-NadicDisjointUnion : d_union '{' RelationExpCommalist '}'           { NadicDisjointUnion $3          }
-                   | d_union Heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $2 $4 }
+NadicDisjointUnion : D_UNION '{' RelationExpCommalist '}'           { NadicDisjointUnion $3          }
+                   | D_UNION Heading '{' RelationExpCommalist '}'   { NadicDisjointUnionHeaded $2 $4 }
 
-NadicIntersect : intersect '{' RelationExpCommalist '}'             { NadicIntersect $3          }
-               | intersect Heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $2 $4 }
+NadicIntersect : INTERSECT '{' RelationExpCommalist '}'             { NadicIntersect $3          }
+               | INTERSECT Heading '{' RelationExpCommalist '}'     { NadicIntersectHeaded $2 $4 }
 
-NadicJoin : join '{' RelationExpCommalist '}'                       { NadicJoin $3 }
+NadicJoin : JOIN '{' RelationExpCommalist '}'                       { NadicJoin $3 }
 
-NadicTimes : join '{' RelationExpCommalist '}'                      { NadicTimes $3 }
+NadicTimes : JOIN '{' RelationExpCommalist '}'                      { NadicTimes $3 }
 
-NadicXunion : xunion '{' RelationExpCommalist '}'                   { NadicXunion $3          }
-            | xunion Heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $2 $4 }
+NadicXunion : XUNION '{' RelationExpCommalist '}'                   { NadicXunion $3          }
+            | XUNION Heading '{' RelationExpCommalist '}'           { NadicXunionHeaded $2 $4 }
 
-NadicCompose : join '{' RelationExpCommalist '}'                    { NadicCompose $3 }
+NadicCompose : JOIN '{' RelationExpCommalist '}'                    { NadicCompose $3 }
 
 RelationExpCommalist : RelationExp                                  { RelationExpCommalist $1 }
                      | RelationExpCommalist ',' RelationExp         { RelationExpCommalistCons $1 $3 }
@@ -386,21 +386,21 @@ MonadicOtherBuiltInRelationOpInv : Rename                           { MonadicOth
                                  | Ungroup                          { MonadicOtherBuiltInRelationOpInvUngroup $1 }
                                  | Tclose                           { MonadicOtherBuiltInRelationOpInvTclose $1 }
 
-Rename : RelationExp rename '{' RenamingCommalist '}'               { Rename $1 $4  }
+Rename : RelationExp RENAME '{' RenamingCommalist '}'               { Rename $1 $4  }
 Where : RelationExp where BoolExp                                   { Where $1 $3   }
-Extend : extend RelationExp ':' '{' AttributeAssignCommalist '}'    { Extend $2 $5  }
-Wrap : RelationExp wrap '(' Wrapping ')'                            { Wrap $1 $4    }
-Unwrap : RelationExp unwrap '(' Unwrapping ')'                      { Unwrap $1 $4  }
-Group : RelationExp group '(' Grouping ')'                          { Group $1 $4   }
-Ungroup : RelationExp ungroup '(' Ungrouping ')'                    { Ungroup $1 $4 }
-Tclose : tclose '(' RelationExp ')'                                 { Tclose $3     }
+Extend : EXTEND RelationExp ':' '{' AttributeAssignCommalist '}'    { Extend $2 $5  }
+Wrap : RelationExp WRAP '(' Wrapping ')'                            { Wrap $1 $4    }
+Unwrap : RelationExp UNWRAP '(' Unwrapping ')'                      { Unwrap $1 $4  }
+Group : RelationExp GROUP '(' Grouping ')'                          { Group $1 $4   }
+Ungroup : RelationExp UNGROUP '(' Ungrouping ')'                    { Ungroup $1 $4 }
+Tclose : TCLOSE '(' RelationExp ')'                                 { Tclose $3     }
 
 -- JUST FOR NOW.
-BoolExp : true                                                      { BoolExpTrue  }
-        | false                                                     { BoolExpFalse }
+BoolExp : TRUE                                                      { BoolExpTrue  }
+        | FALSE                                                     { BoolExpFalse }
 
 Grouping : '{' AttributeRefCommalist '}'                            { Grouping $2       }
-         | '{' all but AttributeRefCommalist '}'                    { GroupingAllBut $4 }
+         | '{' ALL BUT AttributeRefCommalist '}'                    { GroupingAllBut $4 }
 
 Ungrouping : AttributeRef                                           { Ungrouping $1 }
 
@@ -418,36 +418,36 @@ DyadicOtherBuiltInRelationOpInv : DyadicUnion                       { DyadicOthe
                                 | Divide                            { DyadicOtherBuiltInRelationOpInvDivide $1              }
                                 | Summarize                         { DyadicOtherBuiltInRelationOpInvSummarize $1           }
 
-DyadicUnion : RelationExp union RelationExp                         { DyadicUnion $1 $3         }
-DyadicDisjointUnion : RelationExp d_union RelationExp               { DyadicDisjointUnion $1 $3 }
-DyadicIntersect : RelationExp intersect RelationExp                 { DyadicIntersect $1 $3     }
-Minus : RelationExp minus RelationExp                               { Minus $1 $3               }
-IncludedMinus : RelationExp i_minus RelationExp                     { IncludedMinus $1 $3       }
-DyadicJoin : RelationExp join RelationExp                           { DyadicJoin $1 $3          }
-DyadicTimes : RelationExp times RelationExp                         { DyadicTimes $1 $3         }
-DyadicXunion : RelationExp union RelationExp                        { DyadicXunion $1 $3        }
-DyadicCompose : RelationExp compose RelationExp                     { DyadicCompose $1 $3       }
-Matching : RelationExp matching RelationExp                         { Matching $1 $3            }
-NotMatching : RelationExp not matching RelationExp                  { NotMatching $1 $4         }
-Divide : RelationExp divideby RelationExp Per                       { Divide $1 $3 $4           }
+DyadicUnion : RelationExp UNION RelationExp                         { DyadicUnion $1 $3         }
+DyadicDisjointUnion : RelationExp D_UNION RelationExp               { DyadicDisjointUnion $1 $3 }
+DyadicIntersect : RelationExp INTERSECT RelationExp                 { DyadicIntersect $1 $3     }
+Minus : RelationExp MINUS RelationExp                               { Minus $1 $3               }
+IncludedMinus : RelationExp I_MINUS RelationExp                     { IncludedMinus $1 $3       }
+DyadicJoin : RelationExp JOIN RelationExp                           { DyadicJoin $1 $3          }
+DyadicTimes : RelationExp TIMES RelationExp                         { DyadicTimes $1 $3         }
+DyadicXunion : RelationExp XUNION RelationExp                       { DyadicXunion $1 $3        }
+DyadicCompose : RelationExp COMPOSE RelationExp                     { DyadicCompose $1 $3       }
+Matching : RelationExp MATCHING RelationExp                         { Matching $1 $3            }
+NotMatching : RelationExp NOT MATCHING RelationExp                  { NotMatching $1 $4         }
+Divide : RelationExp DIVIDEBY RelationExp Per                       { Divide $1 $3 $4           }
 
-Summarize : summarize RelationExp ':' '{' AttributeAssignCommalist '}'           { Summarize $2 $5           }
-          | summarize RelationExp PerOrBy ':' '{' AttributeAssignCommalist '}'   { SummarizePerOrBy $2 $3 $6 }
+Summarize : SUMMARIZE RelationExp ':' '{' AttributeAssignCommalist '}'           { Summarize $2 $5           }
+          | SUMMARIZE RelationExp PerOrBy ':' '{' AttributeAssignCommalist '}'   { SummarizePerOrBy $2 $3 $6 }
 
-Per : per '(' RelationExp ')'                                       { Per $3 }
-    --| per '(' RelationExp ... many
+Per : PER '(' RelationExp ')'                                       { Per $3 }
+    --| PER '(' RelationExp ... many
 
 PerOrBy : Per                                                       { PerOrByPer $1 }
         | By                                                        { PerOrByBy $1  }
 
 -- Note: I inserted By as it's own element, the original grammar had it nested underPerOrBy.
-By : by '{' AttributeRefCommalist '}'                               { By $3 }
-   | by '{' all but AttributeRefCommalist '}'                       { ByAllBut $5 }
+By : BY '{' AttributeRefCommalist '}'                               { By $3 }
+   | BY '{' ALL BUT AttributeRefCommalist '}'                       { ByAllBut $5 }
 
 ScalarExp : ScalarWithExp                                           { ScalarExpWith $1    }
           | ScalarNonwithExp                                        { ScalarExpNonwith $1 }
 
-ScalarWithExp : with '(' NameIntroCommalist ')' ':' ScalarExp       { ScalarWithExp $3 $6 }
+ScalarWithExp : WITH '(' NameIntroCommalist ')' ':' ScalarExp       { ScalarWithExp $3 $6 }
 
 ScalarNonwithExp : ScalarVarRef                                     { ScalarNonwithExpScalarVarRef $1 }
                  | ScalarOpInv                                      { ScalarNonwithExpScalarOpInv $1  }
@@ -488,16 +488,16 @@ PossrepName : varName                                               { PossrepNam
          --AggOpName '(' RelationExp Exp ')'
          -- Nadic Count Etc?
 
-RelationSelectorInv : relation '{' TupleExpCommalist '}'            { RelationSelectorInv $3 }
-                    | relation Heading '{' TupleExpCommalist '}'    { RelationSelectorInvHeaded $2 $4 }
-                    | table_dee                                     { RelationSelectorInvTableDee }
-                    | table_dum                                     { RelationSelectorInvTableDum }
+RelationSelectorInv : RELATION '{' TupleExpCommalist '}'            { RelationSelectorInv $3 }
+                    | RELATION Heading '{' TupleExpCommalist '}'    { RelationSelectorInvHeaded $2 $4 }
+                    | TABLE_DEE                                     { RelationSelectorInvTableDee }
+                    | TABLE_DUM                                     { RelationSelectorInvTableDum }
 
-ArrayCardinality : count '(' ArrayVarRef ')'                        { ArrayCardinality $3 }
+ArrayCardinality : COUNT '(' ArrayVarRef ')'                        { ArrayCardinality $3 }
 
 ArrayTarget : ArrayVarRef                                           { ArrayTarget $1 }
 
-ArrayVarDef : var ArrayVarName array TupleTypeSpec                  { ArrayVarDef $2 $4 }
+ArrayVarDef : VAR ArrayVarName ARRAY TupleTypeSpec                  { ArrayVarDef $2 $4 }
 
 Assign : ScalarAssign                                               { AssignScalar $1 }
        | NonscalarAssign                                            { AssignNonscalar $1 }
@@ -505,7 +505,7 @@ Assign : ScalarAssign                                               { AssignScal
 ScalarAssign : ScalarTarget ':=' ScalarExp                          { ScalarAssignTarget $1 $3 }
              | ScalarUpdate                                         { ScalarAssignUpdate $1 }
 
-ScalarUpdate : update ScalarTarget
+ScalarUpdate : UPDATE ScalarTarget
                       '{' PossrepComponentAssignCommalist '}'       { ScalarUpdate $2 $4 }
 
 ScalarTarget : ScalarVarRef                                         { ScalarTargetVarRef $1 }
@@ -526,7 +526,7 @@ NonscalarAssign : TupleAssign                                       { NonscalarA
 TupleAssign : TupleTarget ':=' TupleExp                             { TupleAssignTarget $1 $3 }
             | TupleUpdate                                           { TupleAssignUpdate $1 }
 
-TupleUpdate : update TupleTarget '{' AttributeAssignCommalist '}'   { TupleUpdate $2 $4 }
+TupleUpdate : UPDATE TupleTarget '{' AttributeAssignCommalist '}'   { TupleUpdate $2 $4 }
 
 TupleTarget : TupleVarRef                                           { TupleTargetVarRef $1 }
             | TupleTHE_PvRef                                        { TupleTargetTHE_PvRef $1 }
@@ -547,18 +547,18 @@ RelationTarget : RelationVarRef                                     { RelationTa
 
 RelationTHE_PvRef : THE_PvName '(' ScalarTarget ')'                 { RelationTHE_PvRef $1 $3 }
 
-RelationInsert : insert RelationTarget RelationExp                  { RelationInsert $2 $3 }
+RelationInsert : INSERT RelationTarget RelationExp                  { RelationInsert $2 $3 }
 
-RelationDinsert : d_insert RelationTarget RelationExp               { RelationDinsert $2 $3 }
+RelationDinsert : D_INSERT RelationTarget RelationExp               { RelationDinsert $2 $3 }
 
-RelationDelete : delete RelationTarget RelationExp                  { RelationDelete $2 $3 }
-               | delete RelationTarget where BoolExp                { RelationDeleteWhere $2 $4 }
+RelationDelete : DELETE RelationTarget RelationExp                  { RelationDelete $2 $3 }
+               | DELETE RelationTarget where BoolExp                { RelationDeleteWhere $2 $4 }
 
-RelationIdelete : i_delete RelationTarget RelationExp               { RelationIdelete $2 $3 }
+RelationIdelete : I_DELETE RelationTarget RelationExp               { RelationIdelete $2 $3 }
 
-RelationUpdate : update RelationTarget
+RelationUpdate : UPDATE RelationTarget
                         '{' AttributeAssignCommalist '}'            { RelationUpdate $2 $4 }
-               | update RelationTarget where BoolExp
+               | UPDATE RelationTarget where BoolExp
                         '{' AttributeAssignCommalist '}'            { RelationUpdateWhere $2 $4 $6 }
 
 Assignment : AssignCommalist Attribute                              { Assignment $1 $2 }
@@ -571,22 +571,22 @@ AttributeTarget : AttributeRef                                      { AttributeT
 
 AttributeTHE_PvRef : THE_PvName '(' AttributeTarget ')'             { AttributeTHE_PvRef $1 $3 }
 
-BeginTransaction : begin transaction                                { BeginTransaction }
+BeginTransaction : BEGIN TRANSACTION                                { BeginTransaction }
 
-Call : call UserOpInv                                               { Call $2 }
+Call : CALL UserOpInv                                               { Call $2 }
 
-Case : case ';' WhenSpecList end case                               { Case $3 }
-     | case ';' WhenSpecList else Statement end case                { CaseElse $3 $5 }
+Case : CASE ';' WhenSpecList END CASE                               { Case $3 }
+     | CASE ';' WhenSpecList ELSE Statement END CASE                { CaseElse $3 $5 }
 
 WhenSpecList : WhenSpec                                             { WhenSpecList $1 }
              | WhenSpecList ',' WhenSpec                            { WhenSpecListCons $1 $3 }
 
-WhenSpec : when BoolExp then Statement                              { WhenSpec $2 $4 }
+WhenSpec : WHEN BoolExp THEN Statement                              { WhenSpec $2 $4 }
 
 StatementBody : WithStatementBody                                   { StatementBodyWith $1 }
               | NonwithStatementBody                                { StatementBodyNonwith $1 }
 
-WithStatementBody : with '(' NameIntroCommalist ')'
+WithStatementBody : WITH '(' NameIntroCommalist ')'
                          ':' StatementBody                          { WithStatementBody $3 $6 }
 
 NonwithStatementBody
@@ -606,46 +606,46 @@ NonwithStatementBody
                      -- | Noop                                         { NonwithStatementBodyNoop $1 }
                      -- Don't want to think through interactions with rest of whitespace, so for now, omitted.
 
-Commit : commit                                                     { Commit }
+Commit : COMMIT                                                     { Commit }
 
-Rollback : rollback                                                 { Rollback }
+Rollback : ROLLBACK                                                 { Rollback }
 
-Return : return                                                     { Return }
-       | return Exp                                                 { ReturnExp $2 }
+Return : RETURN                                                     { Return }
+       | RETURN Exp                                                 { ReturnExp $2 }
 
-If : if BoolExp then Statement end if                               { If $2 $4 }
-   | if BoolExp then Statement else Statement end if                { IfElse $2 $4 $6 }
+If : IF BoolExp THEN Statement END IF                               { If $2 $4 }
+   | IF BoolExp THEN Statement ELSE Statement END IF                { IfElse $2 $4 $6 }
 
-Do : do ScalarVarRef ':=' IntegerExp to IntegerExp Statement end do { Do $2 $4 $6 $7 }
-   | StatementName ':' do
-        ScalarVarRef ':=' IntegerExp to IntegerExp Statement end do { DoNamed $1 $4 $6 $8 $9 }
+Do : DO ScalarVarRef ':=' IntegerExp TO IntegerExp Statement END DO { Do $2 $4 $6 $7 }
+   | StatementName ':' DO
+        ScalarVarRef ':=' IntegerExp TO IntegerExp Statement END DO { DoNamed $1 $4 $6 $8 $9 }
 
 StatementName : varName                                             { StatementName $1 }
 
-CompoundStatementBody : begin ';' StatementList end                 { CompoundStatementBody $3 }
+CompoundStatementBody : BEGIN ';' StatementList END                 { CompoundStatementBody $3 }
 
 StatementList : Statement                                           { StatementList $1 }
               | StatementList ';' Statement                         { StatementListCons $1 $3 }
 
-While : while BoolExp ';' Statement end while                       { While $2 $4 }
-      | StatementName ':' while BoolExp ';' Statement end while     { WhileNamed $1 $4 $6 }
+While : WHILE BoolExp ';' Statement END WHILE                       { While $2 $4 }
+      | StatementName ':' WHILE BoolExp ';' Statement END WHILE     { WhileNamed $1 $4 $6 }
 
-Leave : leave StatementName                                         { Leave $2 }
+Leave : LEAVE StatementName                                         { Leave $2 }
 
-ConstraintDef : constraint ConstraintName BoolExp                   { ConstraintDef $2 $3 }
+ConstraintDef : CONSTRAINT ConstraintName BoolExp                   { ConstraintDef $2 $3 }
 
-ConstraintDrop : drop constraint ConstraintName                     { ConstraintDrop $3 }
+ConstraintDrop : DROP CONSTRAINT ConstraintName                     { ConstraintDrop $3 }
 
 ConstraintName : varName                                            { ConstraintName $1 }
 
 DatabaseRelationVarDef : RealRelationVarDef                         { DatabaseRelationVarDefReal $1 }
                        | VirtualRelationVarDef                      { DatabaseRelationVarDefVirtual $1 }
 
-VirtualRelationVarDef : var RelationVarName
-                            virtual '(' RelationExp ')' KeyDefList  { VirtualRelationVarDef $2 $5 $7 }
+VirtualRelationVarDef : VAR RelationVarName
+                            VIRTUAL '(' RelationExp ')' KeyDefList  { VirtualRelationVarDef $2 $5 $7 }
 
-Direction : asc                                                     { DirectionAsc }
-          | desc                                                    { DirectionDesc }
+Direction : ASC                                                     { DirectionAsc }
+          | DESC                                                    { DirectionDesc }
 
 
 NonscalarSelectorInv : TupleSelectorInv                             { NonscalarSelectorInvTuple $1 }
@@ -659,8 +659,8 @@ OrderItem : Direction AttributeRef                                  { OrderItem 
 OrderItemCommalist : OrderItem                                      { OrderItemCommalist $1 }
                    | OrderItemCommalist ',' OrderItem               { OrderItemCommalistCons $1 $3 }
 
-Ordering : ordinal                                                  { OrderingOrdinal }
-         | ordered                                                  { OrderingOrdered }
+Ordering : ORDINAL                                                  { OrderingOrdinal }
+         | ORDERED                                                  { OrderingOrdered }
 
 ParameterDef : ParameterName TypeSpec                               { ParameterDef $1 $2 }
 
@@ -683,14 +683,14 @@ PossrepTHE_PvRef : THE_PvName '(' PossrepComponentTarget ')'        { PossrepTHE
 PossrepComponentTarget : PossrepComponentRef                        { PossrepComponentTargetRef $1 }
                        | PossrepTHE_PvRef                           { PossrepComponentTargetTHE_PvRef $1 }
 
-PossrepConstraintDef : constraint BoolExp                           { PossrepConstraintDef $2 }
+PossrepConstraintDef : CONSTRAINT BoolExp                           { PossrepConstraintDef $2 }
 
-PossrepDef : possrep '{' PossrepComponentDefCommalist '}'           { PossrepDef $3 }
-           | possrep PossrepName
+PossrepDef : POSSREP '{' PossrepComponentDefCommalist '}'           { PossrepDef $3 }
+           | POSSREP PossrepName
                      '{' PossrepComponentDefCommalist '}'           { PossrepDefNamed $2 $4}
-           | possrep '{' PossrepComponentDefCommalist
+           | POSSREP '{' PossrepComponentDefCommalist
                          PossrepConstraintDef         '}'           { PossrepDefConstrained $3 $4 }
-           | possrep PossrepName
+           | POSSREP PossrepName
                      '{' PossrepComponentDefCommalist
                          PossrepConstraintDef         '}'           { PossrepDefNamedConstrained $2 $4 $5 }
 
@@ -719,53 +719,53 @@ PreviouslyDefinedStatementBody : Assignment                         { PDSBAssign
 UserOpDef : UserUpdateOpDef                                         { UserOpDefUpdate $1 }
           | UserReadOnlyOpDef                                       { UserOpDefReadOnly $1 }
 
-UserUpdateOpDef : operator UserOpName '(' ParameterDefCommalist ')'
-                           updates '{' ParameterNameCommalist '}' ';'
-                           Statement end operator                   { UserUpdateOpDef $2 $4 $8 $11 }
-                | operator UserOpName '(' ParameterDefCommalist ')'
-                           updates '{' all but ParameterNameCommalist '}' ';'
-                           Statement end operator                   { UserUpdateOpDefAllBut $2 $4 $10 $13 }
+UserUpdateOpDef : OPERATOR UserOpName '(' ParameterDefCommalist ')'
+                           UPDATES '{' ParameterNameCommalist '}' ';'
+                           Statement END OPERATOR                   { UserUpdateOpDef $2 $4 $8 $11 }
+                | OPERATOR UserOpName '(' ParameterDefCommalist ')'
+                           UPDATES '{' ALL BUT ParameterNameCommalist '}' ';'
+                           Statement END OPERATOR                   { UserUpdateOpDefAllBut $2 $4 $10 $13 }
 
-UserReadOnlyOpDef : operator UserOpName '(' ParameterDefCommalist ')'
-                             returns TypeSpec ';' Statement
-                             end operator                           { UserReadOnlyOpDef $2 $4 $7 $9 }
+UserReadOnlyOpDef : OPERATOR UserOpName '(' ParameterDefCommalist ')'
+                             RETURNS TypeSpec ';' Statement
+                             END OPERATOR                           { UserReadOnlyOpDef $2 $4 $7 $9 }
 
-UserOpDrop : drop operator UserOpName                               { UserOpDrop $3 }
+UserOpDrop : DROP OPERATOR UserOpName                               { UserOpDrop $3 }
 
 UserScalarTypeDef : UserScalarRootTypeDef                           { UserScalarTypeDef $1 }
 
-UserScalarRootTypeDef : type UserScalarTypeName PossrepDefList
-                             init '(' Literal ')'                   { UserScalarRootTypeDef $2 $3 $6 }
-                      | type UserScalarTypeName Ordering
-                             PossrepDefList init '(' Literal ')'    { UserScalarRootTypeDefOrdered $2 $3 $4 $7 }
+UserScalarRootTypeDef : TYPE UserScalarTypeName PossrepDefList
+                             INIT '(' Literal ')'                   { UserScalarRootTypeDef $2 $3 $6 }
+                      | TYPE UserScalarTypeName Ordering
+                             PossrepDefList INIT '(' Literal ')'    { UserScalarRootTypeDefOrdered $2 $3 $4 $7 }
 
 -- eh? undefined
 Literal : varName                                                   { Literal $1 }
 
-UserScalarTypeDrop : drop type UserScalarTypeName                   { UserScalarTypeDrop $3 }
+UserScalarTypeDrop : DROP TYPE UserScalarTypeName                   { UserScalarTypeDrop $3 }
 
-ScalarVarDef : var ScalarVarName ScalarTypeOrInitValue              { ScalarVarDef $2 $3 }
+ScalarVarDef : VAR ScalarVarName ScalarTypeOrInitValue              { ScalarVarDef $2 $3 }
 
-TupleVarDef : var TupleVarName TupleTypeOrInitValue                 { TupleVarDef $2 $3 }
+TupleVarDef : VAR TupleVarName TupleTypeOrInitValue                 { TupleVarDef $2 $3 }
 
 TupleTypeOrInitValue : TupleTypeSpec                                { TupleTypeOrInitValueTupleTypeSpec $1 }
-                     | init '(' TupleExp ')'                        { TupleTypeOrInitValueInit $3 }
-                     | TupleTypeSpec init '(' TupleExp ')'          { TupleTypeOrInitValueTupleTypeSpecInit $1 $4 }
+                     | INIT '(' TupleExp ')'                        { TupleTypeOrInitValueInit $3 }
+                     | TupleTypeSpec INIT '(' TupleExp ')'          { TupleTypeOrInitValueTupleTypeSpecInit $1 $4 }
 
 RelationVarDef : DatabaseRelationVarDef                             { RelationVarDefDatabase $1 }
                | ApplicationRelationVarDef                          { RelationVarDefApplication $1 }
 
-RelationVarDrop : drop var RelationVarRef                           { RelationVarDrop $3 }
+RelationVarDrop : DROP VAR RelationVarRef                           { RelationVarDrop $3 }
 
-RelationGet : load ArrayTarget
-              from RelationExp
-              order '(' OrderItemCommalist ')'                      { RelationGet $2 $4 $7 }
+RelationGet : LOAD ArrayTarget
+              FROM RelationExp
+              ORDER '(' OrderItemCommalist ')'                      { RelationGet $2 $4 $7 }
 
-RelationSet : load RelationTarget from ArrayVarRef                  { RelationSet $2 $4 }
+RelationSet : LOAD RelationTarget FROM ArrayVarRef                  { RelationSet $2 $4 }
 
 ScalarTypeOrInitValue : ScalarTypeSpec                              { ScalarTypeOrInitValueScalarTypeSpec $1 }
-                      | init '(' ScalarExp ')'                      { ScalarTypeOrInitValueInit $3 }
-                      | ScalarTypeSpec init '(' ScalarExp ')'       { ScalarTypeOrInitValueScalarTypeSpecInit $1 $4 }
+                      | INIT '(' ScalarExp ')'                      { ScalarTypeOrInitValueInit $3 }
+                      | ScalarTypeSpec INIT '(' ScalarExp ')'       { ScalarTypeOrInitValueScalarTypeSpecInit $1 $4 }
 
 RelationComp : RelationExp RelationCompOp RelationExp               { RelationComp $1 $2 $3 }
 
@@ -785,23 +785,23 @@ Summary : SummarySpec '(' ')'                                       { Summary $1
         | SummarySpec '(' Exp ')'                                   { SummaryExp $1 $3 }
         | SummarySpec '(' IntegerExp ',' Exp ')'                    { SummaryExpIntegerExpExp $1 $3 $5 }
 
-SummarySpec : count                                                 { SummarySpecCount     }
-            | countd                                                { SummarySpecCountd    }
-            | sum                                                   { SummarySpecSum       }
-            | sumd                                                  { SummarySpecSumd      }
-            | avg                                                   { SummarySpecAvg       }
-            | avgd                                                  { SummarySpecAvgd      }
-            | max                                                   { SummarySpecMax       }
-            | min                                                   { SummarySpecMin       }
-            | and                                                   { SummarySpecAnd       }
-            | or                                                    { SummarySpecOr        }
-            | xor                                                   { SummarySpecXor       }
-            | exactly                                               { SummarySpecExactly   }
-            | exactlyd                                              { SummarySpecExactlyd  }
-            | union                                                 { SummarySpecUnion     }
-            | d_union                                               { SummarySpecDunion    }
-            | intersect                                             { SummarySpecIntersect }
-            | xunion                                                { SummarySpecXunion    }
+SummarySpec : COUNT                                                 { SummarySpecCount     }
+            | COUNTD                                                { SummarySpecCountd    }
+            | SUM                                                   { SummarySpecSum       }
+            | SUMD                                                  { SummarySpecSumd      }
+            | AVG                                                   { SummarySpecAvg       }
+            | AVGD                                                  { SummarySpecAvgd      }
+            | MAX                                                   { SummarySpecMax       }
+            | MIN                                                   { SummarySpecMin       }
+            | AND                                                   { SummarySpecAnd       }
+            | OR                                                    { SummarySpecOr        }
+            | XOR                                                   { SummarySpecXor       }
+            | EXACTLY                                               { SummarySpecExactly   }
+            | EXACTLYD                                              { SummarySpecExactlyd  }
+            | UNION                                                 { SummarySpecUnion     }
+            | D_UNION                                               { SummarySpecDunion    }
+            | INTERSECT                                             { SummarySpecIntersect }
+            | XUNION                                                { SummarySpecXunion    }
 
 TupleComp : TupleExp TupleCompOp TupleExp                           { TupleComp $1 $2 $3 }
                -- TODO: add the other two later.
