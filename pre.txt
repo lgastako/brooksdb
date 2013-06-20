@@ -16,6 +16,7 @@ put db k v = do
 
 
 --get :: Database -> String -> DVal
+--get :: forall a. IO.Brooks.Database.Engine a => Database a -> String -> IO (Maybe DVal)
 get db k = do
     val <- withASE db $ \ase -> value ase k
     return val
