@@ -1,4 +1,5 @@
 CABAL=cabal-dev
+RLWRAP=rlwrap
 
 all:
 	@echo "c:lean"
@@ -10,7 +11,7 @@ all:
 	@echo "t:est"
 	@echo "f:ull = clean + configure + build + install + test"
 	@echo "d:ist"
-	@echo "r:un"
+	@echo "r:epl"
 	@echo "l:int"
 	@echo "g:hci"
 	@echo ""
@@ -41,8 +42,8 @@ test:
 dist:
 	$(CABAL) sdist
 
-run:
-	@cabal-dev/bin/brooksdb parse
+repl:
+	@$(RLWRAP) cabal-dev/bin/brooksdb repl
 
 lint:
 	hlint .
@@ -65,7 +66,7 @@ i: install
 id: install-deps
 f: full
 d: dist
-r: run
+r: repl
 l: lint
 g: ghci
 

@@ -1,0 +1,30 @@
+import Data.Maybe
+
+import IO.Brooks.Database ( Database
+                          , bindName
+                          , value
+                          )
+import IO.Brooks.Timothy ( newDb
+                         , withASE
+                         )
+import Data.Brooks.Vals
+
+
+--put :: Database -> String -> DVal -> ()
+put db k v = do
+    withASE db $ \ase -> bindName ase k v
+
+
+--get :: Database -> String -> DVal
+get db k = do
+    val <- withASE db $ \ase -> value ase k
+    return val
+
+
+main :: IO ()
+main = do
+    db <- newDb "test.db"
+    let g = get db
+    let p = put db
+    putStrLn "Processing command..."
+    --put db "hi" "there"
