@@ -1,0 +1,32 @@
+A database is an environment.
+
+An environment is a mapping from names to values.
+
+Every value has a type.
+
+If the type of a value in the top level database environment is "environment"
+then that creates a namespace (or nested environment).
+
+Let's create a simple blog database.
+
+    brooksuser@brookshost >> CREATE DATABASE blog;
+    brooksuser@brookshost >> USE blog;
+    brooksuser@brookshost >> BEGIN;
+    Transaction opened.
+    brooksuser@brookshost blog >> LET config = { blog_name: "John's blog.", front_page_posts: 10 }
+    config :: Map String Any  -- ? or json bag etc
+    brooksuser@brookshost blog >> DATA Post = Post { title :: String, content :: String, timestamp :: Timestamp }
+    Post :: String -> String -> Timestamp -> Post
+    brooksuser@brookshost blog >> DATA BlogDay = BlogDay Integer [Post]
+    BlogDay :: Integer -> [Post] -> BlogDay
+    brooksuser@brookshost blog >> DATA BlogMonth = BlogMonth Month [BlogDay]
+    BlogMonth :: Month -> [BlogDay] -> BlogMonth
+    brooksuser@brookshost blog >> DATA BlogYear = BlogYear Integer [BlogMonth]
+    BlogYear :: Integer -> [BlogMonth] -> BlogYear
+    brooksuser@brookshost blog >> LET years :: [BlogYear] = []
+
+    ...instance all these guys of Functor, etc...
+
+    brooksuser@brookshost blog >> LET todays_posts = fmap <*> filter <*> magic <*> today, etc.
+    brooksuser@brookshost blog >> COMMIT;
+
