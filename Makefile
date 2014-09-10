@@ -9,6 +9,9 @@ SRCS=src/CurQuery.hs \
 	 src/IO/Brooks/Timothy.hs \
 	 src/Main.hs
 
+GET=$(BINARY) get
+PUT=$(BINARY) put
+
 all:
 	@cat Makefile
 
@@ -26,11 +29,21 @@ cabal-install-cabal-install:
 clean:
 	$(CABAL) clean
 
+demo: $(BINARY)
+	$(PUT) foo bar
+	$(GET) foo
+	$(PUT) baz 5
+	$(GET) baz
+	$(GET) foo
+
 deps:
 	$(CABAL) install --only-dependencies
 
-run: $(BINARY)
-	./$(BINARY)
+# run: $(BINARY)
+# 	./$(BINARY)
+
+repl: $(BINARY)
+	$(BINARY) repl
 
 sandbox-init:
 	$(CABAL) sandbox init
