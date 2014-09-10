@@ -5,3 +5,4 @@ test.db/
 src/CurQuery.hs
 /.cabal-sandbox
 /cabal.sandbox.config
+/.vagrant
