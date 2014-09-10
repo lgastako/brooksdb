@@ -1,3 +1,4 @@
+{-#Language RankNTypes #-}
 module Main (main) where
 
 import Control.Monad

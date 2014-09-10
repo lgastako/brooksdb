@@ -1,10 +1,21 @@
 CABAL=cabal
+BINARY=dist/build/brooksdb/brooksdb
+
+SRCS=src/CurQuery.hs \
+	 src/Data/Brooks/Vals.hs \
+	 src/Data/Relation/Operators.hs \
+	 src/Data/Relation/Types.hs \
+	 src/IO/Brooks/Database.hs \
+	 src/IO/Brooks/Timothy.hs \
+	 src/Main.hs
 
 all:
 	@cat Makefile
 
-build:
+$(BINARY): $(SRCS)
 	$(CABAL) build
+
+build: $(BINARY)
 
 cabal-update:
 	$(CABAL) update
@@ -18,6 +29,9 @@ clean:
 deps:
 	$(CABAL) install --only-dependencies
 
+run: $(BINARY)
+	./$(BINARY)
+
 sandbox-init:
 	$(CABAL) sandbox init
 
@@ -26,3 +40,4 @@ cu: cabal-update
 cici: cabal-install-cabal-install
 d: deps
 si: sandbox-init
+r: run
