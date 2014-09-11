@@ -23,8 +23,8 @@ $(BINARY): $(SRCS)
 
 build: $(BINARY)
 
-cabal-update:
-	$(CABAL) update
+cabal-install:
+	$(CABAL) install --enable-tests
 
 cabal-install-cabal-install:
 	$(CABAL) install cabal-install
@@ -34,6 +34,9 @@ cabal-repl:
 
 cabal-test: $(BINARY)
 	$(CABAL) test
+
+cabal-update:
+	$(CABAL) update
 
 clean:
 	$(CABAL) clean
@@ -68,9 +71,10 @@ test: $(BINARY)
 	runhaskell Spec.hs
 
 b: build
-cu: cabal-update
+ci: cabal-install
 cici: cabal-install-cabal-install
 ct: cabal-test
+cu: cabal-update
 cr: cabal-repl
 d: deps
 eb: echo-bin
