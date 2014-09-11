@@ -57,7 +57,7 @@ instance DB.Engine (AcidStateEngine a) where
     bindName ase name val = do
         acid <- onAcid ase
         _    <- update acid (BindName name val)
-        putStrLn $ "bound " ++ (show name) ++ " bound to " ++ (show val)
+        putStrLn $ "bound name " ++ (show name) ++ " to value " ++ (show val)
         return ()
 
     value ase name = do
