@@ -63,6 +63,7 @@ instance DB.Engine (AcidStateEngine a) where
     value ase name = do
         acid <- onAcid ase
         val  <- query acid (Value name)
+        putStrLn $ "returning value " ++ (show val)
         return val
 
 newDb :: FilePath -> IO (DB.Database (AcidStateEngine (AcidState Store)))

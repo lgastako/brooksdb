@@ -29,6 +29,12 @@ cabal-update:
 cabal-install-cabal-install:
 	$(CABAL) install cabal-install
 
+cabal-repl:
+	$(CABAL) repl
+
+cabal-test: $(BINARY)
+	$(CABAL) test
+
 clean:
 	$(CABAL) clean
 
@@ -57,11 +63,18 @@ repl: $(BINARY)
 sandbox-init:
 	$(CABAL) sandbox init
 
+test: $(BINARY)
+#	runhaskell -v Spec.hs
+	runhaskell Spec.hs
+
 b: build
 cu: cabal-update
 cici: cabal-install-cabal-install
+ct: cabal-test
+cr: cabal-repl
 d: deps
 eb: echo-bin
 si: sandbox-init
 ir: install-readline
-r: run
+r: repl
+t: test

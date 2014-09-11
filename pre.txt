@@ -1,5 +1,9 @@
 import Data.Maybe
 
+import Control.Monad ( liftM
+                     , liftM2
+                     )
+
 import IO.Brooks.Database ( Database
                           , bindName
                           , value

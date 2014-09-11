@@ -14,7 +14,7 @@ import Data.SafeCopy        ( base
 
 data Tree a = Leaf a
 --data (Eq a, Ord a, Show a) => Tree a = Leaf a
-                                     | Tree (Tree a) (Tree a)
+       | Tree (Tree a) (Tree a)
     deriving (Eq, Ord, Show, Typeable)
 
 instance Functor Tree where
