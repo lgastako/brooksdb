@@ -23,6 +23,9 @@ $(BINARY): $(SRCS)
 
 build: $(BINARY)
 
+cabal-configure:
+	$(CABAL) configure
+
 cabal-install:
 	$(CABAL) install --enable-tests --enable-benchmarks
 
@@ -71,6 +74,7 @@ test: $(BINARY)
 	runhaskell Spec.hs
 
 b: build
+cc: cabal-configure
 ci: cabal-install
 cici: cabal-install-cabal-install
 ct: cabal-test
