@@ -12,6 +12,7 @@ import Data.SafeCopy        ( base
 
 --type WrappedDVal = (Int, DVal)
 
+-- TODO: Rename to BTree or generalize to N-leaves
 data Tree a = Leaf a
 --data (Eq a, Ord a, Show a) => Tree a = Leaf a
        | Tree (Tree a) (Tree a)
