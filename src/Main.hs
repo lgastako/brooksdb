@@ -17,7 +17,9 @@ import System.IO             ( hFlush
                              , IOMode( WriteMode )
                              )
 import System.Environment    ( getArgs )
-import System.Console.Readline ( readline )
+import System.Console.Readline ( readline
+                               , addHistory
+                               )
 
 import qualified Data.Map as M
 import Data.Brooks.Vals      ( DVal( StringVal
@@ -133,12 +135,20 @@ executeExpr expr = do
 repl :: IO ()
 repl = do
     putStrLn "Welcome to brooksdb."
-    forever $ do
-        putStr ":: "
-        hFlush stdout
-        expr <- getLine
-        putStrLn ("expr:(" ++ expr ++ ")")
-        executeExpr expr
+    doRepl
+
+doRepl :: IO ()
+doRepl = do
+    maybeLine <- readline ":: "
+    case maybeLine of
+         Nothing ->     return ()  -- EOF / control-d
+         Just "exit" -> return ()
+         Just "quit" -> return ()
+         Just "q."   -> return ()
+         Just expr   -> do addHistory expr
+                           putStrLn ("expr:(" ++ expr ++ ")")
+                           executeExpr expr
+                           doRepl
 
 play :: String -> IO ()
 play arg = do
