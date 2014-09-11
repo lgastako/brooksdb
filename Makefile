@@ -24,7 +24,7 @@ $(BINARY): $(SRCS)
 build: $(BINARY)
 
 cabal-install:
-	$(CABAL) install --enable-tests
+	$(CABAL) install --enable-tests --enable-benchmarks
 
 cabal-install-cabal-install:
 	$(CABAL) install cabal-install
