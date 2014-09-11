@@ -17,7 +17,7 @@ import System.IO             ( hFlush
                              , IOMode( WriteMode )
                              )
 import System.Environment    ( getArgs )
---import System.Console.Readline ( readline )
+import System.Console.Readline ( readline )
 
 import qualified Data.Map as M
 import Data.Brooks.Vals      ( DVal( StringVal
