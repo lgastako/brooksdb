@@ -1,8 +1,7 @@
 CABAL=cabal
 BINARY=dist/build/brooksdb/brooksdb
 
-SRCS=src/CurQuery.hs \
-	 src/Data/Brooks/Vals.hs \
+SRCS=src/Data/Brooks/Vals.hs \
 	 src/Data/Relation/Operators.hs \
 	 src/Data/Relation/Types.hs \
 	 src/IO/Brooks/Database.hs \
@@ -38,6 +37,16 @@ demo: $(BINARY)
 
 deps:
 	$(CABAL) install --only-dependencies
+
+READLINE_DIR=/usr/local/Cellar/readline/6.2.4
+READLINE_INC=$(READLINE_DIR)/include
+READLINE_LIB=$(READLINE_DIR)/lib
+
+install-readline:
+	$(CABAL) install readline --extra-include-dirs=$(READLINE_INC) \
+		--extra-lib-dirs=$(READLINE_LIB) \
+		--configure-option=--with-readline-includes=$(READLINE_INC) \
+		--configure-option=--with-readline-libraries=$(READLINE_LIB)
 
 # run: $(BINARY)
 # 	./$(BINARY)
