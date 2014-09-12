@@ -1,5 +1,4 @@
-brooksdb
-========
+# brooksdb
 
 This is an attempt to implement a relational database management system based
 primarily on the ideas of Date & Darwen's Third Manifesto and the Haskell
@@ -15,3 +14,9 @@ on in the same transactional way as real relvars.
 
 "Brooks" is Haskell Curry's middle name.
 
+
+## TODOs
+
+- docopt
+- provide a mechanism for specifying types in loadrel
+  - maybe just require a second header row?

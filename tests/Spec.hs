@@ -1,6 +1,6 @@
-{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+-- {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
 
-module Main where
+--module BrooksSpec where
 
 -- import Test.Framework ( Test
 --                       , defaultMain )
