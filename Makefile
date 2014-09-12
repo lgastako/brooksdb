@@ -4,6 +4,7 @@ BINARY=dist/build/brooksdb/brooksdb
 SRCS=src/Data/Brooks/Vals.hs \
 	 src/Data/Relation/Operators.hs \
 	 src/Data/Relation/Types.hs \
+	 src/IO/Brooks/Csv.hs \
 	 src/IO/Brooks/Database.hs \
 	 src/IO/Brooks/Timothy.hs \
 	 src/Main.hs

@@ -18,6 +18,7 @@ data Tree a = Leaf a
        | Tree (Tree a) (Tree a)
     deriving (Eq, Ord, Show, Typeable)
 
+
 instance Functor Tree where
     fmap f (Leaf x) = (Leaf (f x))
     fmap f (Tree left right) = (Tree (fmap f left) (fmap f right))

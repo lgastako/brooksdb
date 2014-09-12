@@ -26,6 +26,7 @@ import Data.Brooks.Vals      ( DVal( StringVal
                                    , IntVal
                                    , MapVal
                                    , TreeVal
+                                   , RelVal
                                    )
                              , Tree ( Leaf
                                     , Tree
@@ -40,8 +41,21 @@ import IO.Brooks.Timothy     ( newDb
                              , withASE
                              )
 
+import IO.Brooks.Csv         ( relFromCsv )
+
 --import Language.Heidi.Lexer  ( alexScanTokens )
 --import Language.Heidi.Parser ( parse )
+
+
+loadRel :: String -> String -> IO ()
+loadRel name fn = do
+    db <- newDb "test.db"
+    putStrLn $ "yarp! loadRel! from: " ++ fn
+    r <- relFromCsv fn
+    case r of
+      Nothing  -> putStrLn $ "Parse error, could not read from: " ++ fn
+      Just rel -> withASE db $ \ase -> bindName ase name (RelVal rel)
+    -- close db
 
 
 main :: IO ()
@@ -67,10 +81,11 @@ main = do
 --            stream <- getContents
 --            let result = parseMain stream
 --            putStrLn result
-        ["play", playArg]      -> play playArg
+        ["play", playArg]        -> play playArg
+        ["loadrel", name, file]  -> loadRel name file
         ["repl"] -> repl
 --        _      -> putStrLn "<get k>, <set k v>, <lex [fn]>, <parse [fn]>, <play>, <repl>"
-        _      -> putStrLn "<get k>, <set k v>, <play>, <repl>"
+        _      -> putStrLn "<get k>, <set k v>, <loadrel>, <play>, <repl>"
     putStrLn "Done"
 
 indent :: String -> String

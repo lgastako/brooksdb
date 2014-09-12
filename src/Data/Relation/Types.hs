@@ -86,7 +86,7 @@ withNoHead as = AnonTuple (Set.fromList as)
 
 headWith :: Heading -> [(AttributeName, AttributeValue)] -> Tuple
 headWith hd as
-    | (length as) /= (degree hd) = error "degree mismatch."
+    | (length as) /= (degree hd) = error $ "degree mismatch."
     | anames /= hnames           = error "attribute name mismatch."
     | otherwise = Tuple hd tset
         -- TODO: Also check that the types are correct.  for the lolz.
