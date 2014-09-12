@@ -16,6 +16,8 @@ module Data.Relation.Types( AttributeName
                           , conforms
                           , attributes
                           , heading
+                          -- only exported for tests.  fix.
+                          , asKeyDefList
                           ) where
 
 import qualified Data.Set as Set

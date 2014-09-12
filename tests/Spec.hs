@@ -1,39 +1,56 @@
--- {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
-
---module BrooksSpec where
-
--- import Test.Framework ( Test
---                       , defaultMain )
--- import Test.Framework.Providers.HUnit ( testCase )
--- import Test.HUnit ( assertEqual )
-
--- --import Language.Heidi.Lexer ( Var )
-
--- -- once more I must sally forth without testing.
--- --test_lex_var = assertEqual "var > Var" Var (alexScanTokens "var")
-
--- tests :: [Test]
--- tests = [
--- --test_lex_var
---         ]
-
--- main :: IO ()
--- main = defaultMain tests
--- file Spec.hs
-
 import Test.Hspec
 import Test.QuickCheck
-import Control.Exception (evaluate)
+import Control.Exception ( evaluate )
+
+import Data.Relation.Types ( fromList
+                           , asKeyDefList
+                           )
 
 
 main :: IO ()
 main = hspec $ do
-  describe "Prelude.head" $ do
-    it "returns the first element of a list" $ do
-      head [23 ..] `shouldBe` (23 :: Int)
+  describe "asKeyDefList" $ do
 
-    it "returns the first element of an *arbitrary* list" $
-      property $ \x xs -> head (x:xs) == (x :: Int)
+    context "empty set"  $ do
 
-    it "throws an exception if used with an empty list" $ do
-      evaluate (head []) `shouldThrow` anyException
+      let heading0 = fromList []
+
+      it "returns an empty string" $ do
+
+        (asKeyDefList heading0) `shouldBe` ""
+
+    context "one item" $ do
+
+      let heading1 = fromList [ ("foo", "String") ]
+
+      it "returns a single keyDef" $ do
+
+        (asKeyDefList heading1) `shouldBe` "\n    foo String\n"
+
+    context "two items" $ do
+
+      let heading2 = fromList [ ("foo", "String")
+                              , ("bar", "Int")
+                              ]
+
+      it "returns a single keyDef" $ do
+
+        (asKeyDefList heading2) `shouldBe` (  "\n"
+                                           ++ "    bar Int,\n"
+                                           ++ "    foo String\n"
+                                           )
+
+    context "three items" $ do
+
+      let heading3 = fromList [ ("foo", "String")
+                              , ("bar", "Int")
+                              , ("baz", "Bool")
+                              ]
+
+      it "returns a single keyDef" $ do
+
+        (asKeyDefList heading3) `shouldBe` (  "\n"
+                                           ++ "    bar Int,\n"
+                                           ++ "    baz Bool,\n"
+                                           ++ "    foo String\n"
+                                           )
