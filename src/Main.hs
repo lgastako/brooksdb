@@ -51,10 +51,15 @@ loadRel :: String -> String -> IO ()
 loadRel name fn = do
     db <- newDb "test.db"
     putStrLn $ "yarp! loadRel! from: " ++ fn
+    putStrLn $ "----"
     r <- relFromCsv fn
+    putStrLn $ "----"
+    putStrLn $ "relFromCsv: " ++ (show r)
     case r of
       Nothing  -> putStrLn $ "Parse error, could not read from: " ++ fn
-      Just rel -> withASE db $ \ase -> bindName ase name (RelVal rel)
+      Just rel -> do
+        withASE db $ \ase -> bindName ase name (RelVal rel)
+        putStrLn $ "should have bound name '" ++ name ++ "' to rel val: " ++ (show (RelVal rel))
     -- close db
 
 

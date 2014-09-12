@@ -151,16 +151,16 @@ withHeading hd = Relation hd Set.empty
 
 
 
-
-
 -- Level up:
 
 
 class Headed a where
     heading :: a -> Heading
 
+
 instance Headed Tuple where
     heading = undefined
+
 
 instance Headed Relation where
     heading (Relation h _) = h
@@ -179,19 +179,24 @@ attributes x = Set.fromList as
         headingSet (Heading set) = set
 
 
+
 -- We want to be able to ask the degree of a heading, a tuple or a relation.
 
 class Degreed a where
     degree :: a -> Int
 
+
 instance Degreed Heading where
     degree (Heading set) = Set.size set
+
 
 instance Degreed Tuple where
     degree = degree . heading
 
+
 instance Degreed Relation where
     degree = degree . heading
+
 
 -- | Determine if a Headed entity conforms to the given Heading.
 conforms :: Headed a => Heading -> a -> Bool
@@ -204,8 +209,6 @@ type AttrSet = (Set.Set (AttributeName, TypeName))
 type AttrValueSet = (Set.Set (AttributeName, AttributeValue))
 
 
-
-
 -- If empty, "" else list of "AttrName TypeName," with no trailing comma,
 -- separated by newlines
 asKeyDefList :: Heading -> String
@@ -214,6 +217,7 @@ asKeyDefList (Heading set) | set == Set.empty = ""
                                 where keyDefs = join ",\n" $ map fmt sortedKeys
                                       sortedKeys = sort $ Set.toList set
                                       fmt (a, b) = "    " ++ a ++ " " ++ b
+
 
 instance Show Relation where
     show (Relation hd tuples) = top ++ bottom
