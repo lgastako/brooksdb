@@ -35,7 +35,8 @@ library
                          array                          ==0.4.0.1,
                          readline                       ==1.0.3.0,
                          network-uri                    ==2.6.*,
-                         csv                            ==0.1.1
+                         csv                            ==0.1.1,
+                         docopt                         ==0.6.*
 
 executable brooksdb
     build-depends:       base                           ==4.6.*,
@@ -50,7 +51,8 @@ executable brooksdb
                          array                          ==0.4.0.1,
                          readline                       ==1.0.3.0,
                          network-uri                    ==2.6.*,
-                         csv                            ==0.1.1
+                         csv                            ==0.1.1,
+                         docopt                         ==0.6.*
     hs-source-dirs:      src
     main-is:             Main.hs
 

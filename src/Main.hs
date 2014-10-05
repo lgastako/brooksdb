@@ -21,6 +21,14 @@ import System.Console.Readline ( readline
                                , addHistory
                                )
 
+import System.Console.Docopt ( optionsWithUsageFile
+                             , getArg
+                             , isPresent
+                             , command
+                             , argument
+                             , longOption
+                             )
+
 import qualified Data.Map as M
 import Data.Brooks.Vals      ( DVal( StringVal
                                    , IntVal
@@ -50,7 +58,7 @@ import IO.Brooks.Csv         ( relFromCsv )
 loadRel :: String -> String -> IO ()
 loadRel name fn = do
     db <- newDb "test.db"
-    putStrLn $ "yarp! loadRel! from: " ++ fn
+    putStrLn $ "loadRel! from: " ++ fn
     putStrLn $ "----"
     r <- relFromCsv fn
     putStrLn $ "----"
@@ -65,33 +73,46 @@ loadRel name fn = do
 
 main :: IO ()
 main = do
-    args <- getArgs
-    putStrLn $ "Args: " ++ (show args)
-    case args of
-        ["get", k]    -> getKey k
-        ["set", k, v] -> setKey k v
---        ["lex", fn] -> do
---            stream <- readFile fn
---            let result = lexMain stream
---            putStrLn result
---        ["lex"]     -> do
---            stream <- getContents
---            let result = lexMain stream
---            putStrLn result
---        ["parse", fn] -> do
---            stream <- readFile fn
---            let result = parseMain stream
---            putStrLn result
---        ["parse"]     -> do
---            stream <- getContents
---            let result = parseMain stream
---            putStrLn result
-        ["play", playArg]        -> play playArg
-        ["loadrel", name, file]  -> loadRel name file
-        ["repl"] -> repl
---        _      -> putStrLn "<get k>, <set k v>, <lex [fn]>, <parse [fn]>, <play>, <repl>"
-        _      -> putStrLn "<get k>, <set k v>, <loadrel>, <play>, <repl>"
-    putStrLn "Done"
+    args <- optionsWithUsageFile "USAGE.txt"
+--    putStrLn $ "Args: " ++ (show args)
+
+    when (args `isPresent` (command "get")) $ do
+      k <- args `getArg` (argument "<k>")
+      getKey k
+
+    when (args `isPresent` (command "set")) $ do
+      k <- args `getArg` (argument "<k>")
+      v <- args `getArg` (argument "<v>")
+      setKey k v
+
+    when (args `isPresent` (command "play")) $ do
+      playArg <- args `getArg` (argument "<play_arg>")
+      play playArg
+
+    when (args `isPresent` (command "loadrel")) $ do
+      name <- args `getArg` (argument "<name>")
+      file <- args `getArg` (argument "<file>")
+      loadRel name file
+
+    when (args `isPresent` (command "repl")) $ do
+      repl
+
+-- --        ["lex", fn] -> do
+-- --            stream <- readFile fn
+-- --            let result = lexMain stream
+-- --            putStrLn result
+-- --        ["lex"]     -> do
+-- --            stream <- getContents
+-- --            let result = lexMain stream
+-- --            putStrLn result
+-- --        ["parse", fn] -> do
+-- --            stream <- readFile fn
+-- --            let result = parseMain stream
+-- --            putStrLn result
+-- --        ["parse"]     -> do
+-- --            stream <- getContents
+-- --            let result = parseMain stream
+-- --            putStrLn result
 
 indent :: String -> String
 indent = unlines . map (\s -> "    " ++ s) . lines
@@ -173,7 +194,7 @@ doRepl = do
 play :: String -> IO ()
 play arg = do
     db <- newDb "test.db"
-    putStrLn "yarp! play!"
+    putStrLn "play!"
     putStrLn ("playArg: " ++ arg)
     case arg of
         "get" -> do
@@ -191,7 +212,7 @@ play arg = do
 getKey :: String -> IO ()
 getKey k = do
     db <- newDb "test.db"
-    putStrLn "yarp! getKey!"
+    putStrLn "getKey!"
     val <- withASE db $ \ase -> value ase k
     case val of
         (Just (StringVal s)) -> putStrLn $ "value is: " ++ (show s)
@@ -204,7 +225,7 @@ getKey k = do
 setKey :: String -> String -> IO ()
 setKey k v = do
     db <- newDb "test.db"
-    putStrLn "yarp! setKey!"
+    putStrLn "setKey!"
     withASE db $ \ase -> bindName ase k (StringVal v)
     --close db
 
