@@ -17,6 +17,5 @@ on in the same transactional way as real relvars.
 
 ## TODOs
 
-- docopt
 - provide a mechanism for specifying types in loadrel
   - maybe just require a second header row?
