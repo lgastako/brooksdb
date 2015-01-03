@@ -23,41 +23,42 @@ library
     other-modules:       Language.Heidi.Parser,
                          Language.Heidi.Lexer
     build-tools:         alex, happy
-    build-depends:       base                           ==4.6.*,
-                         containers                     ==0.5.*,
-                         random                         ==1.0.1.1,
-                         acid-state                     ==0.12.2,
-                         mtl                            ==2.1.2,
-                         safecopy                       ==0.8.2,
-                         MissingH                       ==1.2.*,
-                         plugins                        ==1.5.3.0,
-                         process                        ==1.1.0.2,
-                         array                          ==0.4.0.1,
-                         readline                       ==1.0.3.0,
-                         network-uri                    ==2.6.*,
-                         csv                            ==0.1.1,
-                         docopt                         ==0.6.*
+    build-depends:       base                >= 4.7.0.0
+                       , containers
+                       , random
+                       , acid-state
+                       , mtl
+                       , safecopy
+                       , MissingH
+                       , process
+                       , array
+                       , readline
+                       , network-uri
+                       , csv
+                       , docopt
 
 executable brooksdb
-    build-depends:       base                           ==4.6.*,
-                         containers                     ==0.5.*,
-                         random                         ==1.0.1.1,
-                         acid-state                     ==0.12.2,
-                         mtl                            ==2.1.2,
-                         safecopy                       ==0.8.2,
-                         MissingH                       ==1.2.*,
-                         plugins                        ==1.5.3.0,
-                         process                        ==1.1.0.2,
-                         array                          ==0.4.0.1,
-                         readline                       ==1.0.3.0,
-                         network-uri                    ==2.6.*,
-                         csv                            ==0.1.1,
-                         docopt                         ==0.6.*
+    build-depends:       base                >= 4.7.0.0
+                       , containers
+                       , random
+                       , acid-state
+                       , mtl
+                       , safecopy
+                       , MissingH
+                       , process
+                       , array
+                       , readline
+                       , network-uri
+                       , csv
+                       , docopt
     hs-source-dirs:      src
     main-is:             Main.hs
 
 test-suite tests
-    build-depends:    base, brooksdb, hspec == 1.11.*, QuickCheck == 2.7.6.*
+    build-depends:    base
+                    , brooksdb
+                    , hspec
+                    , QuickCheck
     default-language: Haskell2010
     hs-source-dirs:   tests
     main-is:          Spec.hs

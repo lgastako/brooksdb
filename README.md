@@ -14,8 +14,23 @@ on in the same transactional way as real relvars.
 
 "Brooks" is Haskell Curry's middle name.
 
+## Building / Installing
+
+Simply:
+
+    make bootstrap
+
+which is the equivalent of:
+
+    make sandbox-init
+    make cabal-update
+    make cabal-install-cabal-install
+    make install-readline
+    make deps
+    make cabal-install
 
 ## TODOs
 
+- escape from cabal hell
 - provide a mechanism for specifying types in loadrel
   - maybe just require a second header row?

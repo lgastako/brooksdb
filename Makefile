@@ -9,7 +9,8 @@ SRCS=src/Data/Brooks/Vals.hs \
 	 src/IO/Brooks/Timothy.hs \
 	 src/Main.hs
 
-READLINE_DIR=/usr/local/Cellar/readline/6.2.4
+READLINE_VERSION=6.3.8
+READLINE_DIR=/usr/local/Cellar/readline/$(READLINE_VERSION)
 READLINE_INC=$(READLINE_DIR)/include
 READLINE_LIB=$(READLINE_DIR)/lib
 
@@ -21,6 +22,13 @@ all:
 
 $(BINARY): $(SRCS)
 	$(CABAL) build
+
+bootstrap: sandbox-init \
+		   cabal-update \
+		   cabal-install-cabal-install \
+		   install-readline \
+		   deps \
+		   cabal-install
 
 build: $(BINARY)
 
