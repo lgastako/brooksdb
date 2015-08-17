@@ -1,0 +1,24 @@
+VAGRANT_MOUNT=/brooksdb
+TAG=brooksdb
+VOLUMES=-v $(VAGRANT_MOUNT):/src/brooksdb
+
+
+all:
+	@cat Makefile
+
+build:
+	docker build -t $(TAG) .
+
+run:
+	docker run -t -i $(VOLUMES) $(TAG)
+
+shell:
+	docker run -t -i $(VOLUMES) $(TAG) /bin/bash
+
+
+b: build
+r: run
+s: shell
+
+.PHONY: build run shell
+.PHONY: b r s
