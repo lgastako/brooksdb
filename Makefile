@@ -1,97 +1,68 @@
-CABAL=cabal
+STACK=stack
 BINARY=dist/build/brooksdb/brooksdb
 
-SRCS=src/Data/Brooks/Vals.hs \
-	 src/Data/Relation/Operators.hs \
-	 src/Data/Relation/Types.hs \
-	 src/IO/Brooks/Csv.hs \
-	 src/IO/Brooks/Database.hs \
-	 src/IO/Brooks/Timothy.hs \
-	 src/Main.hs
+SRCS=$(sort $(dir $(wildcard src/*/)))
 
 READLINE_VERSION=6.3.8
 READLINE_DIR=/usr/local/Cellar/readline/$(READLINE_VERSION)
 READLINE_INC=$(READLINE_DIR)/include
 READLINE_LIB=$(READLINE_DIR)/lib
 
-GET=$(BINARY) get
-PUT=$(BINARY) put
+# GET=$(BINARY) get
+# PUT=$(BINARY) put
+
+GET=stack exec brooksdb get
+SET=stack exec brooksdb set
 
 all:
 	@cat Makefile
 
 $(BINARY): $(SRCS)
-	$(CABAL) build
-
-bootstrap: sandbox-init \
-		   cabal-update \
-		   cabal-install-cabal-install \
-		   install-readline \
-		   deps \
-		   cabal-install
+	$(STACK) build
 
 build: $(BINARY)
-
-cabal-configure:
-	$(CABAL) configure
-
-cabal-install:
-	$(CABAL) install --enable-tests --enable-benchmarks
-
-cabal-install-cabal-install:
-	$(CABAL) install cabal-install
-
-cabal-repl:
-	$(CABAL) repl
-
-cabal-test: $(BINARY)
-	$(CABAL) test
-
-cabal-update:
-	$(CABAL) update
+	$(STACK) build
 
 clean:
-	$(CABAL) clean
+	$(STACK) clean
 
-demo: $(BINARY)
-	$(PUT) foo bar
+demo:  # $(BINARY)
+	$(SET) foo bar
 	$(GET) foo
-	$(PUT) baz 5
+	$(SET) baz 5
 	$(GET) baz
 	$(GET) foo
 
-deps:
-	$(CABAL) install --only-dependencies
-
-echo-bin:
-	@echo $(BINARY)
+# install-readline:
+# 	   $(CABAL) install readline                                         \
+# 				--extra-include-dirs=$(READLINE_INC)                      \
+# 				--extra-lib-dirs=$(READLINE_LIB)                           \
+# 				--configure-option=--with-readline-includes=$(READLINE_INC) \
+# 				--configure-option=--with-readline-libraries=$(READLINE_LIB)
 
 install-readline:
-	$(CABAL) install readline --extra-include-dirs=$(READLINE_INC) \
-		--extra-lib-dirs=$(READLINE_LIB) \
-		--configure-option=--with-readline-includes=$(READLINE_INC) \
-		--configure-option=--with-readline-libraries=$(READLINE_LIB)
+	   $(STACK) install readline                                        \
+			   --extra-include-dirs=$(READLINE_INC)                      \
+			   --extra-lib-dirs=$(READLINE_LIB)                           \
+			   --configure-option=--with-readline-includes=$(READLINE_INC) \
+			   --configure-option=--with-readline-libraries=$(READLINE_LIB)
 
 repl: $(BINARY)
-	$(BINARY) repl
+	stack exec brooksdb repl
+# $(BINARY) repl
 
-sandbox-init:
-	$(CABAL) sandbox init
+setup:
+	$(STACK) setup
 
 test: $(BINARY)
-#	runhaskell -v Spec.hs
-	runhaskell Spec.hs
+	$(STACK) test
+
+update:
+	$(STACK) update
 
 b: build
-cc: cabal-configure
-ci: cabal-install
-cici: cabal-install-cabal-install
-ct: cabal-test
-cu: cabal-update
-cr: cabal-repl
-d: deps
-eb: echo-bin
-si: sandbox-init
 ir: install-readline
 r: repl
+s: setup
 t: test
+u: update

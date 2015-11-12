@@ -1,4 +1,4 @@
-{-#Language RankNTypes #-}
+{-# Language RankNTypes, QuasiQuotes #-}
 module Main (main) where
 
 import Control.Monad
@@ -17,16 +17,19 @@ import System.IO             ( hFlush
                              , IOMode( WriteMode )
                              )
 import System.Environment    ( getArgs )
-import System.Console.Readline ( readline
-                               , addHistory
-                               )
+-- import System.Console.Readline ( readline
+--                                , addHistory
+--                                )
 
-import System.Console.Docopt ( optionsWithUsageFile
-                             , getArg
-                             , isPresent
-                             , command
+import System.Console.Docopt ( Docopt
                              , argument
+                             , command
+                             , docopt
+                             , getArg
+                             , getArgOrExitWith
+                             , isPresent
                              , longOption
+                             , parseArgsOrExit
                              )
 
 import qualified Data.Map as M
@@ -70,28 +73,45 @@ loadRel name fn = do
         putStrLn $ "should have bound name '" ++ name ++ "' to rel val: " ++ (show (RelVal rel))
     -- close db
 
+patterns :: Docopt
+patterns = [docopt|
+brooksdb
+
+Usage:
+  brooksdb get <k>
+  brooksdb set <k> <v>
+  brooksdb play <play_arg>
+  brooksdb loadrel <name> <file>
+  brooksdb repl
+
+Options:
+  -h --help     Show this help.
+|]
+
+getArgOrExit = getArgOrExitWith patterns
 
 main :: IO ()
 main = do
-    args <- optionsWithUsageFile "USAGE.txt"
---    putStrLn $ "Args: " ++ (show args)
+    args <- parseArgsOrExit patterns =<< getArgs
+
+    putStrLn $ "Args: " ++ (show args)
 
     when (args `isPresent` (command "get")) $ do
-      k <- args `getArg` (argument "<k>")
+      k <- args `getArgOrExit` (argument "k")
       getKey k
 
     when (args `isPresent` (command "set")) $ do
-      k <- args `getArg` (argument "<k>")
-      v <- args `getArg` (argument "<v>")
+      k <- args `getArgOrExit` (argument "k")
+      v <- args `getArgOrExit` (argument "v")
       setKey k v
 
     when (args `isPresent` (command "play")) $ do
-      playArg <- args `getArg` (argument "<play_arg>")
+      playArg <- args `getArgOrExit` (argument "play_arg")
       play playArg
 
     when (args `isPresent` (command "loadrel")) $ do
-      name <- args `getArg` (argument "<name>")
-      file <- args `getArg` (argument "<file>")
+      name <- args `getArgOrExit` (argument "name")
+      file <- args `getArgOrExit` (argument "file")
       loadRel name file
 
     when (args `isPresent` (command "repl")) $ do
@@ -178,15 +198,22 @@ repl = do
     putStrLn "Welcome to brooksdb."
     doRepl
 
+readline :: String -> IO (Maybe String)
+readline s = do putStr s
+                hFlush stdout
+                x <- getLine
+                return $ Just x
+
 doRepl :: IO ()
 doRepl = do
+    -- maybeLine <- readline ":: "
     maybeLine <- readline ":: "
     case maybeLine of
          Nothing ->     return ()  -- EOF / control-d
          Just "exit" -> return ()
          Just "quit" -> return ()
          Just "q."   -> return ()
-         Just expr   -> do addHistory expr
+         Just expr   -> do -- addHistory expr
                            putStrLn ("expr:(" ++ expr ++ ")")
                            executeExpr expr
                            doRepl
