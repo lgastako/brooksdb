@@ -7,3 +7,4 @@ src/CurQuery.hs
 /cabal.sandbox.config
 /.vagrant
 .stack-work/
+gen

@@ -51,7 +51,7 @@ import IO.Brooks.Timothy     ( newDb
 
 import IO.Brooks.Csv         ( relFromCsv )
 
---import Language.Heidi.Lexer  ( alexScanTokens )
+import Language.Heidi.Lexer  ( alexScanTokens )
 --import Language.Heidi.Parser ( parse )
 
 
@@ -77,6 +77,7 @@ brooksdb
 Usage:
   brooksdb get <k>
   brooksdb set <k> <v>
+  brooksdb lex <fn>
   brooksdb play <play_arg>
   brooksdb loadrel <name> <file>
 
@@ -110,10 +111,11 @@ main = do
       file <- args `getArgOrExit` (argument "file")
       loadRel name file
 
-    -- when (args `isPresent` (command "lex")) $ do
-    --   stream <- readFile fn
-    --   let result = lexMain stream
-    --   putStrLn result
+    when (args `isPresent` (command "lex")) $ do
+      fn <- args `getArgOrExit` (argument "fn")
+      stream <- readFile fn
+      let result = lexMain stream
+      putStrLn result
 
 -- --        ["lex", fn] -> do
 -- --            stream <- readFile fn
@@ -174,8 +176,8 @@ setKey k v = do
     --close db
 
 
---lexMain :: String -> String
---lexMain stream = show (alexScanTokens stream)
+lexMain :: String -> String
+lexMain stream = show (alexScanTokens stream)
 
 --parseMain :: String -> String
 --parseMain stream = show (parse (alexScanTokens stream))
