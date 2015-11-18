@@ -34,5 +34,6 @@ Demo:
 
 ## TODOs
 
+- implement client/server model using Data.Acid.Remote
 - provide a mechanism for specifying types in loadrel
   - maybe just require a second header row?

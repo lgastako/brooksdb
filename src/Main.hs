@@ -52,7 +52,7 @@ import IO.Brooks.Timothy     ( newDb
 import IO.Brooks.Csv         ( relFromCsv )
 
 import Language.Heidi.Lexer  ( alexScanTokens )
---import Language.Heidi.Parser ( parse )
+import Language.Heidi.Parser ( parse )
 
 
 loadRel :: String -> String -> IO ()
@@ -79,7 +79,9 @@ Usage:
   brooksdb set <k> <v>
   brooksdb lex <fn>
   brooksdb play <play_arg>
-  brooksdb loadrel <name> <file>
+  brooksdb loadrel <name> <fn>
+  brooksdb lex <fn>
+  brooksdb parse <fn>
 
 Options:
   -h --help     Show this help.
@@ -108,8 +110,8 @@ main = do
 
     when (args `isPresent` (command "loadrel")) $ do
       name <- args `getArgOrExit` (argument "name")
-      file <- args `getArgOrExit` (argument "file")
-      loadRel name file
+      fn <- args `getArgOrExit` (argument "fn")
+      loadRel name fn
 
     when (args `isPresent` (command "lex")) $ do
       fn <- args `getArgOrExit` (argument "fn")
@@ -117,22 +119,12 @@ main = do
       let result = lexMain stream
       putStrLn result
 
--- --        ["lex", fn] -> do
--- --            stream <- readFile fn
--- --            let result = lexMain stream
--- --            putStrLn result
--- --        ["lex"]     -> do
--- --            stream <- getContents
--- --            let result = lexMain stream
--- --            putStrLn result
--- --        ["parse", fn] -> do
--- --            stream <- readFile fn
--- --            let result = parseMain stream
--- --            putStrLn result
--- --        ["parse"]     -> do
--- --            stream <- getContents
--- --            let result = parseMain stream
--- --            putStrLn result
+    when (args `isPresent` (command "parse")) $ do
+      fn <- args `getArgOrExit` (argument "fn")
+      stream <- readFile fn
+      let result = parseMain stream
+      putStrLn result
+
 
 indent :: String -> String
 indent = unlines . map (\s -> "    " ++ s) . lines
@@ -179,5 +171,5 @@ setKey k v = do
 lexMain :: String -> String
 lexMain stream = show (alexScanTokens stream)
 
---parseMain :: String -> String
---parseMain stream = show (parse (alexScanTokens stream))
+parseMain :: String -> String
+parseMain stream = show (parse (alexScanTokens stream))
