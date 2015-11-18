@@ -32,3 +32,5 @@ b: build
 s: setup
 t: test
 u: update
+
+.PHONY: test
