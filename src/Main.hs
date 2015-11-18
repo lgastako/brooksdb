@@ -2,24 +2,21 @@
 module Main (main) where
 
 import Control.Monad
-import System.Process        ( createProcess
-                             , proc
-                             , StdStream( CreatePipe )
-                             , CreateProcess ( std_out )
-                             , waitForProcess
-                             , system
-                             )
-import System.Exit           ( ExitCode( ExitSuccess ) )
-import System.IO             ( hFlush
-                             , hPutStr
-                             , stdout
-                             , withFile
-                             , IOMode( WriteMode )
-                             )
-import System.Environment    ( getArgs )
--- import System.Console.Readline ( readline
---                                , addHistory
---                                )
+import System.Process           ( createProcess
+                                , proc
+                                , StdStream( CreatePipe )
+                                , CreateProcess ( std_out )
+                                , waitForProcess
+                                , system
+                                )
+import System.Exit              ( ExitCode( ExitSuccess ) )
+import System.IO                ( hFlush
+                                , hPutStr
+                                , stdout
+                                , withFile
+                                , IOMode( WriteMode )
+                                )
+import System.Environment       ( getArgs )
 
 import System.Console.Docopt ( Docopt
                              , argument
@@ -82,7 +79,6 @@ Usage:
   brooksdb set <k> <v>
   brooksdb play <play_arg>
   brooksdb loadrel <name> <file>
-  brooksdb repl
 
 Options:
   -h --help     Show this help.
@@ -94,7 +90,7 @@ main :: IO ()
 main = do
     args <- parseArgsOrExit patterns =<< getArgs
 
-    putStrLn $ "Args: " ++ (show args)
+    -- putStrLn $ "Args: " ++ (show args)
 
     when (args `isPresent` (command "get")) $ do
       k <- args `getArgOrExit` (argument "k")
@@ -114,8 +110,10 @@ main = do
       file <- args `getArgOrExit` (argument "file")
       loadRel name file
 
-    when (args `isPresent` (command "repl")) $ do
-      repl
+    -- when (args `isPresent` (command "lex")) $ do
+    --   stream <- readFile fn
+    --   let result = lexMain stream
+    --   putStrLn result
 
 -- --        ["lex", fn] -> do
 -- --            stream <- readFile fn
@@ -136,87 +134,6 @@ main = do
 
 indent :: String -> String
 indent = unlines . map (\s -> "    " ++ s) . lines
-
-executeExpr :: String -> IO ()
-executeExpr expr = do
-    let makeCmd = [ "--make"
-                  , "-fbuilding-cabal-package"
-                  , "-O"
-                  , "-odir", "dist/build/brooksdb/brooksdb-tmp"
-                  , "-hidir" , "dist/build/brooksdb/brooksdb-tmp"
-                  , "-stubdir", "dist/build/brooksdb/brooksdb-tmp"
-                  , "-i"
-                  , "-idist/build/brooksdb/brooksdb-tmp"
-                  , "-isrc"
-                  , "-idist/build/autogen"
-                  , "-Idist/build/autogen"
-                  , "-Idist/build/brooksdb/brooksdb-tmp"
-                  , "-optP-include"
-                  , "-optPdist/build/autogen/cabal_macros.h"
-                  , "-hide-all-packages"
-                  , "-no-user-package-db"
-                  , "-package-db" , "./.cabal-sandbox/x86_64-osx-ghc-7.6.3-packages.conf.d"
-                  , "-package-db" , "dist/package.conf.inplace"
-                  , "-package", "MissingH-1.2.0.0"
-                  , "-package", "acid-state"
-                  , "-package", "array-0.4.0.1"
-                  , "-package", "base-4.6.0.1"
-                  , "-package", "containers-0.5.0.0"
-                  , "-package", "mtl-2.1.2"
-                  , "-package", "plugins-1.5.3.0"
-                  , "-package", "process-1.1.0.2"
-                  , "-package", "random-1.0.1.1"
-                  , "-package", "safecopy-0.8.2"
-                  , "-XHaskell2010"
-                  , "src/CurQuery.hs"
-                  , "-o"
-                  , "dist/build/brooksdb/curquery"
---                  , "-Wall"
---                  , "-v"
-                  ]
-    prescript <- readFile "pre.txt"
-    postscript <- readFile "post.txt"
-    let chromed = unlines [ prescript
-                          , indent expr
-                          , indent postscript
-                          ]
-    withFile "src/CurQuery.hs" WriteMode $ \fh -> hPutStr fh chromed
-    (_, Just _hout, _, procHdl) <- createProcess (proc "ghc" makeCmd){ std_out = CreatePipe }
-    exitCode <- waitForProcess procHdl
-    putStrLn $ "GHC exitCode: " ++ (show exitCode)
-    case exitCode of
-        ExitSuccess -> do
-            queryExitCode <- system "./dist/build/brooksdb/curquery"
-            putStrLn $ "queryExitCode: " ++ (show queryExitCode)
-
-        _ -> putStrLn "Query not executed (failed to compile)."
-    -- execute it
-    -- print the whole db (for now)
-
-repl :: IO ()
-repl = do
-    putStrLn "Welcome to brooksdb."
-    doRepl
-
-readline :: String -> IO (Maybe String)
-readline s = do putStr s
-                hFlush stdout
-                x <- getLine
-                return $ Just x
-
-doRepl :: IO ()
-doRepl = do
-    -- maybeLine <- readline ":: "
-    maybeLine <- readline ":: "
-    case maybeLine of
-         Nothing ->     return ()  -- EOF / control-d
-         Just "exit" -> return ()
-         Just "quit" -> return ()
-         Just "q."   -> return ()
-         Just expr   -> do -- addHistory expr
-                           putStrLn ("expr:(" ++ expr ++ ")")
-                           executeExpr expr
-                           doRepl
 
 play :: String -> IO ()
 play arg = do

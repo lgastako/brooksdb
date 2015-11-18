@@ -24,33 +24,31 @@ library
                          Language.Heidi.Lexer
     build-tools:         alex, happy
     build-depends:       base                >= 4.7.0.0
-                       , containers
-                       , random
                        , acid-state
-                       , mtl
-                       , safecopy
-                       , MissingH
-                       , process
                        , array
-                       -- , readline
-                       , network-uri
+                       , containers
                        , csv
                        , docopt
+                       , MissingH
+                       , mtl
+                       , network-uri
+                       , process
+                       , random
+                       , safecopy
 
 executable brooksdb
     build-depends:       base                >= 4.7.0.0
-                       , containers
-                       , random
                        , acid-state
-                       , mtl
-                       , safecopy
-                       , MissingH
-                       , process
                        , array
-                       -- , readline
-                       , network-uri
+                       , containers
                        , csv
                        , docopt
+                       , MissingH
+                       , mtl
+                       , network-uri
+                       , process
+                       , random
+                       , safecopy
     hs-source-dirs:      src
     main-is:             Main.hs
 
