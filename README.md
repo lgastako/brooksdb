@@ -16,21 +16,23 @@ on in the same transactional way as real relvars.
 
 ## Building / Installing
 
-Simply:
+Once, to set everything up:
 
-    make bootstrap
+    make setup
 
-which is the equivalent of:
+Build:
 
-    make sandbox-init
-    make cabal-update
-    make cabal-install-cabal-install
-    make install-readline
-    make deps
-    make cabal-install
+    make build
+
+Test:
+
+    make test
+
+Demo:
+
+    make build demo
 
 ## TODOs
 
-- escape from cabal hell
 - provide a mechanism for specifying types in loadrel
   - maybe just require a second header row?
